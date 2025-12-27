@@ -1,0 +1,4 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"/home/zenix/development/ROT/ROT/Content/images/atlas-definition.xml","/home/zenix/development/ROT/ROT/Content/bin/DesktopGL/Content/images/atlas-definition.xml","CopyItem","File",882,882,0.0003691
+"/home/zenix/development/ROT/ROT/Content/images/atlas.png","/home/zenix/development/ROT/ROT/Content/bin/DesktopGL/Content/images/atlas.xnb","TextureProcessor","Texture2DContent",590,16469,0.1453636
+"/home/zenix/development/ROT/ROT/Content/images/logo.png","/home/zenix/development/ROT/ROT/Content/bin/DesktopGL/Content/images/logo.xnb","TextureProcessor","Texture2DContent",16734,311381,0.1312695

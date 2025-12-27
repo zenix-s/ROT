@@ -1,0 +1,3 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"/home/zenix/development/ROT/ROT/Content/images/atlas.png","/home/zenix/development/ROT/ROT/Content/bin/DesktopGL/images/atlas.xnb","TextureProcessor","Texture2DContent",590,16469,0.1519618
+"/home/zenix/development/ROT/ROT/Content/images/logo.png","/home/zenix/development/ROT/ROT/Content/bin/DesktopGL/images/logo.xnb","TextureProcessor","Texture2DContent",16734,311381,0.0368681
