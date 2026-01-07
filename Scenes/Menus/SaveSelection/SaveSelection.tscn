@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://diqs5vfv18vnl"]
+
+[node name="SaveSelection" type="Node2D"]
+
+[node name="Button" type="Button" parent="."]
+offset_left = 296.0
+offset_top = 165.0
+offset_right = 342.0
+offset_bottom = 196.0
+text = "Start"
+metadata/_edit_use_anchors_ = true
