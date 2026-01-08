@@ -4,10 +4,10 @@ using RotOfTime.Core;
 public partial class SceneManager : Node
 {
     [Signal]
-    public delegate void SceneChangeRequestedEventHandler(SceneExtensionManager.GameScene gameScene);
+    public delegate void MenuChangeRequestedEventHandler(SceneExtensionManager.MenuScene menuScene);
 
     [Signal]
-    public delegate void MenuChangeRequestedEventHandler(SceneExtensionManager.MenuScene menuScene);
+    public delegate void SceneChangeRequestedEventHandler(SceneExtensionManager.GameScene gameScene);
 
     public static SceneManager Instance { get; private set; }
 

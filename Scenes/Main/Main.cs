@@ -20,7 +20,7 @@ public partial class Main : Node2D
     {
     }
 
-    private  void OnMenuChangeRequested(SceneExtensionManager.MenuScene menuScene)
+    private void OnMenuChangeRequested(SceneExtensionManager.MenuScene menuScene)
     {
         foreach (Node node in _worldContainer.GetChildren()) node.QueueFree();
 

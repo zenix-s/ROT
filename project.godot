@@ -18,6 +18,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 SceneManager="*res://Autoload/SceneManager.cs"
+SaveManager="*res://Autoload/SaveManager.cs"
+GameManager="*res://Autoload/GameManager.cs"
 
 [display]
 
