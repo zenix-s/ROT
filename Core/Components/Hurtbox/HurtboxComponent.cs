@@ -1,10 +1,8 @@
 using Godot;
-using System;
 using RotOfTime.Core.Combat.Attacks;
 
 public partial class HurtboxComponent : Area2D
 {
-
     [Signal]
     public delegate void AttackReceivedEventHandler(AttackData attackData);
 

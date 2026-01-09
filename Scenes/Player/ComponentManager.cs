@@ -1,12 +1,11 @@
-using Godot;
 using System;
+using Godot;
 using RotOfTime.Core.Components.Stats;
 
 
 // Player component manager, coordinates player components
 public partial class ComponentManager : Node
 {
-
     [Export] public StatsComponent StatsComponent;
 
     // Called when the node enters the scene tree for the first time.
@@ -23,7 +22,6 @@ public partial class ComponentManager : Node
 
     private void UpdatePlayerStats()
     {
-
     }
 
     private void SetupStatsComponent()

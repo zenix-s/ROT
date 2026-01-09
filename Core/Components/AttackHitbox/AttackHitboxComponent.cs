@@ -1,10 +1,10 @@
 using Godot;
-using System;
 using RotOfTime.Core.Combat.Attacks;
 
 public partial class AttackHitboxComponent : Area2D
 {
-    [Signal] public delegate void AttackConnotedEventHandler(AttackData attackData);
+    [Signal]
+    public delegate void AttackConnotedEventHandler(AttackData attackData);
 
     [Export] public AttackData AttackData;
 
