@@ -4,6 +4,17 @@ namespace RotOfTime.Core;
 
 public static class SceneExtensionManager
 {
+    public enum GameScene
+    {
+        TowerLevel0
+    }
+
+    public enum MenuScene
+    {
+        Start,
+        SaveSelection
+    }
+
     public enum TowerLevel
     {
         Level0,
@@ -11,18 +22,7 @@ public static class SceneExtensionManager
         Level2,
         Level3,
         Level4,
-        Level5,
-    }
-
-    public enum GameScene
-    {
-        TowerLevel0,
-    }
-
-    public enum MenuScene
-    {
-        Start,
-        SaveSelection
+        Level5
     }
 
     public static readonly Dictionary<MenuScene, string> MenuPaths = new()
@@ -33,17 +33,17 @@ public static class SceneExtensionManager
 
     public static readonly Dictionary<GameScene, string> ScenePaths = new()
     {
-        { GameScene.TowerLevel0, "res://Scenes/Levels/Tower/Level0/Level.tscn" },
+        { GameScene.TowerLevel0, "res://Scenes/Levels/Tower/Level0/Level.tscn" }
     };
 
     public static readonly Dictionary<TowerLevel, GameScene> TowerLevelScenes = new()
     {
-        { TowerLevel.Level0, GameScene.TowerLevel0 },
+        { TowerLevel.Level0, GameScene.TowerLevel0 }
         // Add more mappings as levels are created
     };
 
     public static GameScene TowerLevelToGameScene(TowerLevel level)
     {
-        return TowerLevelScenes.TryGetValue(level, out var scene) ? scene : GameScene.TowerLevel0;
+        return TowerLevelScenes.TryGetValue(level, out GameScene scene) ? scene : GameScene.TowerLevel0;
     }
 }

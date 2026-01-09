@@ -1,11 +1,10 @@
 using System;
-using RotOfTime.Core;
 
 namespace RotOfTime.Core.GameData;
 
 /// <summary>
-/// DTO for save/load operations.
-/// Pure data class - no business logic.
+///     DTO for save/load operations.
+///     Pure data class - no business logic.
 /// </summary>
 public class GameData
 {
@@ -20,7 +19,7 @@ public class GameData
     // Formatting helpers for UI display
     public string GetFormattedPlayTime()
     {
-        var timeSpan = TimeSpan.FromSeconds(PlayTimeSeconds);
+        TimeSpan timeSpan = TimeSpan.FromSeconds(PlayTimeSeconds);
         return timeSpan.Hours > 0
             ? $"{timeSpan.Hours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}"
             : $"{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";

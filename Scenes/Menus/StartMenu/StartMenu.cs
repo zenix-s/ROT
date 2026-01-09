@@ -1,5 +1,8 @@
 using Godot;
+using RotOfTime.Autoload;
 using RotOfTime.Core;
+
+namespace RotOfTime.Scenes.Menus.StartMenu;
 
 public partial class StartMenu : Node2D
 {

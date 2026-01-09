@@ -1,6 +1,8 @@
 using Godot;
 using RotOfTime.Core;
 
+namespace RotOfTime.Autoload;
+
 public partial class SceneManager : Node
 {
     [Signal]

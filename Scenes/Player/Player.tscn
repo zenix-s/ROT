@@ -1,0 +1,87 @@
+[gd_scene load_steps=15 format=3 uid="uid://doueq3ruoms08"]
+
+[ext_resource type="Script" uid="uid://cqdt27wqvvlfu" path="res://Scenes/Player/Player.cs" id="1_ft8w5"]
+[ext_resource type="Texture2D" uid="uid://oca2e8efi0ps" path="res://Scenes/Player/Assets/knight.png" id="1_s0eop"]
+[ext_resource type="Script" uid="uid://cx5i6ne1h5okf" path="res://Scenes/Player/ComponentManager.cs" id="3_h54ih"]
+[ext_resource type="PackedScene" uid="uid://c0wf6ka08418k" path="res://Core/Components/Stats/StatsComponent.tscn" id="4_4wape"]
+[ext_resource type="PackedScene" uid="uid://bf02ol4kb01yx" path="res://Core/Components/AttackHitbox/AttackHitboxComponent.tscn" id="5_t26db"]
+[ext_resource type="PackedScene" uid="uid://b3vcy5i1s23ff" path="res://Core/Components/Hurtbox/HurtboxComponent.tscn" id="6_fk5o5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ft8w5"]
+atlas = ExtResource("1_s0eop")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h54ih"]
+atlas = ExtResource("1_s0eop")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ude3g"]
+atlas = ExtResource("1_s0eop")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jmcll"]
+atlas = ExtResource("1_s0eop")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4wape"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ft8w5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h54ih")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ude3g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jmcll")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_l3ax4"]
+radius = 5.0
+height = 16.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ji083"]
+radius = 4.0
+height = 16.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_825xp"]
+size = Vector2(20, 17)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1_ft8w5")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_4wape")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("CapsuleShape2D_l3ax4")
+
+[node name="ComponentManager" type="Node" parent="." node_paths=PackedStringArray("StatsComponent")]
+script = ExtResource("3_h54ih")
+StatsComponent = NodePath("StatsComponent")
+
+[node name="StatsComponent" parent="ComponentManager" instance=ExtResource("4_4wape")]
+
+[node name="HurtboxComponent" parent="ComponentManager" instance=ExtResource("6_fk5o5")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ComponentManager/HurtboxComponent"]
+position = Vector2(0, 4)
+shape = SubResource("CapsuleShape2D_ji083")
+debug_color = Color(0.85042524, 0.00089003384, 0.9003315, 0.41960785)
+
+[node name="AttackHitboxComponent" parent="ComponentManager" instance=ExtResource("5_t26db")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ComponentManager/AttackHitboxComponent"]
+position = Vector2(17, 3)
+shape = SubResource("RectangleShape2D_825xp")

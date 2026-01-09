@@ -3,17 +3,19 @@ using System.Text.Json;
 using Godot;
 using RotOfTime.Core.GameData;
 
+namespace RotOfTime.Autoload;
+
 /// <summary>
-/// Persistence layer for save/load operations.
-/// Handles file I/O only - no game state management.
+///     Persistence layer for save/load operations.
+///     Handles file I/O only - no game state management.
 /// </summary>
 public partial class SaveManager : Node
 {
     [Signal]
-    public delegate void SaveCompletedEventHandler(int slotId);
+    public delegate void LoadCompletedEventHandler(int slotId);
 
     [Signal]
-    public delegate void LoadCompletedEventHandler(int slotId);
+    public delegate void SaveCompletedEventHandler(int slotId);
 
     [Signal]
     public delegate void SaveDeletedEventHandler(int slotId);
@@ -31,12 +33,15 @@ public partial class SaveManager : Node
 
     private void EnsureSaveDirectoryExists()
     {
-        using var dir = DirAccess.Open("user://");
+        using DirAccess dir = DirAccess.Open("user://");
         if (dir != null && !dir.DirExists("saves"))
             dir.MakeDir("saves");
     }
 
-    private string GetSavePath(int slotId) => $"{SaveDirectory}save_{slotId}.json";
+    private string GetSavePath(int slotId)
+    {
+        return $"{SaveDirectory}save_{slotId}.json";
+    }
 
     public bool SaveExists(int slotId)
     {
@@ -56,12 +61,12 @@ public partial class SaveManager : Node
             data.SlotId = slotId;
             data.LastSavedAt = DateTime.Now;
 
-            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions
+            string json = JsonSerializer.Serialize(data, new JsonSerializerOptions
             {
                 WriteIndented = true
             });
 
-            using var file = FileAccess.Open(GetSavePath(slotId), FileAccess.ModeFlags.Write);
+            using FileAccess file = FileAccess.Open(GetSavePath(slotId), FileAccess.ModeFlags.Write);
             file.StoreString(json);
 
             GD.Print($"SaveManager: Saved to slot {slotId}");
@@ -77,7 +82,7 @@ public partial class SaveManager : Node
 
     public GameData Load(int slotId)
     {
-        var path = GetSavePath(slotId);
+        string path = GetSavePath(slotId);
         if (!FileAccess.FileExists(path))
         {
             GD.PrintErr($"SaveManager: No save file at slot {slotId}");
@@ -86,9 +91,9 @@ public partial class SaveManager : Node
 
         try
         {
-            using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
-            var json = file.GetAsText();
-            var data = JsonSerializer.Deserialize<GameData>(json);
+            using FileAccess file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
+            string json = file.GetAsText();
+            GameData data = JsonSerializer.Deserialize<GameData>(json);
 
             GD.Print($"SaveManager: Loaded slot {slotId}");
             EmitSignal(SignalName.LoadCompleted, slotId);
@@ -106,14 +111,14 @@ public partial class SaveManager : Node
         var slots = new GameData[MaxSlots];
         for (int i = 0; i < MaxSlots; i++)
         {
-            var path = GetSavePath(i + 1);
+            string path = GetSavePath(i + 1);
             if (!FileAccess.FileExists(path))
                 continue;
 
             try
             {
-                using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
-                var json = file.GetAsText();
+                using FileAccess file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
+                string json = file.GetAsText();
                 slots[i] = JsonSerializer.Deserialize<GameData>(json);
             }
             catch (Exception e)
@@ -121,18 +126,19 @@ public partial class SaveManager : Node
                 GD.PrintErr($"SaveManager: Failed to read slot {i + 1} info - {e.Message}");
             }
         }
+
         return slots;
     }
 
     public bool DeleteSave(int slotId)
     {
-        var path = GetSavePath(slotId);
+        string path = GetSavePath(slotId);
         if (!FileAccess.FileExists(path))
             return false;
 
         try
         {
-            using var dir = DirAccess.Open(SaveDirectory);
+            using DirAccess dir = DirAccess.Open(SaveDirectory);
             dir.Remove($"save_{slotId}.json");
 
             GD.Print($"SaveManager: Deleted slot {slotId}");

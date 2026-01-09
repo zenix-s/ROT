@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="AttackData" load_steps=2 format=3 uid="uid://dyafa6ekvu3i1"]
+
+[ext_resource type="Script" uid="uid://bfopd132a30" path="res://Core/Combat/Attacks/AttackData.cs" id="1_ucbqi"]
+
+[resource]
+script = ExtResource("1_ucbqi")
+Name = "Thrust Attack"
+metadata/_custom_type_script = "uid://bfopd132a30"

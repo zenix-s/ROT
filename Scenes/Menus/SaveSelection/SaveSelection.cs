@@ -1,6 +1,9 @@
 using Godot;
+using RotOfTime.Autoload;
 using RotOfTime.Core;
 using RotOfTime.Core.GameData;
+
+namespace RotOfTime.Scenes.Menus.SaveSelection;
 
 public partial class SaveSelection : Node2D
 {
@@ -47,7 +50,7 @@ public partial class SaveSelection : Node2D
             GameManager.Instance.NewGame(slotId);
 
         // Transition to game based on current tower level
-        var level = GameManager.Instance.CurrentLevel;
+        SceneExtensionManager.TowerLevel level = GameManager.Instance.Data.CurrentLevel;
         SceneManager.Instance.RequestSceneChange(SceneExtensionManager.TowerLevelToGameScene(level));
     }
 

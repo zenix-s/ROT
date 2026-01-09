@@ -3,97 +3,59 @@ using Godot;
 using RotOfTime.Core;
 using RotOfTime.Core.GameData;
 
+namespace RotOfTime.Autoload;
+
 /// <summary>
-/// Runtime state manager for live game data.
-/// Uses SaveManager for persistence, GameData as DTO.
+///     Runtime state manager for live game data.
+///     Holds GameData instance directly, uses SaveManager for persistence.
 /// </summary>
 public partial class GameManager : Node
 {
     public static GameManager Instance { get; private set; }
 
-    // Save slot tracking
-    public int? ActiveSlot { get; private set; }
-    public DateTime CreatedAt { get; private set; }
-    public DateTime LastSavedAt { get; private set; }
+    /// <summary>
+    ///     The current game data. Null when no active game.
+    /// </summary>
+    public GameData Data { get; private set; }
 
-    // Live game state
-    public double PlayTimeSeconds { get; private set; }
-    public SceneExtensionManager.TowerLevel CurrentLevel { get; set; } = SceneExtensionManager.TowerLevel.Level0;
-    public Vector2 PlayerPosition { get; set; }
-
-    public bool HasActiveGame => ActiveSlot.HasValue;
+    public bool HasActiveGame => Data != null;
 
     public override void _Ready()
     {
         Instance = this;
-
-        // Subscribe to scene changes for auto-save
         SceneManager.Instance.SceneChangeRequested += OnSceneChangeRequested;
     }
 
     public override void _Process(double delta)
     {
-        // Track play time during active session
         if (HasActiveGame)
-            PlayTimeSeconds += delta;
+            Data.PlayTimeSeconds += delta;
     }
 
     private void OnSceneChangeRequested(SceneExtensionManager.GameScene gameScene)
     {
-        // Auto-save when changing game scenes
         if (HasActiveGame)
             Save();
     }
 
     /// <summary>
-    /// Create a GameData DTO from current runtime state.
-    /// </summary>
-    public GameData ToGameData()
-    {
-        return new GameData
-        {
-            SlotId = ActiveSlot ?? 0,
-            CreatedAt = CreatedAt,
-            LastSavedAt = DateTime.Now,
-            PlayTimeSeconds = PlayTimeSeconds,
-            CurrentLevel = CurrentLevel,
-            Player = new PlayerData { Position = PlayerPosition }
-        };
-    }
-
-    /// <summary>
-    /// Populate runtime state from a GameData DTO.
-    /// </summary>
-    public void LoadFromGameData(GameData data)
-    {
-        if (data == null) return;
-
-        ActiveSlot = data.SlotId;
-        CreatedAt = data.CreatedAt;
-        LastSavedAt = data.LastSavedAt;
-        PlayTimeSeconds = data.PlayTimeSeconds;
-        CurrentLevel = data.CurrentLevel;
-        PlayerPosition = data.Player?.Position ?? Vector2.Zero;
-    }
-
-    /// <summary>
-    /// Initialize fresh game state for a new game.
+    ///     Start a new game in the specified slot.
     /// </summary>
     public void NewGame(int slotId)
     {
-        ActiveSlot = slotId;
-        CreatedAt = DateTime.Now;
-        LastSavedAt = DateTime.Now;
-        PlayTimeSeconds = 0;
-        CurrentLevel = SceneExtensionManager.TowerLevel.Level0;
-        PlayerPosition = Vector2.Zero;
+        Data = new GameData
+        {
+            SlotId = slotId,
+            CreatedAt = DateTime.Now,
+            LastSavedAt = DateTime.Now
+        };
 
         Save();
         GD.Print($"GameManager: New game started in slot {slotId}");
     }
 
     /// <summary>
-    /// Save current state via SaveManager.
+    ///     Save current game data.
     /// </summary>
     public bool Save()
     {
@@ -103,36 +65,28 @@ public partial class GameManager : Node
             return false;
         }
 
-        var data = ToGameData();
-        return SaveManager.Instance.Save(ActiveSlot.Value, data);
+        return SaveManager.Instance.Save(Data.SlotId, Data);
     }
 
     /// <summary>
-    /// Load game state from SaveManager.
+    ///     Load game from the specified slot.
     /// </summary>
     public bool Load(int slotId)
     {
-        var data = SaveManager.Instance.Load(slotId);
+        GameData data = SaveManager.Instance.Load(slotId);
         if (data == null)
             return false;
 
-        LoadFromGameData(data);
+        Data = data;
         GD.Print($"GameManager: Loaded game from slot {slotId}");
         return true;
     }
 
     /// <summary>
-    /// Clear current game state (e.g., returning to main menu).
+    ///     Clear current session (e.g., returning to main menu).
     /// </summary>
     public void ClearSession()
     {
-        ActiveSlot = null;
-        PlayTimeSeconds = 0;
-        CurrentLevel = SceneExtensionManager.TowerLevel.Level0;
-        PlayerPosition = Vector2.Zero;
+        Data = null;
     }
-
-    // Convenience methods for updating state
-    public void UpdatePlayerPosition(Vector2 position) => PlayerPosition = position;
-    public void UpdateCurrentLevel(SceneExtensionManager.TowerLevel level) => CurrentLevel = level;
 }

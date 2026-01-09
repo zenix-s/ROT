@@ -1,9 +1,21 @@
-[gd_scene load_steps=2 format=3 uid="uid://bx6kvvtoehxks"]
+[gd_scene load_steps=3 format=3 uid="uid://bx6kvvtoehxks"]
 
 [ext_resource type="Script" uid="uid://bj8y5oo2tmkfh" path="res://Scenes/Main/Main.cs" id="1_p8rbg"]
+[ext_resource type="PackedScene" uid="uid://doueq3ruoms08" path="res://Scenes/Player/Player.tscn" id="2_qtv3y"]
 
-[node name="Main" type="Node2D" node_paths=PackedStringArray("_worldContainer")]
+[node name="Main" type="Node2D" node_paths=PackedStringArray("_player", "_worldContainer", "_camera")]
 script = ExtResource("1_p8rbg")
+_player = NodePath("Player")
 _worldContainer = NodePath("WorldContainer")
+_camera = NodePath("Camera")
 
 [node name="WorldContainer" type="Node2D" parent="."]
+
+[node name="Player" parent="." instance=ExtResource("2_qtv3y")]
+
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2(322, 180)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="MenuContainer" type="CanvasLayer" parent="."]
