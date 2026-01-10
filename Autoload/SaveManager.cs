@@ -6,22 +6,13 @@ using RotOfTime.Core.GameData;
 namespace RotOfTime.Autoload;
 
 /// <summary>
-///     Persistence layer for save/load operations.
+///     Persistence layer for meta-progression.
 ///     Handles file I/O only - no game state management.
 /// </summary>
 public partial class SaveManager : Node
 {
-    [Signal]
-    public delegate void LoadCompletedEventHandler(int slotId);
-
-    [Signal]
-    public delegate void SaveCompletedEventHandler(int slotId);
-
-    [Signal]
-    public delegate void SaveDeletedEventHandler(int slotId);
-
     private const string SaveDirectory = "user://saves/";
-    private const int MaxSlots = 3;
+    private const string MetaFileName = "meta.json";
 
     public static SaveManager Instance { get; private set; }
 
@@ -38,117 +29,58 @@ public partial class SaveManager : Node
             dir.MakeDir("saves");
     }
 
-    private string GetSavePath(int slotId)
+    private string GetMetaPath()
     {
-        return $"{SaveDirectory}save_{slotId}.json";
+        return $"{SaveDirectory}{MetaFileName}";
     }
 
-    public bool SaveExists(int slotId)
-    {
-        return FileAccess.FileExists(GetSavePath(slotId));
-    }
-
-    public bool Save(int slotId, GameData data)
+    public bool SaveMeta(MetaData data)
     {
         if (data == null)
         {
-            GD.PrintErr("Cannot save null GameData");
+            GD.PrintErr("SaveManager: Cannot save null MetaData");
             return false;
         }
 
         try
         {
-            data.SlotId = slotId;
-            data.LastSavedAt = DateTime.Now;
-
             string json = JsonSerializer.Serialize(data, new JsonSerializerOptions
             {
                 WriteIndented = true
             });
 
-            using FileAccess file = FileAccess.Open(GetSavePath(slotId), FileAccess.ModeFlags.Write);
+            using FileAccess file = FileAccess.Open(GetMetaPath(), FileAccess.ModeFlags.Write);
             file.StoreString(json);
 
-            GD.Print($"SaveManager: Saved to slot {slotId}");
-            EmitSignal(SignalName.SaveCompleted, slotId);
+            GD.Print("SaveManager: Meta saved");
             return true;
         }
         catch (Exception e)
         {
-            GD.PrintErr($"SaveManager: Failed to save - {e.Message}");
+            GD.PrintErr($"SaveManager: Failed to save meta - {e.Message}");
             return false;
         }
     }
 
-    public GameData Load(int slotId)
+    public MetaData LoadMeta()
     {
-        string path = GetSavePath(slotId);
+        string path = GetMetaPath();
         if (!FileAccess.FileExists(path))
-        {
-            GD.PrintErr($"SaveManager: No save file at slot {slotId}");
             return null;
-        }
 
         try
         {
             using FileAccess file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
             string json = file.GetAsText();
-            GameData data = JsonSerializer.Deserialize<GameData>(json);
+            MetaData data = JsonSerializer.Deserialize<MetaData>(json);
 
-            GD.Print($"SaveManager: Loaded slot {slotId}");
-            EmitSignal(SignalName.LoadCompleted, slotId);
+            GD.Print("SaveManager: Meta loaded");
             return data;
         }
         catch (Exception e)
         {
-            GD.PrintErr($"SaveManager: Failed to load slot {slotId} - {e.Message}");
+            GD.PrintErr($"SaveManager: Failed to load meta - {e.Message}");
             return null;
-        }
-    }
-
-    public GameData[] GetAllSlotInfo()
-    {
-        var slots = new GameData[MaxSlots];
-        for (int i = 0; i < MaxSlots; i++)
-        {
-            string path = GetSavePath(i + 1);
-            if (!FileAccess.FileExists(path))
-                continue;
-
-            try
-            {
-                using FileAccess file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
-                string json = file.GetAsText();
-                slots[i] = JsonSerializer.Deserialize<GameData>(json);
-            }
-            catch (Exception e)
-            {
-                GD.PrintErr($"SaveManager: Failed to read slot {i + 1} info - {e.Message}");
-            }
-        }
-
-        return slots;
-    }
-
-    public bool DeleteSave(int slotId)
-    {
-        string path = GetSavePath(slotId);
-        if (!FileAccess.FileExists(path))
-            return false;
-
-        try
-        {
-            using DirAccess dir = DirAccess.Open(SaveDirectory);
-            dir.Remove($"save_{slotId}.json");
-
-            GD.Print($"SaveManager: Deleted slot {slotId}");
-            EmitSignal(SignalName.SaveDeleted, slotId);
-            return true;
-        }
-        catch (Exception e)
-        {
-            GD.PrintErr($"SaveManager: Failed to delete slot {slotId} - {e.Message}");
-            return false;
         }
     }
 }

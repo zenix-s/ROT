@@ -22,6 +22,6 @@ public partial class StartMenu : Node2D
     private static void _on_StartButton_pressed()
     {
         GD.Print("Start Button Pressed");
-        SceneManager.Instance.RequestMenuChange(SceneExtensionManager.MenuScene.SaveSelection);
+        SceneManager.Instance.RequestSceneChange(SceneExtensionManager.GameScene.TowerLevel0);
     }
 }

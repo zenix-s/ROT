@@ -2,26 +2,18 @@ using System;
 using Godot;
 using RotOfTime.Core.Components.Stats;
 
+namespace RotOfTime.Scenes.Player;
 
-// Player component manager, coordinates player components
+/// <summary>
+///     Player component manager, coordinates player components.
+/// </summary>
 public partial class ComponentManager : Node
 {
     [Export] public StatsComponent StatsComponent;
 
-    // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         SetupStatsComponent();
-    }
-
-
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
-    }
-
-    private void UpdatePlayerStats()
-    {
     }
 
     private void SetupStatsComponent()
@@ -35,27 +27,27 @@ public partial class ComponentManager : Node
         StatsComponent.InvincibilityEnded += OnPlayerInvincibilityEnded;
     }
 
+    #region Event Handlers
+
     private void OnPlayerInvincibilityEnded()
     {
-        // Update player sprite or effects
-        throw new NotImplementedException();
+        // TODO: Update player sprite or effects
     }
 
     private void OnPlayerInvincibilityStarted()
     {
-        // Update player sprite or effects
-        throw new NotImplementedException();
+        // TODO: Update player sprite or effects
     }
 
     private void OnPlayerHealthChanged()
     {
-        // Notify HUD to update health display
-        throw new NotImplementedException();
+        // TODO: Notify HUD to update health display
     }
 
     private void OnPlayerDied()
     {
-        // Notify SceneManager to load Game Over scene
-        throw new NotImplementedException();
+        // TODO: Notify SceneManager to load Game Over scene
     }
+
+    #endregion
 }

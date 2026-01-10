@@ -1,92 +1,54 @@
-using System;
 using Godot;
-using RotOfTime.Core;
 using RotOfTime.Core.GameData;
 
 namespace RotOfTime.Autoload;
 
 /// <summary>
-///     Runtime state manager for live game data.
-///     Holds GameData instance directly, uses SaveManager for persistence.
+///     Runtime manager for meta-progression.
+///     Holds MetaData and provides money operations.
 /// </summary>
 public partial class GameManager : Node
 {
     public static GameManager Instance { get; private set; }
 
     /// <summary>
-    ///     The current game data. Null when no active game.
+    ///     Permanent progression data. Never null after _Ready.
     /// </summary>
-    public GameData Data { get; private set; }
-
-    public bool HasActiveGame => Data != null;
+    public MetaData Meta { get; private set; }
 
     public override void _Ready()
     {
         Instance = this;
-        SceneManager.Instance.SceneChangeRequested += OnSceneChangeRequested;
+        LoadMeta();
     }
 
-    public override void _Process(double delta)
+    private void LoadMeta()
     {
-        if (HasActiveGame)
-            Data.PlayTimeSeconds += delta;
+        Meta = SaveManager.Instance.LoadMeta() ?? new MetaData();
     }
 
-    private void OnSceneChangeRequested(SceneExtensionManager.GameScene gameScene)
+    private void SaveMeta()
     {
-        if (HasActiveGame)
-            Save();
+        SaveManager.Instance.SaveMeta(Meta);
     }
 
-    /// <summary>
-    ///     Start a new game in the specified slot.
-    /// </summary>
-    public void NewGame(int slotId)
+    public void AddMoney(int amount)
     {
-        Data = new GameData
-        {
-            SlotId = slotId,
-            CreatedAt = DateTime.Now,
-            LastSavedAt = DateTime.Now
-        };
+        if (amount <= 0) return;
 
-        Save();
-        GD.Print($"GameManager: New game started in slot {slotId}");
+        Meta.Money += amount;
+        SaveMeta();
+        GD.Print($"GameManager: Added {amount} money. Total: {Meta.Money}");
     }
 
-    /// <summary>
-    ///     Save current game data.
-    /// </summary>
-    public bool Save()
+    public bool SpendMoney(int amount)
     {
-        if (!HasActiveGame)
-        {
-            GD.PrintErr("GameManager: No active game to save");
-            return false;
-        }
-
-        return SaveManager.Instance.Save(Data.SlotId, Data);
-    }
-
-    /// <summary>
-    ///     Load game from the specified slot.
-    /// </summary>
-    public bool Load(int slotId)
-    {
-        GameData data = SaveManager.Instance.Load(slotId);
-        if (data == null)
+        if (amount <= 0 || Meta.Money < amount)
             return false;
 
-        Data = data;
-        GD.Print($"GameManager: Loaded game from slot {slotId}");
+        Meta.Money -= amount;
+        SaveMeta();
+        GD.Print($"GameManager: Spent {amount} money. Remaining: {Meta.Money}");
         return true;
-    }
-
-    /// <summary>
-    ///     Clear current session (e.g., returning to main menu).
-    /// </summary>
-    public void ClearSession()
-    {
-        Data = null;
     }
 }

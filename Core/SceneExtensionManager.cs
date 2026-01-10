@@ -11,8 +11,7 @@ public static class SceneExtensionManager
 
     public enum MenuScene
     {
-        Start,
-        SaveSelection
+        Start
     }
 
     public enum TowerLevel
@@ -27,8 +26,7 @@ public static class SceneExtensionManager
 
     public static readonly Dictionary<MenuScene, string> MenuPaths = new()
     {
-        { MenuScene.Start, "res://Scenes/Menus/StartMenu/StartMenu.tscn" },
-        { MenuScene.SaveSelection, "res://Scenes/Menus/SaveSelection/SaveSelection.tscn" }
+        { MenuScene.Start, "res://Scenes/Menus/StartMenu/StartMenu.tscn" }
     };
 
     public static readonly Dictionary<GameScene, string> ScenePaths = new()

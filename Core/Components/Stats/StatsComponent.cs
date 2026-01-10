@@ -28,16 +28,10 @@ public partial class StatsComponent : Node
 
     public int MaxHealthPoints { get; private set; }
 
-    // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         RecalculateStats();
         SetupInvincibility();
-    }
-
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
     }
 
     private void RecalculateStats()
@@ -51,10 +45,10 @@ public partial class StatsComponent : Node
     {
         if (_invincibility) return;
 
-        MaxHealthPoints = Math.Max(0, MaxHealthPoints - damage.FinalDamage);
+        CurrentHealthPoints = Math.Max(0, CurrentHealthPoints - damage.FinalDamage);
 
         EmitSignal(SignalName.HealthChanged);
-        if (MaxHealthPoints <= 0)
+        if (CurrentHealthPoints <= 0)
             EmitSignal(SignalName.Died);
 
         if (InvincibilityDuration > 0)
