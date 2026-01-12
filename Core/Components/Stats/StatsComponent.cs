@@ -19,6 +19,9 @@ public partial class StatsComponent : Node
     [Signal]
     public delegate void InvincibilityStartedEventHandler();
 
+    [Signal]
+    public delegate void StatsUpdatedEventHandler();
+
     private bool _invincibility;
 
     [Export] public int CurrentHealthPoints { get; set; } = 100;
@@ -37,6 +40,13 @@ public partial class StatsComponent : Node
     private void RecalculateStats()
     {
         MaxHealthPoints = EntityStats.MaxHealth;
+    }
+
+    public void UpdateBaseStats(EntityStats newStats)
+    {
+        EntityStats = newStats;
+        RecalculateStats();
+        EmitSignal(SignalName.StatsUpdated);
     }
 
     #region Health Management

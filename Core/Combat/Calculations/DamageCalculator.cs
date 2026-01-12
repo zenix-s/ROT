@@ -5,36 +5,28 @@ using RotOfTime.Core.Entities;
 namespace RotOfTime.Core.Combat.Calculations;
 
 /// <summary>
-///     Default damage calculation implementation.
-///     Formula: FinalDamage = max(MinimumDamage, (Attack * Coefficient) - Defense)
+///     Damage calculation (defender side).
+///     Formula: FinalDamage = max(1, RawDamage - Defense)
 /// </summary>
-public class DamageCalculator : IDamageCalculator
+public static class DamageCalculator
 {
-    /// <summary>
-    ///     Minimum damage that can be dealt (prevents complete nullification).
-    /// </summary>
-    public int MinimumDamage { get; init; } = 1;
+    private const int MinimumDamage = 1;
 
-    /// <summary>
-    ///     Singleton instance for simple use cases.
-    /// </summary>
-    public static DamageCalculator Default { get; } = new();
-
-    public DamageResult Calculate(EntityStats attacker, EntityStats defender, AttackData attack)
+    public static DamageResult Calculate(EntityStats defender, AttackResult attackResult)
     {
-        int rawDamage = (int)(attacker.Attack * attack.DamageCoefficient);
+        int rawDamage = attackResult.RawDamage;
 
         int damageAfterDefense = rawDamage - defender.Defense;
         int finalDamage = Math.Max(MinimumDamage, damageAfterDefense);
         int damageReduced = rawDamage - finalDamage;
 
-        bool wasBlocked = finalDamage <= 0;
+        bool wasBlocked = damageAfterDefense <= 0;
         if (wasBlocked) return DamageResult.Blocked with { RawDamage = rawDamage, DamageReduced = rawDamage };
 
         return new DamageResult(
             rawDamage,
             finalDamage,
-            false,
+            attackResult.IsCritical,
             false,
             damageReduced
         );

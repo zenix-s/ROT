@@ -1,26 +1,37 @@
 using Godot;
 using RotOfTime.Core.Combat.Attacks;
 
+namespace RotOfTime.Core.Components.Hurtbox;
+
+/// <summary>
+///     Hurtbox component for receiving attacks.
+///     Reads AttackResult from any IAttack and signals for damage processing.
+/// </summary>
 public partial class HurtboxComponent : Area2D
 {
     [Signal]
-    public delegate void AttackReceivedEventHandler(AttackData attackData);
+    public delegate void AttackReceivedEventHandler(AttackResult attackResult);
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
+    /// <summary>
+    ///     Called by attacks to trigger damage.
+    /// </summary>
+    public void ReceiveAttack(IAttack attack)
     {
-    }
+        var targetId = GetInstanceId();
+        if (!attack.CanHit(targetId)) return;
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
+        attack.RegisterHit(targetId);
+        EmitSignal(SignalName.AttackReceived, attack.AttackResult);
     }
 
     private void OnHurtboxAreaEntered(Area2D area)
     {
-        // Handle hurtbox collision logic here
-        if (area is not AttackHitboxComponent hitbox) return;
+        if (area is not IAttack attack) return;
 
-        EmitSignal(SignalName.AttackReceived, hitbox.AttackData);
+        var targetId = GetInstanceId();
+        if (!attack.CanHit(targetId)) return;
+
+        attack.RegisterHit(targetId);
+        EmitSignal(SignalName.AttackReceived, attack.AttackResult);
     }
 }
