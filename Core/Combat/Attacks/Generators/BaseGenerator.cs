@@ -1,5 +1,4 @@
 using Godot;
-using RotOfTime.Core.Combat.Calculations;
 using RotOfTime.Core.Entities;
 using RotOfTime.Core.Grimoire;
 
@@ -11,13 +10,19 @@ namespace RotOfTime.Core.Combat.Attacks.Generators;
 /// </summary>
 public abstract partial class BaseGenerator : Node2D, IGenerator
 {
-    [Export] public float SpawnCooldown { get; set; } = 1.0f;
-    [Export] public PackedScene AttackPrefab { get; set; }
+    protected float CooldownTimer;
 
     protected EntityStats EntityStats;
     protected GrimoireStats GrimoireStats;
-    protected float CooldownTimer;
     protected bool CanSpawn => CooldownTimer <= 0;
+    [Export] public float SpawnCooldown { get; set; } = 1.0f;
+    [Export] public PackedScene AttackPrefab { get; set; }
+
+    public void UpdateStats(EntityStats entity, GrimoireStats grimoire)
+    {
+        EntityStats = entity;
+        GrimoireStats = grimoire;
+    }
 
     public override void _Ready()
     {
@@ -33,21 +38,12 @@ public abstract partial class BaseGenerator : Node2D, IGenerator
             TrySpawn();
     }
 
-    public void UpdateStats(EntityStats entity, GrimoireStats grimoire)
-    {
-        EntityStats = entity;
-        GrimoireStats = grimoire;
-    }
-
     protected virtual void TrySpawn()
     {
         if (AttackPrefab == null) return;
 
-        var attack = AttackPrefab.Instantiate();
-        if (attack is IAttack attackInstance)
-        {
-            attackInstance.UpdateStats(EntityStats, GrimoireStats);
-        }
+        Node attack = AttackPrefab.Instantiate();
+        if (attack is IAttack attackInstance) attackInstance.UpdateStats(EntityStats, GrimoireStats);
 
         ConfigureSpawnedAttack(attack);
         GetTree().CurrentScene.AddChild(attack);

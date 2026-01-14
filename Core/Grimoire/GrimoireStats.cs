@@ -8,6 +8,6 @@ namespace RotOfTime.Core.Grimoire;
 [GlobalClass]
 public partial class GrimoireStats : Resource
 {
-    [Export] public int BonusAttack { get; set; } = 0;
+    [Export] public int BonusAttack { get; set; }
     [Export] public float CastingSpeed { get; set; } = 1.0f;
 }

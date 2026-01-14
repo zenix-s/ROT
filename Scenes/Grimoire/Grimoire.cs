@@ -12,11 +12,10 @@ namespace RotOfTime.Scenes.Grimoire;
 /// </summary>
 public partial class Grimoire : Node2D
 {
-    [Export] public GrimoireStats Stats;
+    private EntityStats _entityStats;
     [Export] public Array<Node2D> Attacks = new();
     [Export] public Array<Node2D> Generators = new();
-
-    private EntityStats _entityStats;
+    [Export] public GrimoireStats Stats;
 
     public void UpdateEntityStats(EntityStats stats)
     {
@@ -26,16 +25,12 @@ public partial class Grimoire : Node2D
 
     private void UpdateAll()
     {
-        foreach (var node in Attacks)
-        {
+        foreach (Node2D node in Attacks)
             if (node is IAttack attack)
                 attack.UpdateStats(_entityStats, Stats);
-        }
 
-        foreach (var node in Generators)
-        {
+        foreach (Node2D node in Generators)
             if (node is IGenerator generator)
                 generator.UpdateStats(_entityStats, Stats);
-        }
     }
 }

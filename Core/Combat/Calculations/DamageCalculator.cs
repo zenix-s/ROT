@@ -16,7 +16,7 @@ public static class DamageCalculator
     {
         int rawDamage = attackResult.RawDamage;
 
-        int damageAfterDefense = rawDamage - defender.Defense;
+        int damageAfterDefense = rawDamage - defender.DefenseStat;
         int finalDamage = Math.Max(MinimumDamage, damageAfterDefense);
         int damageReduced = rawDamage - finalDamage;
 

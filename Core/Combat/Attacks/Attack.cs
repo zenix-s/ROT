@@ -18,20 +18,23 @@ namespace RotOfTime.Core.Combat.Attacks;
 /// </summary>
 public partial class Attack : Area2D, IAttack
 {
+    private float _lifetimeTimer;
+
+    [Export] public float HitCooldown { get; set; }
+    [Export] public bool IsPermanent { get; set; }
+    [Export] public float Speed { get; set; }
+    [Export] public Vector2 Direction { get; set; } = Vector2.Zero;
+    [Export] public float Lifetime { get; set; }
+    [Export] public bool DestroyOnHit { get; set; }
     [Export] public AttackData AttackData { get; set; }
     public AttackTag[] Tags { get; set; } = [AttackTag.Normal];
 
-    [Export] public float HitCooldown { get; set; } = 0f;
-    [Export] public bool IsPermanent { get; set; } = false;
-    [Export] public float Speed { get; set; } = 0f;
-    [Export] public Vector2 Direction { get; set; } = Vector2.Zero;
-    [Export] public float Lifetime { get; set; } = 0f;
-    [Export] public bool DestroyOnHit { get; set; } = false;
-
     public AttackResult AttackResult { get; private set; }
 
-    private readonly Dictionary<ulong, float> _targetCooldowns = new();
-    private float _lifetimeTimer;
+    public void UpdateStats(EntityStats entity, GrimoireStats grimoire)
+    {
+        AttackResult = AttackCalculator.Calculate(entity, grimoire, AttackData);
+    }
 
     public override void _Ready()
     {
@@ -46,7 +49,7 @@ public partial class Attack : Area2D, IAttack
 
     public override void _Process(double delta)
     {
-        var dt = (float)delta;
+        float dt = (float)delta;
 
         // Movement
         if (Speed > 0 && Direction != Vector2.Zero)
@@ -59,45 +62,6 @@ public partial class Attack : Area2D, IAttack
             if (_lifetimeTimer <= 0)
                 QueueFree();
         }
-
-        // Update per-target cooldowns
-        UpdateCooldowns(dt);
-    }
-
-    public void UpdateStats(EntityStats entity, GrimoireStats grimoire)
-    {
-        AttackResult = AttackCalculator.Calculate(entity, grimoire, AttackData);
-    }
-
-    public bool CanHit(ulong targetId)
-    {
-        if (HitCooldown <= 0)
-            return !_targetCooldowns.ContainsKey(targetId);
-
-        return !_targetCooldowns.ContainsKey(targetId) || _targetCooldowns[targetId] <= 0;
-    }
-
-    public void RegisterHit(ulong targetId)
-    {
-        if (HitCooldown > 0)
-            _targetCooldowns[targetId] = HitCooldown;
-        else
-            _targetCooldowns[targetId] = float.MaxValue; // One-shot: never hit again
-    }
-
-    private void UpdateCooldowns(float delta)
-    {
-        if (HitCooldown <= 0) return;
-
-        var expiredKeys = new List<ulong>();
-        foreach (var kvp in _targetCooldowns)
-        {
-            _targetCooldowns[kvp.Key] -= delta;
-            if (_targetCooldowns[kvp.Key] <= 0)
-                expiredKeys.Add(kvp.Key);
-        }
-        foreach (var key in expiredKeys)
-            _targetCooldowns.Remove(key);
     }
 
     private void OnAttackAreaEntered(Area2D area)

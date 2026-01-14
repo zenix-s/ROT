@@ -17,10 +17,6 @@ public partial class HurtboxComponent : Area2D
     /// </summary>
     public void ReceiveAttack(IAttack attack)
     {
-        var targetId = GetInstanceId();
-        if (!attack.CanHit(targetId)) return;
-
-        attack.RegisterHit(targetId);
         EmitSignal(SignalName.AttackReceived, attack.AttackResult);
     }
 
@@ -28,10 +24,6 @@ public partial class HurtboxComponent : Area2D
     {
         if (area is not IAttack attack) return;
 
-        var targetId = GetInstanceId();
-        if (!attack.CanHit(targetId)) return;
-
-        attack.RegisterHit(targetId);
         EmitSignal(SignalName.AttackReceived, attack.AttackResult);
     }
 }

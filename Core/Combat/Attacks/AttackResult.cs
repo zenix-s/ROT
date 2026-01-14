@@ -9,11 +9,9 @@ namespace RotOfTime.Core.Combat.Attacks;
 [GlobalClass]
 public partial class AttackResult : Resource
 {
-    [Export] public int RawDamage { get; set; }
-    [Export] public string AttackName { get; set; } = "";
-    [Export] public bool IsCritical { get; set; }
-
-    public AttackResult() { }
+    public AttackResult()
+    {
+    }
 
     public AttackResult(int rawDamage, string attackName, bool isCritical = false)
     {
@@ -21,6 +19,10 @@ public partial class AttackResult : Resource
         AttackName = attackName;
         IsCritical = isCritical;
     }
+
+    [Export] public int RawDamage { get; set; }
+    [Export] public string AttackName { get; set; } = "";
+    [Export] public bool IsCritical { get; set; }
 
     /// <summary>
     ///     Result for missed or invalid attacks.

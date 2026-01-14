@@ -12,7 +12,7 @@ public static class AttackCalculator
 {
     public static AttackResult Calculate(EntityStats entity, GrimoireStats grimoire, AttackData attack)
     {
-        int totalAttack = entity.Attack + grimoire.BonusAttack;
+        int totalAttack = entity.AttackStat + grimoire.BonusAttack;
         int rawDamage = (int)(totalAttack * attack.DamageCoefficient);
 
         return new AttackResult(

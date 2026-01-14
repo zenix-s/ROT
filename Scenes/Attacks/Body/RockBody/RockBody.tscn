@@ -1,11 +1,11 @@
 [gd_scene load_steps=6 format=3 uid="uid://rockbody"]
 
-[ext_resource type="Script" uid="uid://dp8dekkmux3ty" path="res://Core/Combat/Attacks/Types/BodyAttack.cs" id="1_1pqwk"]
-[ext_resource type="Script" uid="uid://bfopd132a30" path="res://Core/Combat/Attacks/AttackData.cs" id="2_pnxi2"]
+[ext_resource type="Script" uid="uid://c8pegwc23gxeb" path="res://Core/Combat/Attacks/Attack.cs" id="1_pnxi2"]
+[ext_resource type="Script" uid="uid://bfopd132a30" path="res://Core/Combat/Attacks/AttackData.cs" id="2_c4v06"]
 [ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="3_pnxi2"]
 
-[sub_resource type="Resource" id="Resource_attack"]
-script = ExtResource("2_pnxi2")
+[sub_resource type="Resource" id="Resource_aoi0w"]
+script = ExtResource("2_c4v06")
 Name = "Rock Body"
 metadata/_custom_type_script = "uid://bfopd132a30"
 
@@ -15,8 +15,9 @@ radius = 15.0
 [node name="RockBody" type="Area2D"]
 collision_layer = 256
 collision_mask = 0
-script = ExtResource("1_1pqwk")
-AttackData = SubResource("Resource_attack")
+script = ExtResource("1_pnxi2")
+IsPermanent = true
+AttackData = SubResource("Resource_aoi0w")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_pnxi2")
@@ -24,5 +25,3 @@ texture = ExtResource("3_pnxi2")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_body")
 debug_color = Color(0.87, 0.24, 0.24, 0.42)
-
-[connection signal="area_entered" from="." to="." method="OnBodyAttackAreaEntered"]

@@ -1,16 +1,19 @@
-[gd_scene load_steps=23 format=3 uid="uid://doueq3ruoms08"]
+[gd_scene load_steps=17 format=3 uid="uid://doueq3ruoms08"]
 
 [ext_resource type="Script" uid="uid://cqdt27wqvvlfu" path="res://Scenes/Player/Player.cs" id="1_ft8w5"]
 [ext_resource type="Texture2D" uid="uid://oca2e8efi0ps" path="res://Scenes/Player/Assets/knight.png" id="1_s0eop"]
-[ext_resource type="PackedScene" uid="uid://bmie2rtvky2u0" path="res://Core/Components/Animation/AnimationComponent.tscn" id="3_0kmp4"]
-[ext_resource type="Script" uid="uid://cx5i6ne1h5okf" path="res://Scenes/Player/PlayerComponentManager.cs" id="3_i5acl"]
-[ext_resource type="PackedScene" uid="uid://c0wf6ka08418k" path="res://Core/Components/Stats/StatsComponent.tscn" id="4_4wape"]
 [ext_resource type="Script" uid="uid://bk4lgfbd2ojpm" path="res://Core/Entities/EntityStats.cs" id="5_fk5o5"]
-[ext_resource type="PackedScene" uid="uid://bf02ol4kb01yx" path="res://Core/Components/AttackHitbox/AttackHitboxComponent.tscn" id="5_t26db"]
-[ext_resource type="PackedScene" uid="uid://b3vcy5i1s23ff" path="res://Core/Components/Hurtbox/HurtboxComponent.tscn" id="6_fk5o5"]
-[ext_resource type="Script" uid="uid://bfopd132a30" path="res://Core/Combat/Attacks/AttackData.cs" id="8_fk5o5"]
+[ext_resource type="Script" uid="uid://1s7je03tfckb" path="res://Core/Components/AnimationComponent.cs" id="6_t26db"]
+[ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Components/HurtboxComponent.cs" id="7_fk5o5"]
 [ext_resource type="PackedScene" uid="uid://grimoire" path="res://Scenes/Grimoire/Grimoire.tscn" id="9_ji083"]
 [ext_resource type="Script" uid="uid://chwt212x1tgd" path="res://Core/Grimoire/GrimoireStats.cs" id="10_0kmp4"]
+
+[sub_resource type="Resource" id="Resource_fk5o5"]
+script = ExtResource("5_fk5o5")
+VitalityStat = 10
+AttackStat = 1
+DefenseStat = 1
+metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ft8w5"]
 atlas = ExtResource("1_s0eop")
@@ -52,30 +55,23 @@ animations = [{
 radius = 5.0
 height = 16.0
 
-[sub_resource type="Resource" id="Resource_825xp"]
-script = ExtResource("5_fk5o5")
-metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
+[sub_resource type="Resource" id="Resource_i5acl"]
+script = ExtResource("10_0kmp4")
+metadata/_custom_type_script = "uid://chwt212x1tgd"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ji083"]
 radius = 4.0
 height = 16.0
 
-[sub_resource type="Resource" id="Resource_ji083"]
-script = ExtResource("8_fk5o5")
-metadata/_custom_type_script = "uid://bfopd132a30"
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_825xp"]
-size = Vector2(20, 17)
-
-[sub_resource type="Resource" id="Resource_i5acl"]
-script = ExtResource("10_0kmp4")
-metadata/_custom_type_script = "uid://chwt212x1tgd"
-
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("ComponentManager") groups=["Player"]]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("AnimationComponent", "DebugLabel", "Grimoire", "HurtboxComponent") groups=["Player"]]
 collision_layer = 2
 motion_mode = 1
 script = ExtResource("1_ft8w5")
-ComponentManager = NodePath("ComponentManager")
+AnimationComponent = NodePath("AnimationComponent")
+DebugLabel = NodePath("DebugLabel")
+EntityStats = SubResource("Resource_fk5o5")
+Grimoire = NodePath("Grimoire")
+HurtboxComponent = NodePath("HurtboxComponent")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_4wape")
@@ -86,34 +82,25 @@ autoplay = "idle"
 position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_l3ax4")
 
-[node name="ComponentManager" type="Node" parent="." node_paths=PackedStringArray("StatsComponent", "HurtboxComponent", "Grimoire", "AnimationComponent")]
-script = ExtResource("3_i5acl")
-StatsComponent = NodePath("StatsComponent")
-HurtboxComponent = NodePath("HurtboxComponent")
-Grimoire = NodePath("../Grimoire")
-AnimationComponent = NodePath("AnimationComponent")
+[node name="Grimoire" parent="." instance=ExtResource("9_ji083")]
+Stats = SubResource("Resource_i5acl")
 
-[node name="AnimationComponent" parent="ComponentManager" node_paths=PackedStringArray("AnimatedSprite2D") instance=ExtResource("3_0kmp4")]
-AnimatedSprite2D = NodePath("../../AnimatedSprite2D")
+[node name="DebugLabel" type="Label" parent="."]
+offset_left = -19.0
+offset_top = -32.0
+offset_right = 21.0
+offset_bottom = -9.0
 
-[node name="StatsComponent" parent="ComponentManager" instance=ExtResource("4_4wape")]
-EntityStats = SubResource("Resource_825xp")
+[node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("AnimatedSprite2D")]
+script = ExtResource("6_t26db")
+AnimatedSprite2D = NodePath("../AnimatedSprite2D")
 
-[node name="HurtboxComponent" parent="ComponentManager" instance=ExtResource("6_fk5o5")]
+[node name="HurtboxComponent" type="Area2D" parent="."]
 collision_layer = 32
-collision_mask = 64
+collision_mask = 256
+script = ExtResource("7_fk5o5")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ComponentManager/HurtboxComponent"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent"]
 position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_ji083")
 debug_color = Color(0.85042524, 0.00089003384, 0.9003315, 0.41960785)
-
-[node name="AttackHitboxComponent" parent="ComponentManager" instance=ExtResource("5_t26db")]
-AttackData = SubResource("Resource_ji083")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ComponentManager/AttackHitboxComponent"]
-position = Vector2(17, 3)
-shape = SubResource("RectangleShape2D_825xp")
-
-[node name="Grimoire" parent="." instance=ExtResource("9_ji083")]
-Stats = SubResource("Resource_i5acl")

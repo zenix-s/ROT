@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://c0wf6ka08418k"]
-
-[ext_resource type="Script" uid="uid://v2nb3vi81pmg" path="res://Core/Components/Stats/StatsComponent.cs" id="1_wks15"]
-
-[node name="StatsComponent" type="Node" node_paths=PackedStringArray("InvincibilityTimer")]
-script = ExtResource("1_wks15")
-InvincibilityTimer = NodePath("InvincibilityTimer")
-
-[node name="InvincibilityTimer" type="Timer" parent="."]

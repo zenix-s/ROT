@@ -12,7 +12,5 @@ public interface IAttack
     AttackResult AttackResult { get; }
     AttackData AttackData { get; }
     AttackTag[] Tags { get; }
-    bool CanHit(ulong targetId);
-    void RegisterHit(ulong targetId);
     void UpdateStats(EntityStats entity, GrimoireStats grimoire);
 }
