@@ -52,7 +52,8 @@ public partial class Player : CharacterBody2D
     private void OnAttackReceived(AttackResult attackResult)
     {
         EntityStats.TakeDamage(attackResult);
-        AnimationComponent.Blink(new Color("#FF0000"), 0.1);
+        AnimationComponent.Blink(new Color("#FF0000"), 0.5);
+        HurtboxComponent.StartInvincibility(0.5f);
     }
 
     private void SetupStatsComponent()

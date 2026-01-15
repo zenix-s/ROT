@@ -4,12 +4,15 @@ using Godot;
 public partial class AnimationComponent : Node
 {
     [Export] public AnimatedSprite2D AnimatedSprite2D;
-    private Timer BlinkTimer { get; } = new();
+    private Timer BlinkTimer;
 
     public override void _Ready()
     {
         if (AnimatedSprite2D == null)
             throw new InvalidOperationException("AnimatedSprite2D must be assigned.");
+        BlinkTimer = new Timer();
+        BlinkTimer.OneShot = true;
+        BlinkTimer.Timeout += OnBlinkTimeout;
         AddChild(BlinkTimer);
     }
 
@@ -40,8 +43,11 @@ public partial class AnimationComponent : Node
 
         SetModulate(blinkColor);
         BlinkTimer.WaitTime = duration;
-        BlinkTimer.OneShot = true;
-        BlinkTimer.Timeout += () => SetModulate(new Color("#FFFFFF"));
         BlinkTimer.Start();
+    }
+
+    private void OnBlinkTimeout()
+    {
+        SetModulate(new Color("#FFFFFF"));
     }
 }
