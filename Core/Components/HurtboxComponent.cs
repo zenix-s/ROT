@@ -1,7 +1,7 @@
 using Godot;
 using RotOfTime.Core.Combat.Attacks;
 
-namespace RotOfTime.Core.Components.Hurtbox;
+namespace RotOfTime.Core.Components;
 
 /// <summary>
 ///     Hurtbox component for receiving attacks.
@@ -11,6 +11,11 @@ public partial class HurtboxComponent : Area2D
 {
     [Signal]
     public delegate void AttackReceivedEventHandler(AttackResult attackResult);
+
+    public override void _Ready()
+    {
+        AreaEntered += OnHurtboxAreaEntered;
+    }
 
     /// <summary>
     ///     Called by attacks to trigger damage.
@@ -22,7 +27,12 @@ public partial class HurtboxComponent : Area2D
 
     private void OnHurtboxAreaEntered(Area2D area)
     {
-        if (area is not IAttack attack) return;
+        if (area is not AttackHitboxComponent attack) return;
+
+        // TODO: Implement knockback
+        // Vector2 attackerPosition = attack.GetGlobalPosition();
+        // Vector2 hurtboxPosition = GetGlobalPosition();
+        // Vector2 knockbackDirection = (hurtboxPosition - attackerPosition).Normalized();
 
         EmitSignal(SignalName.AttackReceived, attack.AttackResult);
     }

@@ -1,5 +1,6 @@
 using Godot;
-using RotOfTime.Core.Components.Hurtbox;
+using RotOfTime.Core.Combat.Attacks;
+using RotOfTime.Core.Components;
 
 namespace RotOfTime.Core.Components;
 
@@ -7,6 +8,8 @@ public partial class AttackHitboxComponent : Area2D
 {
     [Signal]
     public delegate void AttackConnectedEventHandler();
+
+    public AttackResult AttackResult { get; set; }
 
     public override void _Ready()
     {

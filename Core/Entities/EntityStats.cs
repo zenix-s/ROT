@@ -39,32 +39,14 @@ public partial class EntityStats : Resource, IEntityStats
     {
         CurrentHealth = VitalityStat;
     }
-}
 
-public static class EntityStatsCombatExtensions
-{
-    public static DamageResult CalculateDamageTaken(this IEntityStats defenderStats, AttackResult attackResult)
+    public void TakeDamage(AttackResult attackResult)
     {
-        int rawDamage = attackResult.RawDamage;
-        int defense = defenderStats.DefenseStat;
+        int finalDamage = Math.Max(0, attackResult.RawDamage - DefenseStat);
+        CurrentHealth = Math.Max(0, CurrentHealth - finalDamage);
+        EmitSignal(nameof(HealthChanged), CurrentHealth);
 
-        int finalDamage = Math.Max(0, rawDamage - defense);
-
-        return new DamageResult(
-            rawDamage,
-            finalDamage,
-            attackResult.IsCritical,
-            false, // TODO: Implement block logic
-            rawDamage - finalDamage
-        );
-    }
-
-    public static void TakeDamage(this EntityStats defenderStats, DamageResult damage)
-    {
-        defenderStats.CurrentHealth = Math.Max(0, defenderStats.CurrentHealth - damage.FinalDamage);
-        defenderStats.EmitSignal(nameof(EntityStats.HealthChanged), defenderStats.CurrentHealth);
-
-        if (defenderStats.CurrentHealth <= 0)
-            defenderStats.EmitSignal(nameof(EntityStats.EntityDied));
+        if (CurrentHealth <= 0)
+            EmitSignal(nameof(EntityDied));
     }
 }

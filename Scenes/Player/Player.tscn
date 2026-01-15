@@ -1,12 +1,10 @@
-[gd_scene load_steps=17 format=3 uid="uid://doueq3ruoms08"]
+[gd_scene load_steps=14 format=3 uid="uid://doueq3ruoms08"]
 
 [ext_resource type="Script" uid="uid://cqdt27wqvvlfu" path="res://Scenes/Player/Player.cs" id="1_ft8w5"]
 [ext_resource type="Texture2D" uid="uid://oca2e8efi0ps" path="res://Scenes/Player/Assets/knight.png" id="1_s0eop"]
 [ext_resource type="Script" uid="uid://bk4lgfbd2ojpm" path="res://Core/Entities/EntityStats.cs" id="5_fk5o5"]
 [ext_resource type="Script" uid="uid://1s7je03tfckb" path="res://Core/Components/AnimationComponent.cs" id="6_t26db"]
 [ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Components/HurtboxComponent.cs" id="7_fk5o5"]
-[ext_resource type="PackedScene" uid="uid://grimoire" path="res://Scenes/Grimoire/Grimoire.tscn" id="9_ji083"]
-[ext_resource type="Script" uid="uid://chwt212x1tgd" path="res://Core/Grimoire/GrimoireStats.cs" id="10_0kmp4"]
 
 [sub_resource type="Resource" id="Resource_fk5o5"]
 script = ExtResource("5_fk5o5")
@@ -55,22 +53,17 @@ animations = [{
 radius = 5.0
 height = 16.0
 
-[sub_resource type="Resource" id="Resource_i5acl"]
-script = ExtResource("10_0kmp4")
-metadata/_custom_type_script = "uid://chwt212x1tgd"
-
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ji083"]
 radius = 4.0
 height = 16.0
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("AnimationComponent", "DebugLabel", "Grimoire", "HurtboxComponent") groups=["Player"]]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("AnimationComponent", "DebugLabel", "HurtboxComponent") groups=["Player"]]
 collision_layer = 2
 motion_mode = 1
 script = ExtResource("1_ft8w5")
 AnimationComponent = NodePath("AnimationComponent")
 DebugLabel = NodePath("DebugLabel")
 EntityStats = SubResource("Resource_fk5o5")
-Grimoire = NodePath("Grimoire")
 HurtboxComponent = NodePath("HurtboxComponent")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -81,9 +74,6 @@ autoplay = "idle"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_l3ax4")
-
-[node name="Grimoire" parent="." instance=ExtResource("9_ji083")]
-Stats = SubResource("Resource_i5acl")
 
 [node name="DebugLabel" type="Label" parent="."]
 offset_left = -19.0

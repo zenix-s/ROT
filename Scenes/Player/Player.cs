@@ -1,7 +1,7 @@
 using System;
 using Godot;
 using RotOfTime.Core.Combat.Attacks;
-using RotOfTime.Core.Components.Hurtbox;
+using RotOfTime.Core.Components;
 using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Scenes.Player;
@@ -11,17 +11,14 @@ public partial class Player : CharacterBody2D
     public const float Speed = 200.0f;
 
     [Export] public AnimationComponent AnimationComponent;
-
     [Export] public Label DebugLabel;
     [Export] public EntityStats EntityStats;
-    [Export] public Grimoire.Grimoire Grimoire;
     [Export] public HurtboxComponent HurtboxComponent;
 
     public override void _Ready()
     {
         SetupStatsComponent();
         SetupHurtboxComponent();
-        SetupGrimoire();
     }
 
     public override void _PhysicsProcess(double delta)
@@ -37,17 +34,11 @@ public partial class Player : CharacterBody2D
         else if (direction.X < 0)
             AnimationComponent.AnimatedSprite2D.FlipH = true;
 
-
         Velocity = direction.Normalized() * Speed;
         MoveAndSlide();
 
         DebugLabel.Text =
             $"Health: {EntityStats.CurrentHealth}/{EntityStats.VitalityStat}\n";
-    }
-
-    private void SetupGrimoire()
-    {
-        Grimoire?.UpdateEntityStats(EntityStats);
     }
 
     private void SetupHurtboxComponent()
@@ -60,8 +51,8 @@ public partial class Player : CharacterBody2D
 
     private void OnAttackReceived(AttackResult attackResult)
     {
-        DamageResult damageResult = EntityStats.CalculateDamageTaken(attackResult);
-        EntityStats.TakeDamage(damageResult);
+        EntityStats.TakeDamage(attackResult);
+        AnimationComponent.Blink(new Color("#FF0000"), 0.1);
     }
 
     private void SetupStatsComponent()
@@ -71,28 +62,9 @@ public partial class Player : CharacterBody2D
 
         EntityStats.EntityDied += OnPlayerDied;
         EntityStats.HealthChanged += OnPlayerHealthChanged;
-        // EntityStats.InvincibilityStarted += OnPlayerInvincibilityStarted;
-        // EntityStats.InvincibilityEnded += OnPlayerInvincibilityEnded;
-        EntityStats.StatsUpdated += OnEntityStatsUpdated;
     }
-
-    private void OnEntityStatsUpdated()
-    {
-        Grimoire?.UpdateEntityStats(EntityStats);
-    }
-
 
     #region Event Handlers
-
-    private void OnPlayerInvincibilityEnded()
-    {
-        // TODO: Update player sprite or effects
-    }
-
-    private void OnPlayerInvincibilityStarted()
-    {
-        // TODO: Update player sprite or effects
-    }
 
     private void OnPlayerHealthChanged(int newHealth)
     {
