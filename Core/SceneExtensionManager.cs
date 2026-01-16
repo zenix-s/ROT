@@ -24,6 +24,11 @@ public static class SceneExtensionManager
         Level5
     }
 
+    public enum EntityScene
+    {
+        Player
+    }
+
     public static readonly Dictionary<MenuScene, string> MenuPaths = new()
     {
         { MenuScene.Start, "res://Scenes/Menus/StartMenu/StartMenu.tscn" }
@@ -38,6 +43,11 @@ public static class SceneExtensionManager
     {
         { TowerLevel.Level0, GameScene.TowerLevel0 }
         // Add more mappings as levels are created
+    };
+
+    public static readonly Dictionary<EntityScene, string> EntityPaths = new()
+    {
+        { EntityScene.Player, "res://Scenes/Player/Player.tscn" },
     };
 
     public static GameScene TowerLevelToGameScene(TowerLevel level)

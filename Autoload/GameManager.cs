@@ -1,4 +1,5 @@
 using Godot;
+using RotOfTime.Core;
 using RotOfTime.Core.GameData;
 
 namespace RotOfTime.Autoload;
@@ -30,6 +31,12 @@ public partial class GameManager : Node
     private void SaveMeta()
     {
         SaveManager.Instance.SaveMeta(Meta);
+    }
+
+    public void PlayerDied()
+    {
+        GD.Print("GameManager: Player died. Resetting money to 0.");
+        SceneManager.Instance.RequestMenuChange(SceneExtensionManager.MenuScene.Start);
     }
 
     public void AddMoney(int amount)

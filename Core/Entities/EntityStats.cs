@@ -49,4 +49,9 @@ public partial class EntityStats : Resource, IEntityStats
         if (CurrentHealth <= 0)
             EmitSignal(nameof(EntityDied));
     }
+
+    public void ResetStats()
+    {
+        CurrentHealth = VitalityStat;
+    }
 }

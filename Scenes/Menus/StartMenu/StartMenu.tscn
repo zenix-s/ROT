@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://lw82sxdd7n8y" path="res://Scenes/Menus/StartMenu/StartMenu.cs" id="1_ejoup"]
 
-[node name="StartMenu" type="Node2D" node_paths=PackedStringArray("_startButton")]
+[node name="StartMenu" type="CanvasLayer" node_paths=PackedStringArray("_startButton")]
 script = ExtResource("1_ejoup")
 _startButton = NodePath("CenterContainer/VBoxContainer/StartButton")
 

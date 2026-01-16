@@ -4,7 +4,7 @@ using RotOfTime.Core;
 
 namespace RotOfTime.Scenes.Menus.StartMenu;
 
-public partial class StartMenu : Node2D
+public partial class StartMenu : CanvasLayer
 {
     [Export] private Button _startButton;
 

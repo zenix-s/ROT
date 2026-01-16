@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using RotOfTime.Autoload;
 using RotOfTime.Core.Combat.Attacks;
 using RotOfTime.Core.Components;
 using RotOfTime.Core.Entities;
@@ -60,7 +61,7 @@ public partial class Player : CharacterBody2D
     {
         if (EntityStats == null)
             throw new InvalidOperationException("StatsComponent is not set");
-
+        EntityStats = (EntityStats)EntityStats.Duplicate(true);
         EntityStats.EntityDied += OnPlayerDied;
         EntityStats.HealthChanged += OnPlayerHealthChanged;
     }
@@ -74,7 +75,7 @@ public partial class Player : CharacterBody2D
 
     private void OnPlayerDied()
     {
-        // TODO: Notify SceneManager to load Game Over scene
+        GameManager.Instance.PlayerDied();
     }
 
     #endregion

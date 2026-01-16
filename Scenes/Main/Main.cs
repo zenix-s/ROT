@@ -9,7 +9,7 @@ public partial class Main : Node2D
     [Export] private Camera2D _camera;
 
     private bool _isMenuActive = true;
-    [Export] private CharacterBody2D _player;
+    private Player.Player _player;
     [Export] private Node _worldContainer;
 
     // Called when the node enters the scene tree for the first time.
@@ -31,6 +31,12 @@ public partial class Main : Node2D
 
     private void OnMenuChangeRequested(SceneExtensionManager.MenuScene menuScene)
     {
+        if (IsInstanceValid(_player))
+        {
+            _player.QueueFree();
+            _player = null;
+        }
+
         foreach (Node node in _worldContainer.GetChildren()) node.QueueFree();
 
         string path = SceneExtensionManager.MenuPaths[menuScene];
@@ -39,13 +45,14 @@ public partial class Main : Node2D
         _worldContainer.AddChild(sceneInstance);
         _isMenuActive = true;
         SetupCamera();
-        _player.Position = Vector2.Zero;
-        _player.Visible = false;
     }
 
     private void OnSceneChangeRequested(SceneExtensionManager.GameScene gameScene)
     {
         foreach (Node node in _worldContainer.GetChildren()) node.QueueFree();
+
+        // Load the player
+        InstantiatePlayer();
 
         string path = SceneExtensionManager.ScenePaths[gameScene];
         PackedScene scene = GD.Load<PackedScene>(path);
@@ -58,6 +65,20 @@ public partial class Main : Node2D
 
         _isMenuActive = false;
         SetupCamera();
+    }
+
+    private void InstantiatePlayer()
+    {
+        if (_player is not null)
+        {
+            _player.QueueFree();
+            _player = null;
+        }
+
+        _player = GD.Load<PackedScene>(
+            SceneExtensionManager.EntityPaths[SceneExtensionManager.EntityScene.Player]
+        ).Instantiate<Player.Player>();
+        _worldContainer.AddChild(_player);
     }
 
 
