@@ -1,44 +1,13 @@
-using Godot;
-using RotOfTime.Core.Combat.Attacks;
-using RotOfTime.Core.Components;
-using RotOfTime.Core.Entities;
-
 namespace RotOfTime.Scenes.Attacks.Projectiles.Fireball;
 
 /// <summary>
-///     Projectile attack that moves in a direction and damages on contact.
-///     Uses CharacterBody2D for physics-based movement.
+///     Fire projectile that inherits base projectile behavior for movement and collision.
+///     Can be extended to add fire-specific effects on timeout or impact.
 /// </summary>
-public partial class Fireball : CharacterBody2D, IAttack
+public partial class Fireball : Projectile
 {
-    private Vector2 _direction;
-    [Export] public float Speed { get; set; } = 300f;
-    [Export] public float Lifetime { get; set; } = 5f;
-    [Export] public AttackDamageComponent DamageComponent { get; set; }
-
-    public void UpdateStats(EntityStats ownerStats)
+    protected override void BeforeLifetimeTimeout()
     {
-        DamageComponent?.UpdateStats(ownerStats);
-    }
-
-    /// <summary>
-    ///     Launch the projectile in the specified direction.
-    /// </summary>
-    public void Launch(Vector2 direction)
-    {
-        _direction = direction.Normalized();
-        Rotation = _direction.Angle();
-
-        GetTree().CreateTimer(Lifetime).Timeout += QueueFree;
-    }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        Velocity = _direction * Speed;
-        KinematicCollision2D collision = MoveAndCollide(Velocity * (float)delta);
-
-        if (collision != null)
-            // Destroy on hitting a wall/obstacle
-            QueueFree();
+        base.BeforeLifetimeTimeout();
     }
 }

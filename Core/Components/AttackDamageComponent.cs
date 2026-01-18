@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using Godot;
-using RotOfTime.Core.Combat.Attacks;
 using RotOfTime.Core.Combat.Calculations;
+using RotOfTime.Core.Combat.Data;
+using RotOfTime.Core.Combat.Registry;
 using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Core.Components;
@@ -18,6 +19,7 @@ public partial class AttackDamageComponent : Node
         { GameConstants.Faction.Ally, GameConstants.GameLayers.PlayerAttack },
         { GameConstants.Faction.Enemy, GameConstants.GameLayers.EnemyAttack }
     };
+
     [Export] public AttackHitboxComponent Hitbox { get; set; }
     [Export] public AttackType AttackType { get; set; }
     [Export] public GameConstants.Faction Faction { get; set; }
@@ -48,5 +50,4 @@ public partial class AttackDamageComponent : Node
         if (Hitbox != null)
             Hitbox.AttackResult = CurrentAttackResult;
     }
-
 }

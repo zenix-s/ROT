@@ -1,4 +1,4 @@
-namespace RotOfTime.Core.Combat.Calculations;
+namespace RotOfTime.Core.Combat.Data;
 
 /// <summary>
 ///     Final damage result after defense calculation.

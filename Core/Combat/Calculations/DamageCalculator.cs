@@ -1,5 +1,5 @@
 using System;
-using RotOfTime.Core.Combat.Attacks;
+using RotOfTime.Core.Combat.Data;
 using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Core.Combat.Calculations;

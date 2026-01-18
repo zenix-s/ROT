@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://doueq3ruoms08"]
+[gd_scene load_steps=16 format=3 uid="uid://doueq3ruoms08"]
 
 [ext_resource type="Script" uid="uid://cqdt27wqvvlfu" path="res://Scenes/Player/Player.cs" id="1_ft8w5"]
 [ext_resource type="Texture2D" uid="uid://oca2e8efi0ps" path="res://Scenes/Player/Assets/knight.png" id="1_s0eop"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bk4lgfbd2ojpm" path="res://Core/Entities/EntityStats.cs" id="5_fk5o5"]
 [ext_resource type="Script" uid="uid://1s7je03tfckb" path="res://Core/Components/AnimationComponent.cs" id="6_t26db"]
 [ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Components/HurtboxComponent.cs" id="7_fk5o5"]
+[ext_resource type="PackedScene" uid="uid://dwips18xqhtp8" path="res://Scenes/Attacks/Projectiles/Projectile.tscn" id="8_prj01"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ft8w5"]
 atlas = ExtResource("1_s0eop")
@@ -66,6 +67,7 @@ AnimationComponent = NodePath("AnimationComponent")
 DebugLabel = NodePath("DebugLabel")
 EntityStatsComponent = NodePath("EntityStatsComponent")
 HurtboxComponent = NodePath("HurtboxComponent")
+ProjectileScene = ExtResource("8_prj01")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_4wape")

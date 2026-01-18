@@ -1,6 +1,6 @@
 using Godot;
 
-namespace RotOfTime.Core.Combat.Attacks;
+namespace RotOfTime.Core.Combat.Data;
 
 /// <summary>
 ///     Result of an attack calculation (attacker side).

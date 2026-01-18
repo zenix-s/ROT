@@ -1,7 +1,8 @@
 using System;
 using Godot;
-using RotOfTime.Core.Combat.Attacks;
+using RotOfTime.Core.Combat.Data;
 using RotOfTime.Core.Components;
+using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Scenes.Enemies.BasicEnemy;
 

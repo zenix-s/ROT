@@ -1,13 +1,13 @@
-using Godot;
+using RotOfTime.Core.Combat.Projectiles;
 using RotOfTime.Core.Entities;
 
-namespace RotOfTime.Core.Combat.Attacks;
+namespace RotOfTime.Core.Combat.Data;
 
-[GlobalClass]
-public partial class AttackData : Resource
+public class AttackData
 {
-    [Export] public string Name { get; set; } = "Unnamed Attack";
-    [Export] public float DamageCoefficient { get; set; } = 1.0f;
+    public string Name { get; set; } = "Unnamed Attack";
+    public float DamageCoefficient { get; set; } = 1.0f;
+    public ProjectileSettings ProjectileSettings { get; set; }
 
     public AttackResult ToAttackResult(EntityStats entity)
     {

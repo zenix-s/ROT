@@ -1,7 +1,6 @@
 using RotOfTime.Core.Components;
-using RotOfTime.Core.Entities;
 
-namespace RotOfTime.Core.Combat.Attacks;
+namespace RotOfTime.Core.Entities;
 
 /// <summary>
 ///     Interface for any node that acts as an attack.

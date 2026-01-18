@@ -1,6 +1,35 @@
-[gd_scene load_steps=2 format=3 uid="uid://dwips18xqhtp8"]
+[gd_scene load_steps=7 format=3 uid="uid://dwips18xqhtp8"]
 
 [ext_resource type="Script" uid="uid://b0o1knn14pl2p" path="res://Scenes/Attacks/Projectiles/Projectile.cs" id="1_k1yxc"]
+[ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="2_t7gc1"]
+[ext_resource type="Script" uid="uid://bme4d2c100jlf" path="res://Core/Components/AttackDamageComponent.cs" id="3_3vg7y"]
+[ext_resource type="Script" uid="uid://dmjy7sqfwj6nb" path="res://Core/Components/AttackHitboxComponent.cs" id="4_fui73"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pyv0a"]
+radius = 7.071068
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_utkwb"]
+radius = 8.0
 
 [node name="Projectile" type="CharacterBody2D"]
+collision_layer = 512
 script = ExtResource("1_k1yxc")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-9.536743e-07, -9.536743e-07)
+scale = Vector2(0.40625, 0.40625)
+texture = ExtResource("2_t7gc1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_pyv0a")
+
+[node name="AttackDamageComponent" type="Node" parent="." node_paths=PackedStringArray("Hitbox")]
+script = ExtResource("3_3vg7y")
+Hitbox = NodePath("../AttackHitboxComponent")
+AttackType = 2
+
+[node name="AttackHitboxComponent" type="Area2D" parent="."]
+script = ExtResource("4_fui73")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent"]
+shape = SubResource("CircleShape2D_utkwb")
