@@ -1,20 +1,23 @@
-[gd_scene load_steps=7 format=3 uid="uid://rockbody"]
+[gd_scene load_steps=6 format=3 uid="uid://do7qyryvmcnir"]
 
 [ext_resource type="Script" uid="uid://dmjy7sqfwj6nb" path="res://Core/Components/AttackHitboxComponent.cs" id="1_hitbox"]
-[ext_resource type="Script" uid="uid://q0gwkuhki2lf" path="res://Scenes/Attacks/Body/RockBody/RockBody.cs" id="1_rockbody"]
-[ext_resource type="Script" uid="uid://bme4d2c100jlf" path="res://Core/Components/AttackDamageComponent.cs" id="2_damage"]
+[ext_resource type="Script" path="res://Scenes/Attacks/Projectiles/Fireball/Fireball.cs" id="1_fireball"]
+[ext_resource type="Script" path="res://Core/Components/AttackDamageComponent.cs" id="2_damage"]
 [ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="3_sprite"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
-radius = 15.0
+radius = 8.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_c4v06"]
-
-[node name="RockBody" type="Area2D" node_paths=PackedStringArray("DamageComponent")]
-script = ExtResource("1_rockbody")
+[node name="Fireball" type="CharacterBody2D" node_paths=PackedStringArray("DamageComponent")]
+collision_layer = 512
+collision_mask = 1
+script = ExtResource("1_fireball")
 DamageComponent = NodePath("AttackDamageComponent")
+Speed = 300.0
+Lifetime = 5.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_sprite")
 
 [node name="AttackHitboxComponent" type="Area2D" parent="."]
@@ -24,13 +27,12 @@ script = ExtResource("1_hitbox")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent"]
 shape = SubResource("CircleShape2D_body")
-debug_color = Color(0.87, 0.24, 0.24, 0.42)
+debug_color = Color(1.0, 0.5, 0.0, 0.42)
 
 [node name="AttackDamageComponent" type="Node" parent="." node_paths=PackedStringArray("Hitbox")]
 script = ExtResource("2_damage")
 Hitbox = NodePath("../AttackHitboxComponent")
-AttackType = 1
-Faction = 2
+AttackType = 2
+Faction = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_c4v06")
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]

@@ -4,6 +4,11 @@ namespace RotOfTime.Core;
 
 public static class SceneExtensionManager
 {
+    public enum EntityScene
+    {
+        Player
+    }
+
     public enum GameScene
     {
         TowerLevel0
@@ -24,11 +29,6 @@ public static class SceneExtensionManager
         Level5
     }
 
-    public enum EntityScene
-    {
-        Player
-    }
-
     public static readonly Dictionary<MenuScene, string> MenuPaths = new()
     {
         { MenuScene.Start, "res://Scenes/Menus/StartMenu/StartMenu.tscn" }
@@ -47,7 +47,7 @@ public static class SceneExtensionManager
 
     public static readonly Dictionary<EntityScene, string> EntityPaths = new()
     {
-        { EntityScene.Player, "res://Scenes/Player/Player.tscn" },
+        { EntityScene.Player, "res://Scenes/Player/Player.tscn" }
     };
 
     public static GameScene TowerLevelToGameScene(TowerLevel level)

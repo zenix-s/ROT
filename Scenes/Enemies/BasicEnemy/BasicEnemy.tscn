@@ -1,18 +1,12 @@
-[gd_scene load_steps=19 format=3 uid="uid://basicenemy"]
+[gd_scene load_steps=20 format=3 uid="uid://basicenemy"]
 
 [ext_resource type="Script" uid="uid://bmmfrkxg0r3g4" path="res://Scenes/Enemies/BasicEnemy/BasicEnemy.cs" id="1_enemy"]
+[ext_resource type="Script" uid="uid://1kwvyjmvryoa" path="res://Core/Components/EntityStatsComponent.cs" id="6_reiwa"]
 [ext_resource type="PackedScene" uid="uid://rockbody" path="res://Scenes/Attacks/Body/RockBody/RockBody.tscn" id="6_rockbody"]
 [ext_resource type="Script" uid="uid://bfopd132a30" path="res://Core/Combat/Attacks/AttackData.cs" id="6_vj441"]
 [ext_resource type="Script" uid="uid://bk4lgfbd2ojpm" path="res://Core/Entities/EntityStats.cs" id="7_entitystats"]
 [ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Components/HurtboxComponent.cs" id="7_reiwa"]
 [ext_resource type="Texture2D" uid="uid://7yvmd8gt5a41" path="res://Scenes/Enemies/BasicEnemy/basic_enemy_run.png" id="9_t2hff"]
-
-[sub_resource type="Resource" id="Resource_gc2vv"]
-script = ExtResource("7_entitystats")
-VitalityStat = 1
-AttackStat = 5
-DefenseStat = 1
-metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
 
@@ -76,13 +70,20 @@ radius = 12.0
 script = ExtResource("6_vj441")
 metadata/_custom_type_script = "uid://bfopd132a30"
 
-[node name="BasicEnemy" type="CharacterBody2D" node_paths=PackedStringArray("HurtboxComponent", "DetectionArea", "BodyAttack") groups=["Enemy"]]
+[sub_resource type="Resource" id="Resource_gc2vv"]
+script = ExtResource("7_entitystats")
+VitalityStat = 1
+AttackStat = 3
+DefenseStat = 1
+metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
+
+[node name="BasicEnemy" type="CharacterBody2D" node_paths=PackedStringArray("EntityStatsComponent", "HurtboxComponent", "DetectionArea", "BodyAttackNode") groups=["Enemy"]]
 collision_layer = 4
 script = ExtResource("1_enemy")
-EntityStats = SubResource("Resource_gc2vv")
+EntityStatsComponent = NodePath("EntityStatsComponent")
 HurtboxComponent = NodePath("HurtboxComponent")
 DetectionArea = NodePath("DetectionArea")
-BodyAttack = NodePath("RockBody")
+BodyAttackNode = NodePath("RockBody")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_body")
@@ -112,5 +113,7 @@ shape = SubResource("CircleShape2D_hurtbox")
 debug_color = Color(0.24, 0.87, 0.36, 0.42)
 
 [node name="RockBody" parent="." instance=ExtResource("6_rockbody")]
-AttackData = SubResource("Resource_reiwa")
-Faction = 2
+
+[node name="EntityStatsComponent" type="Node" parent="."]
+script = ExtResource("6_reiwa")
+EntityStats = SubResource("Resource_gc2vv")

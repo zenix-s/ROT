@@ -2,19 +2,19 @@ using System;
 using Godot;
 using RotOfTime.Core.Combat.Attacks;
 using RotOfTime.Core.Components;
-using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Scenes.Enemies.BasicEnemy;
 
 public partial class BasicEnemy : CharacterBody2D
 {
+    private IAttack _bodyAttack;
     private Node2D _target;
 
-    [Export] public EntityStats EntityStats;
+    [Export] public EntityStatsComponent EntityStatsComponent;
     [Export] public HurtboxComponent HurtboxComponent;
     [Export] public float Speed { get; set; } = 50f;
     [Export] public Area2D DetectionArea { get; set; }
-    [Export] public Attack BodyAttack { get; set; }
+    [Export] public Node2D BodyAttackNode { get; set; }
 
     public override void _Ready()
     {
@@ -27,7 +27,11 @@ public partial class BasicEnemy : CharacterBody2D
             DetectionArea.BodyExited += OnDetectionAreaBodyExited;
         }
 
-        BodyAttack.UpdateStats(EntityStats);
+        if (BodyAttackNode is IAttack attack)
+        {
+            _bodyAttack = attack;
+            _bodyAttack.UpdateStats(EntityStatsComponent.EntityStats);
+        }
     }
 
     public override void _PhysicsProcess(double delta)
@@ -61,16 +65,16 @@ public partial class BasicEnemy : CharacterBody2D
 
     private void OnAttackReceived(AttackResult attackResult)
     {
-        EntityStats.TakeDamage(attackResult);
+        EntityStatsComponent.TakeDamage(attackResult);
     }
 
     private void SetupStatsComponent()
     {
-        if (EntityStats == null)
+        if (EntityStatsComponent == null)
             throw new InvalidOperationException("StatsComponent is not set");
 
-        EntityStats.EntityDied += OnEnemyDied;
-        EntityStats.HealthChanged += OnEnemyHealthChanged;
+        EntityStatsComponent.EntityDied += OnEnemyDied;
+        EntityStatsComponent.HealthChanged += OnEnemyHealthChanged;
     }
 
     #region Event Handlers

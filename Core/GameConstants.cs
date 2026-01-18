@@ -4,6 +4,13 @@ namespace RotOfTime.Core;
 
 public class GameConstants
 {
+    public enum Faction
+    {
+        Player,
+        Ally,
+        Enemy
+    }
+
     [Flags]
     public enum GameLayers
     {
@@ -17,13 +24,6 @@ public class GameConstants
         EnemyDamageBox = 64,
         PlayerAttack = 128,
         EnemyAttack = 256,
-        Projectile = 512,
-    }
-
-    public enum Faction
-    {
-        Player,
-        Ally,
-        Enemy,
+        Projectile = 512
     }
 }

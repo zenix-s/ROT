@@ -1,17 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://doueq3ruoms08"]
+[gd_scene load_steps=15 format=3 uid="uid://doueq3ruoms08"]
 
 [ext_resource type="Script" uid="uid://cqdt27wqvvlfu" path="res://Scenes/Player/Player.cs" id="1_ft8w5"]
 [ext_resource type="Texture2D" uid="uid://oca2e8efi0ps" path="res://Scenes/Player/Assets/knight.png" id="1_s0eop"]
+[ext_resource type="Script" uid="uid://1kwvyjmvryoa" path="res://Core/Components/EntityStatsComponent.cs" id="5_4wape"]
 [ext_resource type="Script" uid="uid://bk4lgfbd2ojpm" path="res://Core/Entities/EntityStats.cs" id="5_fk5o5"]
 [ext_resource type="Script" uid="uid://1s7je03tfckb" path="res://Core/Components/AnimationComponent.cs" id="6_t26db"]
 [ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Components/HurtboxComponent.cs" id="7_fk5o5"]
-
-[sub_resource type="Resource" id="Resource_fk5o5"]
-script = ExtResource("5_fk5o5")
-VitalityStat = 10
-AttackStat = 1
-DefenseStat = 1
-metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ft8w5"]
 atlas = ExtResource("1_s0eop")
@@ -57,13 +51,20 @@ height = 16.0
 radius = 4.0
 height = 16.0
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("AnimationComponent", "DebugLabel", "HurtboxComponent") groups=["Player"]]
+[sub_resource type="Resource" id="Resource_t26db"]
+script = ExtResource("5_fk5o5")
+VitalityStat = 100
+AttackStat = 1
+DefenseStat = 1
+metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("AnimationComponent", "DebugLabel", "EntityStatsComponent", "HurtboxComponent") groups=["Player"]]
 collision_layer = 2
 motion_mode = 1
 script = ExtResource("1_ft8w5")
 AnimationComponent = NodePath("AnimationComponent")
 DebugLabel = NodePath("DebugLabel")
-EntityStats = SubResource("Resource_fk5o5")
+EntityStatsComponent = NodePath("EntityStatsComponent")
 HurtboxComponent = NodePath("HurtboxComponent")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -94,3 +95,7 @@ script = ExtResource("7_fk5o5")
 position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_ji083")
 debug_color = Color(0.85042524, 0.00089003384, 0.9003315, 0.41960785)
+
+[node name="EntityStatsComponent" type="Node" parent="."]
+script = ExtResource("5_4wape")
+EntityStats = SubResource("Resource_t26db")

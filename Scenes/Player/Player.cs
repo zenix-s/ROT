@@ -3,7 +3,6 @@ using Godot;
 using RotOfTime.Autoload;
 using RotOfTime.Core.Combat.Attacks;
 using RotOfTime.Core.Components;
-using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Scenes.Player;
 
@@ -13,7 +12,7 @@ public partial class Player : CharacterBody2D
 
     [Export] public AnimationComponent AnimationComponent;
     [Export] public Label DebugLabel;
-    [Export] public EntityStats EntityStats;
+    [Export] public EntityStatsComponent EntityStatsComponent;
     [Export] public HurtboxComponent HurtboxComponent;
 
     public override void _Ready()
@@ -39,7 +38,7 @@ public partial class Player : CharacterBody2D
         MoveAndSlide();
 
         DebugLabel.Text =
-            $"Health: {EntityStats.CurrentHealth}/{EntityStats.VitalityStat}\n";
+            $"Health: {EntityStatsComponent.CurrentHealth}/{EntityStatsComponent.EntityStats.VitalityStat}\n";
     }
 
     private void SetupHurtboxComponent()
@@ -52,18 +51,17 @@ public partial class Player : CharacterBody2D
 
     private void OnAttackReceived(AttackResult attackResult)
     {
-        EntityStats.TakeDamage(attackResult);
+        EntityStatsComponent.TakeDamage(attackResult);
         AnimationComponent.Blink(new Color("#FF0000"), 0.5);
         HurtboxComponent.StartInvincibility(0.5f);
     }
 
     private void SetupStatsComponent()
     {
-        if (EntityStats == null)
+        if (EntityStatsComponent == null)
             throw new InvalidOperationException("StatsComponent is not set");
-        EntityStats = (EntityStats)EntityStats.Duplicate(true);
-        EntityStats.EntityDied += OnPlayerDied;
-        EntityStats.HealthChanged += OnPlayerHealthChanged;
+        EntityStatsComponent.EntityDied += OnPlayerDied;
+        EntityStatsComponent.HealthChanged += OnPlayerHealthChanged;
     }
 
     #region Event Handlers

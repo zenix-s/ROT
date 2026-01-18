@@ -5,7 +5,8 @@ namespace RotOfTime.Core.Components;
 
 /// <summary>
 ///     Hurtbox component for receiving attacks.
-///     Reads AttackResult from any IAttack and signals for damage processing.
+///     Reads AttackResult from AttackHitboxComponent and signals for damage processing.
+///     Relies on i-frames to prevent spam damage.
 /// </summary>
 public partial class HurtboxComponent : Area2D
 {
@@ -28,19 +29,13 @@ public partial class HurtboxComponent : Area2D
     /// </summary>
     public void ReceiveAttack(IAttack attack)
     {
-        EmitSignal(SignalName.AttackReceived, attack.AttackResult);
+        EmitSignal(SignalName.AttackReceived, attack.DamageComponent?.CurrentAttackResult ?? AttackResult.None);
     }
 
     private void OnHurtboxAreaEntered(Area2D area)
     {
-        if (area is not AttackHitboxComponent attack) return;
-
-        // TODO: Implement knockback
-        // Vector2 attackerPosition = attack.GetGlobalPosition();
-        // Vector2 hurtboxPosition = GetGlobalPosition();
-        // Vector2 knockbackDirection = (hurtboxPosition - attackerPosition).Normalized();
-
-        EmitSignal(SignalName.AttackReceived, attack.AttackResult);
+        if (area is not AttackHitboxComponent hitbox) return;
+        EmitSignal(SignalName.AttackReceived, hitbox.AttackResult);
     }
 
     public void StartInvincibility(float duration)

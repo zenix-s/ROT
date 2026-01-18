@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwips18xqhtp8"]
+
+[ext_resource type="Script" uid="uid://b0o1knn14pl2p" path="res://Scenes/Attacks/Projectiles/Projectile.cs" id="1_k1yxc"]
+
+[node name="Projectile" type="CharacterBody2D"]
+script = ExtResource("1_k1yxc")

@@ -7,12 +7,14 @@ script = ExtResource("1_ejoup")
 _startButton = NodePath("CenterContainer/VBoxContainer/StartButton")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
-offset_right = 638.0
-offset_bottom = 357.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
 layout_mode = 2
-alignment = 1
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
