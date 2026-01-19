@@ -28,6 +28,19 @@ public static class AttackRegistry
             }
         },
         {
+            AttackType.BasicProjectile, new AttackData
+            {
+                Name = "BasicProjectile",
+                DamageCoefficient = 1.0f,
+                ProjectileSettings = new ProjectileSettings(
+                    initialSpeed: 200,
+                    targetSpeed: 200,
+                    acceleration: 0,
+                    lifetime: 5
+                )
+            }
+        },
+        {
             AttackType.Fireball, new AttackData
             {
                 Name = "Fireball",

@@ -8,5 +8,6 @@ public enum AttackType
 {
     None,
     RockBody,
+    BasicProjectile,
     Fireball
 }

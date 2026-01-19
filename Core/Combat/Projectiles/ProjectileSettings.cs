@@ -10,16 +10,6 @@ public class ProjectileSettings
         Lifetime = lifetime;
     }
 
-    public ProjectileSettings()
-        : this(
-            initialSpeed: 200,
-            targetSpeed: 200,
-            acceleration: 0,
-            lifetime: 5
-        )
-    {
-    }
-
     public int InitialSpeed { get; set; }
     public int TargetSpeed { get; set; }
     public double Acceleration { get; set; }
