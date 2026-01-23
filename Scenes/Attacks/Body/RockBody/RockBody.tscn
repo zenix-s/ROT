@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://rockbody"]
+[gd_scene load_steps=8 format=3 uid="uid://rockbody"]
 
 [ext_resource type="Script" uid="uid://dmjy7sqfwj6nb" path="res://Core/Components/AttackHitboxComponent.cs" id="1_hitbox"]
 [ext_resource type="Script" uid="uid://q0gwkuhki2lf" path="res://Scenes/Attacks/Body/RockBody/RockBody.cs" id="1_rockbody"]
 [ext_resource type="Script" uid="uid://bme4d2c100jlf" path="res://Core/Components/AttackDamageComponent.cs" id="2_damage"]
 [ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="3_sprite"]
+[ext_resource type="Resource" uid="uid://g5hkmvpkqu8s" path="res://Scenes/Attacks/Body/RockBody/RockBodyAttackData.tres" id="5_aoi0w"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
 radius = 15.0
@@ -29,8 +30,8 @@ debug_color = Color(0.87, 0.24, 0.24, 0.42)
 [node name="AttackDamageComponent" type="Node" parent="." node_paths=PackedStringArray("Hitbox")]
 script = ExtResource("2_damage")
 Hitbox = NodePath("../AttackHitboxComponent")
-AttackType = 1
 Faction = 2
+AttackData = ExtResource("5_aoi0w")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_c4v06")

@@ -26,7 +26,6 @@ shape = SubResource("CircleShape2D_pyv0a")
 [node name="AttackDamageComponent" type="Node" parent="." node_paths=PackedStringArray("Hitbox")]
 script = ExtResource("3_3vg7y")
 Hitbox = NodePath("../AttackHitboxComponent")
-AttackType = 2
 
 [node name="AttackHitboxComponent" type="Area2D" parent="."]
 script = ExtResource("4_fui73")

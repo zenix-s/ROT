@@ -62,7 +62,7 @@ public partial class Player : CharacterBody2D
             Vector2 mousePosition = GetGlobalMousePosition();
             Vector2 directionToMouse = (mousePosition - GlobalPosition).Normalized();
 
-            Projectile projectile = ProjectileScene.Instantiate<Projectile>();
+            Attacks.Projectiles.Projectile projectile = ProjectileScene.Instantiate<Attacks.Projectiles.Projectile>();
             projectile.Launch(GlobalPosition, directionToMouse, EntityStatsComponent.EntityStats);
             GetParent().AddChild(projectile);
 

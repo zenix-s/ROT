@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Godot;
 using RotOfTime.Core.Combat.Calculations;
 using RotOfTime.Core.Combat.Data;
-using RotOfTime.Core.Combat.Registry;
 using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Core.Components;
@@ -21,11 +20,10 @@ public partial class AttackDamageComponent : Node
     };
 
     [Export] public AttackHitboxComponent Hitbox { get; set; }
-    [Export] public AttackType AttackType { get; set; }
     [Export] public GameConstants.Faction Faction { get; set; }
+    [Export] public AttackData AttackData { get; set; }
 
     public AttackResult CurrentAttackResult { get; private set; } = AttackResult.None;
-    public AttackData AttackData => AttackRegistry.GetAttackData(AttackType);
 
     public override void _Ready()
     {
@@ -45,9 +43,7 @@ public partial class AttackDamageComponent : Node
     /// </summary>
     public void UpdateStats(EntityStats ownerStats)
     {
-        AttackData attackData = AttackRegistry.GetAttackData(AttackType);
-        CurrentAttackResult = DamageCalculator.CalculateRawDamage(ownerStats, attackData);
-        if (Hitbox != null)
-            Hitbox.AttackResult = CurrentAttackResult;
+        CurrentAttackResult = DamageCalculator.CalculateRawDamage(ownerStats, AttackData);
+        Hitbox?.AttackResult = CurrentAttackResult;
     }
 }

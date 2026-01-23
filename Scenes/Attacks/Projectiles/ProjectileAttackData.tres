@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="AttackData" load_steps=2 format=3 uid="uid://sn7q2qbxvti8"]
+
+[ext_resource type="Script" uid="uid://eclcrv0gp1ey" path="res://Core/Combat/Data/AttackData.cs" id="1_3cbex"]
+
+[resource]
+script = ExtResource("1_3cbex")
+Name = "Projectile"
+metadata/_custom_type_script = "uid://eclcrv0gp1ey"

@@ -1,23 +1,30 @@
 using Godot;
-using RotOfTime.Core.Combat.Projectiles;
+using RotOfTime.Core.Combat.Data;
 using RotOfTime.Core.Components;
 using RotOfTime.Core.Entities;
 
+namespace RotOfTime.Scenes.Attacks.Projectiles;
+
 public partial class Projectile : CharacterBody2D, IAttack
 {
-    protected Vector2 _direction;
+    private double _acceleration;
+    protected Vector2 Direction;
+    private int _initialSpeed = 200;
     private bool _isLaunched;
+    private int _lifetime = 5;
     private Timer _lifetimeTimer;
 
     private int _speed;
-    private int _initialSpeed = 200;
     private int _targetSpeed = 200;
-    private double _acceleration;
-    private int _lifetime = 5;
 
     [Export] public AttackDamageComponent DamageComponent { get; set; }
 
-    public void ApplySettings(ProjectileSettings settings)
+    public void UpdateStats(EntityStats ownerStats)
+    {
+        DamageComponent?.UpdateStats(ownerStats);
+    }
+
+    public void ApplySettings(AttackData settings)
     {
         if (settings == null) return;
         _initialSpeed = settings.InitialSpeed;
@@ -26,16 +33,11 @@ public partial class Projectile : CharacterBody2D, IAttack
         _lifetime = settings.Lifetime;
     }
 
-    public void UpdateStats(EntityStats ownerStats)
-    {
-        DamageComponent?.UpdateStats(ownerStats);
-    }
-
     public override void _Ready()
     {
         _speed = _initialSpeed;
         if (!_isLaunched)
-            _direction = Vector2.Right.Rotated(GlobalRotation);
+            Direction = Vector2.Right.Rotated(GlobalRotation);
 
         SetupLifetimeTimer();
     }
@@ -43,7 +45,7 @@ public partial class Projectile : CharacterBody2D, IAttack
     public override void _PhysicsProcess(double delta)
     {
         _speed = (int)Mathf.MoveToward(_speed, _targetSpeed, (float)(_acceleration * delta));
-        Velocity = _direction * _speed;
+        Velocity = Direction * _speed;
         bool collision = MoveAndSlide();
         if (collision)
             QueueFree();
@@ -72,8 +74,8 @@ public partial class Projectile : CharacterBody2D, IAttack
     public void Launch(Vector2 fromPosition, Vector2 direction, EntityStats ownerStats)
     {
         GlobalPosition = fromPosition;
-        _direction = direction.Normalized();
-        Rotation = _direction.Angle();
+        Direction = direction.Normalized();
+        Rotation = Direction.Angle();
         UpdateStats(ownerStats);
         _isLaunched = true;
     }

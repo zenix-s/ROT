@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://do7qyryvmcnir"]
 
+[ext_resource type="Script" uid="uid://dvgsmmqtd1rom" path="res://Scenes/Attacks/Projectiles/Fireball/Fireball.cs" id="1_fireball"]
 [ext_resource type="Script" uid="uid://dmjy7sqfwj6nb" path="res://Core/Components/AttackHitboxComponent.cs" id="1_hitbox"]
-[ext_resource type="Script" path="res://Scenes/Attacks/Projectiles/Fireball/Fireball.cs" id="1_fireball"]
-[ext_resource type="Script" path="res://Core/Components/AttackDamageComponent.cs" id="2_damage"]
+[ext_resource type="Script" uid="uid://bme4d2c100jlf" path="res://Core/Components/AttackDamageComponent.cs" id="2_damage"]
 [ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="3_sprite"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
@@ -10,12 +10,8 @@ radius = 8.0
 
 [node name="Fireball" type="CharacterBody2D" node_paths=PackedStringArray("DamageComponent")]
 collision_layer = 512
-collision_mask = 1
 script = ExtResource("1_fireball")
 DamageComponent = NodePath("AttackDamageComponent")
-InitialSpeed = 300
-TargetSpeed = 300
-Lifetime = 5
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.5, 0.5)
@@ -28,12 +24,10 @@ script = ExtResource("1_hitbox")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent"]
 shape = SubResource("CircleShape2D_body")
-debug_color = Color(1.0, 0.5, 0.0, 0.42)
+debug_color = Color(1, 0.5, 0, 0.42)
 
 [node name="AttackDamageComponent" type="Node" parent="." node_paths=PackedStringArray("Hitbox")]
 script = ExtResource("2_damage")
 Hitbox = NodePath("../AttackHitboxComponent")
-AttackType = 2
-Faction = 0
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
