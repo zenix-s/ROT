@@ -18,6 +18,7 @@ public partial class Projectile : CharacterBody2D, IAttack
     private int _targetSpeed = 200;
 
     [Export] public AttackDamageComponent DamageComponent { get; set; }
+    [Export] public AttackHitboxComponent HitboxComponent { get; set; }
 
     public void UpdateStats(EntityStats ownerStats)
     {
@@ -40,6 +41,7 @@ public partial class Projectile : CharacterBody2D, IAttack
             Direction = Vector2.Right.Rotated(GlobalRotation);
 
         SetupLifetimeTimer();
+        SetupHitboxComponent();
     }
 
     public override void _PhysicsProcess(double delta)
@@ -51,6 +53,11 @@ public partial class Projectile : CharacterBody2D, IAttack
             QueueFree();
     }
 
+    private void OnAttackHitboxHitConnected()
+    {
+        QueueFree();
+    }
+
     private void SetupLifetimeTimer()
     {
         _lifetimeTimer = new Timer();
@@ -59,6 +66,14 @@ public partial class Projectile : CharacterBody2D, IAttack
         _lifetimeTimer.Timeout += OnLifetimeTimeout;
         AddChild(_lifetimeTimer);
         _lifetimeTimer.Start();
+    }
+
+    private void SetupHitboxComponent()
+    {
+        if (HitboxComponent is null)
+            return;
+
+        HitboxComponent.AttackConnected += OnAttackHitboxHitConnected;
     }
 
     private void OnLifetimeTimeout()

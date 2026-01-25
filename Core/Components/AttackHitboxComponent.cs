@@ -14,11 +14,6 @@ public partial class AttackHitboxComponent : Area2D
 
     public AttackResult AttackResult { get; set; } = AttackResult.None;
 
-    /// <summary>
-    ///     Reference to the damage component. Set by AttackDamageComponent in _Ready.
-    /// </summary>
-    public AttackDamageComponent DamageComponent { get; set; }
-
     public override void _Ready()
     {
         BodyEntered += OnHitboxBodyEntered;

@@ -34,7 +34,6 @@ public partial class AttackDamageComponent : Node
         }
 
         Hitbox.CollisionLayer = (uint)AttackLayerMap[Faction];
-        Hitbox.DamageComponent = this;
     }
 
     /// <summary>

@@ -5,6 +5,6 @@
         <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Core\MilestonesManagement\"/>
+      <Folder Include="Scenes\Attacks\Projectiles\Fireball\" />
     </ItemGroup>
 </Project>

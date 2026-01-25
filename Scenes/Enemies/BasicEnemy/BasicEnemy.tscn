@@ -1,9 +1,8 @@
-[gd_scene load_steps=20 format=3 uid="uid://basicenemy"]
+[gd_scene load_steps=18 format=3 uid="uid://basicenemy"]
 
 [ext_resource type="Script" uid="uid://bmmfrkxg0r3g4" path="res://Scenes/Enemies/BasicEnemy/BasicEnemy.cs" id="1_enemy"]
 [ext_resource type="Script" uid="uid://1kwvyjmvryoa" path="res://Core/Components/EntityStatsComponent.cs" id="6_reiwa"]
 [ext_resource type="PackedScene" uid="uid://rockbody" path="res://Scenes/Attacks/Body/RockBody/RockBody.tscn" id="6_rockbody"]
-[ext_resource type="Script" uid="uid://bfopd132a30" path="res://Core/Combat/Attacks/AttackData.cs" id="6_vj441"]
 [ext_resource type="Script" uid="uid://bk4lgfbd2ojpm" path="res://Core/Entities/EntityStats.cs" id="7_entitystats"]
 [ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Components/HurtboxComponent.cs" id="7_reiwa"]
 [ext_resource type="Texture2D" uid="uid://7yvmd8gt5a41" path="res://Scenes/Enemies/BasicEnemy/basic_enemy_run.png" id="9_t2hff"]
@@ -65,10 +64,6 @@ radius = 343.14575
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hurtbox"]
 radius = 12.0
-
-[sub_resource type="Resource" id="Resource_reiwa"]
-script = ExtResource("6_vj441")
-metadata/_custom_type_script = "uid://bfopd132a30"
 
 [sub_resource type="Resource" id="Resource_gc2vv"]
 script = ExtResource("7_entitystats")
