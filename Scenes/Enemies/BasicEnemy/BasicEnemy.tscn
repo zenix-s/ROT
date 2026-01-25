@@ -1,10 +1,10 @@
 [gd_scene load_steps=18 format=3 uid="uid://basicenemy"]
 
 [ext_resource type="Script" uid="uid://bmmfrkxg0r3g4" path="res://Scenes/Enemies/BasicEnemy/BasicEnemy.cs" id="1_enemy"]
-[ext_resource type="Script" uid="uid://1kwvyjmvryoa" path="res://Core/Components/EntityStatsComponent.cs" id="6_reiwa"]
+[ext_resource type="Script" uid="uid://1kwvyjmvryoa" path="res://Core/Entities/Components/EntityStatsComponent.cs" id="6_reiwa"]
 [ext_resource type="PackedScene" uid="uid://rockbody" path="res://Scenes/Attacks/Body/RockBody/RockBody.tscn" id="6_rockbody"]
 [ext_resource type="Script" uid="uid://bk4lgfbd2ojpm" path="res://Core/Entities/EntityStats.cs" id="7_entitystats"]
-[ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Components/HurtboxComponent.cs" id="7_reiwa"]
+[ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Combat/Components/HurtboxComponent.cs" id="7_reiwa"]
 [ext_resource type="Texture2D" uid="uid://7yvmd8gt5a41" path="res://Scenes/Enemies/BasicEnemy/basic_enemy_run.png" id="9_t2hff"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]

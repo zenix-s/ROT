@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" uid="uid://cqdt27wqvvlfu" path="res://Scenes/Player/Player.cs" id="1_ft8w5"]
 [ext_resource type="Texture2D" uid="uid://oca2e8efi0ps" path="res://Scenes/Player/Assets/knight.png" id="1_s0eop"]
-[ext_resource type="Script" uid="uid://1kwvyjmvryoa" path="res://Core/Components/EntityStatsComponent.cs" id="5_4wape"]
+[ext_resource type="Script" uid="uid://1kwvyjmvryoa" path="res://Core/Entities/Components/EntityStatsComponent.cs" id="5_4wape"]
 [ext_resource type="Script" uid="uid://bk4lgfbd2ojpm" path="res://Core/Entities/EntityStats.cs" id="5_fk5o5"]
-[ext_resource type="Script" uid="uid://1s7je03tfckb" path="res://Core/Components/AnimationComponent.cs" id="6_t26db"]
-[ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Components/HurtboxComponent.cs" id="7_fk5o5"]
+[ext_resource type="Script" uid="uid://1s7je03tfckb" path="res://Core/Animation/Components/AnimationComponent.cs" id="6_t26db"]
+[ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Combat/Components/HurtboxComponent.cs" id="7_fk5o5"]
 [ext_resource type="PackedScene" uid="uid://dwips18xqhtp8" path="res://Scenes/Attacks/Projectiles/Projectile.tscn" id="8_prj01"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ft8w5"]
