@@ -1,7 +1,7 @@
 using System;
 using Godot;
 using RotOfTime.Core.Combat.Calculations;
-using RotOfTime.Core.Combat.Data;
+using RotOfTime.Core.Combat.Results;
 using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Core.Components;

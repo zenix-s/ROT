@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://rockbody"]
 
-[ext_resource type="Script" path="res://Core/Combat/Components/AttackHitboxComponent.cs" id="1_hitbox"]
+[ext_resource type="Script" uid="uid://dmjy7sqfwj6nb" path="res://Core/Combat/Components/AttackHitboxComponent.cs" id="1_hitbox"]
 [ext_resource type="Script" uid="uid://q0gwkuhki2lf" path="res://Scenes/Attacks/Body/RockBody/RockBody.cs" id="1_rockbody"]
 [ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="3_sprite"]
 [ext_resource type="Script" uid="uid://bme4d2c100jlf" path="res://Core/Combat/Components/AttackDamageComponent.cs" id="4_aoi0w"]
@@ -11,9 +11,10 @@ radius = 15.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c4v06"]
 
-[node name="RockBody" type="Area2D" node_paths=PackedStringArray("DamageComponent")]
+[node name="RockBody" type="Area2D" node_paths=PackedStringArray("DamageComponent", "HitboxComponent")]
 script = ExtResource("1_rockbody")
 DamageComponent = NodePath("AttackDamageComponent")
+HitboxComponent = NodePath("AttackHitboxComponent")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_sprite")

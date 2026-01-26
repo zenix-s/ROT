@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using Godot;
+using RotOfTime.Core.Combat.Attacks;
 using RotOfTime.Core.Combat.Calculations;
-using RotOfTime.Core.Combat.Data;
+using RotOfTime.Core.Combat.Results;
 using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Core.Components;
@@ -43,6 +44,7 @@ public partial class AttackDamageComponent : Node
     public void UpdateStats(EntityStats ownerStats)
     {
         CurrentAttackResult = DamageCalculator.CalculateRawDamage(ownerStats, AttackData);
-        Hitbox?.AttackResult = CurrentAttackResult;
+        if (Hitbox != null)
+            Hitbox.AttackResult = CurrentAttackResult;
     }
 }

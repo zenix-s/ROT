@@ -1,5 +1,5 @@
 using Godot;
-using RotOfTime.Core.Combat.Data;
+using RotOfTime.Core.Combat.Results;
 
 namespace RotOfTime.Core.Components;
 

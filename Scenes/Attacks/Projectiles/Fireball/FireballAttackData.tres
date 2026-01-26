@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="AttackData" load_steps=2 format=3 uid="uid://dombbca3uk0ap"]
+[gd_resource type="Resource" script_class="ProjectileData" load_steps=2 format=3 uid="uid://dombbca3uk0ap"]
 
-[ext_resource type="Script" uid="uid://eclcrv0gp1ey" path="res://Core/Combat/Data/AttackData.cs" id="1_2egb8"]
+[ext_resource type="Script" path="res://Core/Combat/Attacks/ProjectileData.cs" id="1_2egb8"]
 
 [resource]
 script = ExtResource("1_2egb8")
 Name = "Fire Ball"
-metadata/_custom_type_script = "uid://eclcrv0gp1ey"
+metadata/_custom_type_script = "res://Core/Combat/Attacks/ProjectileData.cs"

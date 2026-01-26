@@ -1,15 +1,12 @@
 using Godot;
 
-namespace RotOfTime.Core.Combat.Data;
+namespace RotOfTime.Core.Combat.Attacks;
 
 
 [GlobalClass]
-public partial class AttackData : Resource
+public partial class ProjectileData : AttackData
 {
-    [Export] public string Name { get; set; } = "Unnamed Attack";
-    [Export] public float DamageCoefficient { get; set; } = 1.0f;
-
-    [ExportCategory("Projectile settings")]
+    [ExportCategory("Projectile Settings")]
     [Export] public int InitialSpeed { get; set; } = 200;
     [Export] public int TargetSpeed { get; set; } = 200;
     [Export] public double Acceleration { get; set; } = 0;

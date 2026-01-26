@@ -1,4 +1,4 @@
-namespace RotOfTime.Core.Combat.Data;
+namespace RotOfTime.Core.Combat;
 
 /// <summary>
 ///     Enum of all attack types in the game.

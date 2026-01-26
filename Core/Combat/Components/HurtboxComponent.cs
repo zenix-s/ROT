@@ -1,6 +1,6 @@
 using Godot;
-using RotOfTime.Core.Combat.Data;
-using RotOfTime.Core.Entities;
+using RotOfTime.Core.Combat;
+using RotOfTime.Core.Combat.Results;
 
 namespace RotOfTime.Core.Components;
 
