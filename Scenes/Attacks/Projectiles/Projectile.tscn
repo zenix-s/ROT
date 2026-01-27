@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dwips18xqhtp8"]
+[gd_scene format=3 uid="uid://dwips18xqhtp8"]
 
 [ext_resource type="Script" uid="uid://b0o1knn14pl2p" path="res://Scenes/Attacks/Projectiles/Projectile.cs" id="1_k1yxc"]
 [ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="2_t7gc1"]
@@ -13,38 +13,38 @@ radius = 7.071068
 [sub_resource type="CircleShape2D" id="CircleShape2D_utkwb"]
 radius = 8.0
 
-[node name="Projectile" type="CharacterBody2D" node_paths=PackedStringArray("DamageComponent", "HitboxComponent", "MovementComponent")]
+[node name="Projectile" type="CharacterBody2D" unique_id=311666828 node_paths=PackedStringArray("MovementComponent", "DamageComponent", "HitboxComponent")]
 collision_layer = 512
 script = ExtResource("1_k1yxc")
-DamageComponent = NodePath("AttackDamageComponent")
-HitboxComponent = NodePath("AttackHitboxComponent")
 MovementComponent = NodePath("LinearMovementComponent")
 AttackData = ExtResource("4_3vg7y")
+DamageComponent = NodePath("AttackDamageComponent")
+HitboxComponent = NodePath("AttackHitboxComponent")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1629166414]
 position = Vector2(-9.536743e-07, -9.536743e-07)
 scale = Vector2(0.40625, 0.40625)
 texture = ExtResource("2_t7gc1")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1637741916]
 shape = SubResource("CircleShape2D_pyv0a")
 
-[node name="AttackDamageComponent" type="Node" parent="." node_paths=PackedStringArray("Hitbox")]
+[node name="AttackDamageComponent" type="Node" parent="." unique_id=1899509927 node_paths=PackedStringArray("Hitbox")]
 script = ExtResource("3_3vg7y")
 Hitbox = NodePath("../AttackHitboxComponent")
 AttackData = ExtResource("4_3vg7y")
 
-[node name="AttackHitboxComponent" type="Area2D" parent="."]
+[node name="AttackHitboxComponent" type="Area2D" parent="." unique_id=1182442264]
 position = Vector2(1, 0)
 collision_layer = 512
 collision_mask = 64
 script = ExtResource("4_fui73")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent" unique_id=1493063066]
 position = Vector2(-1, 0)
 shape = SubResource("CircleShape2D_utkwb")
 
-[node name="LinearMovementComponent" type="Node" parent="."]
+[node name="LinearMovementComponent" type="Node" parent="." unique_id=1999358139]
 script = ExtResource("6_movement")
 
 [connection signal="area_entered" from="AttackHitboxComponent" to="AttackHitboxComponent" method="OnHitboxBodyEntered"]

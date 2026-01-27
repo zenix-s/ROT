@@ -25,7 +25,7 @@ public partial class Fireball : Projectile
     private void SpawnExplosion()
     {
         if (ExplosionEffect == null) return;
-        var explosion = ExplosionEffect.Instantiate<Node2D>();
+        Node2D explosion = ExplosionEffect.Instantiate<Node2D>();
         explosion.GlobalPosition = GlobalPosition;
         GetParent()?.AddChild(explosion);
     }

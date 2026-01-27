@@ -9,10 +9,10 @@ namespace RotOfTime.Core.Combat.Components;
 /// </summary>
 public abstract partial class AttackMovementComponent : Node
 {
+    protected float Acceleration;
     protected float CurrentSpeed;
     protected float InitialSpeed;
     protected float TargetSpeed;
-    protected float Acceleration;
 
     /// <summary>
     ///     Initialize movement parameters from projectile data.

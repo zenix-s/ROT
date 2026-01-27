@@ -3,6 +3,7 @@ using Godot;
 using RotOfTime.Autoload;
 using RotOfTime.Core.Combat.Results;
 using RotOfTime.Core.Components;
+using RotOfTime.Scenes.Attacks.Projectiles;
 
 namespace RotOfTime.Scenes.Player;
 
@@ -59,10 +60,11 @@ public partial class Player : CharacterBody2D
 
         if (Input.IsActionJustPressed("attack") && _canAttack && ProjectileScene != null)
         {
+            GD.Print("Player Attack!");
             Vector2 mousePosition = GetGlobalMousePosition();
             Vector2 directionToMouse = (mousePosition - GlobalPosition).Normalized();
 
-            Attacks.Projectiles.Projectile projectile = ProjectileScene.Instantiate<Attacks.Projectiles.Projectile>();
+            Projectile projectile = ProjectileScene.Instantiate<Projectile>();
             projectile.Execute(GlobalPosition, directionToMouse, EntityStatsComponent.EntityStats);
             GetParent().AddChild(projectile);
 

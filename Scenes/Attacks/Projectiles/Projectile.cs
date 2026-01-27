@@ -1,4 +1,3 @@
-using System;
 using Godot;
 using RotOfTime.Core.Combat;
 using RotOfTime.Core.Combat.Attacks;
@@ -10,15 +9,15 @@ namespace RotOfTime.Scenes.Attacks.Projectiles;
 
 public partial class Projectile : CharacterBody2D, IAttack
 {
-    protected Vector2 Direction;
     private bool _isLaunched;
     private int _lifetime = 5;
     private Timer _lifetimeTimer;
+    protected Vector2 Direction;
+    [Export] public AttackMovementComponent MovementComponent { get; set; }
+    [Export] public ProjectileData AttackData { get; set; }
 
     [Export] public AttackDamageComponent DamageComponent { get; set; }
     [Export] public AttackHitboxComponent HitboxComponent { get; set; }
-    [Export] public AttackMovementComponent MovementComponent { get; set; }
-    [Export] public ProjectileData AttackData { get; set; }
 
     public void UpdateStats(EntityStats ownerStats)
     {

@@ -3,7 +3,6 @@ using Godot;
 using RotOfTime.Core.Combat;
 using RotOfTime.Core.Combat.Results;
 using RotOfTime.Core.Components;
-using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Scenes.Enemies.BasicEnemy;
 
