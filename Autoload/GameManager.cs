@@ -7,6 +7,7 @@ namespace RotOfTime.Autoload;
 /// <summary>
 ///     Runtime manager for meta-progression.
 ///     Holds MetaData and provides money operations.
+///     Owns SaveManager and MilestoneManager instances.
 /// </summary>
 public partial class GameManager : Node
 {
@@ -17,20 +18,25 @@ public partial class GameManager : Node
     /// </summary>
     public MetaData Meta { get; private set; }
 
+    public SaveManager SaveManager { get; private set; }
+    public MilestoneManager Milestones { get; private set; }
+
     public override void _Ready()
     {
         Instance = this;
+        SaveManager = new SaveManager();
+        Milestones = new MilestoneManager();
         LoadMeta();
     }
 
     private void LoadMeta()
     {
-        Meta = SaveManager.Instance.LoadMeta() ?? new MetaData();
+        Meta = SaveManager.LoadMeta() ?? new MetaData();
     }
 
     private void SaveMeta()
     {
-        SaveManager.Instance.SaveMeta(Meta);
+        SaveManager.SaveMeta(Meta);
     }
 
     public void PlayerDied()

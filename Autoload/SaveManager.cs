@@ -9,16 +9,13 @@ namespace RotOfTime.Autoload;
 ///     Persistence layer for meta-progression.
 ///     Handles file I/O only - no game state management.
 /// </summary>
-public partial class SaveManager : Node
+public class SaveManager
 {
     private const string SaveDirectory = "user://saves/";
     private const string MetaFileName = "meta.json";
 
-    public static SaveManager Instance { get; private set; }
-
-    public override void _Ready()
+    public SaveManager()
     {
-        Instance = this;
         EnsureSaveDirectoryExists();
     }
 

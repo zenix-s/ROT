@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Godot;
 
 namespace RotOfTime.Autoload;
 
@@ -12,25 +11,18 @@ public static class MilestoneExtensions
 {
     public static bool IsCompleted(this Milestone milestone)
     {
-        return MilestoneManager.instance.CompletedMilestones.Contains(milestone);
+        return GameManager.Instance.Milestones.CompletedMilestones.Contains(milestone);
     }
 
     public static void Complete(this Milestone milestone)
     {
-        MilestoneManager.instance.CompleteMilestone(milestone);
+        GameManager.Instance.Milestones.CompleteMilestone(milestone);
     }
 }
 
-public partial class MilestoneManager : Node
+public class MilestoneManager
 {
-    public static MilestoneManager instance { get; private set; }
-
     public HashSet<Milestone> CompletedMilestones { get; private set; } = [];
-
-    public override void _Ready()
-    {
-        instance = this;
-    }
 
     public void CompleteMilestone(Milestone milestone)
     {
