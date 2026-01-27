@@ -394,11 +394,10 @@ sources/0 = SubResource("TileSetAtlasSource_x2kx1")
 [node name="Level" type="Node2D" unique_id=1089290294]
 
 [node name="Label" type="Label" parent="." unique_id=742101338]
-offset_left = 261.0
-offset_top = 73.0
-offset_right = 311.0
-offset_bottom = 96.0
-text = "level 0"
+offset_left = 184.0
+offset_top = 141.0
+offset_right = 234.0
+offset_bottom = 164.0
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=238094545]
 position = Vector2(312, 248)
@@ -408,4 +407,4 @@ tile_map_data = PackedByteArray("AAAGAAMAAAACAAMAAAALAAMAAAACAAMAAAAKAAMAAAACAAM
 tile_set = SubResource("TileSet_hdo08")
 
 [node name="BasicEnemy" parent="." unique_id=178184045 instance=ExtResource("2_x2kx1")]
-position = Vector2(514, 355)
+position = Vector2(882, 353)

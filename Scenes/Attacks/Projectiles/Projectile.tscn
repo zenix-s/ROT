@@ -7,11 +7,11 @@
 [ext_resource type="Script" uid="uid://dmjy7sqfwj6nb" path="res://Core/Combat/Components/AttackHitboxComponent.cs" id="4_fui73"]
 [ext_resource type="Script" uid="uid://d3mdiyui48mnx" path="res://Core/Combat/Components/LinearMovementComponent.cs" id="6_movement"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_pyv0a"]
-radius = 7.071068
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_utkwb"]
 radius = 8.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pyv0a"]
+radius = 7.071068
 
 [node name="Projectile" type="CharacterBody2D" unique_id=311666828 node_paths=PackedStringArray("MovementComponent", "DamageComponent", "HitboxComponent")]
 collision_layer = 512
@@ -26,6 +26,17 @@ position = Vector2(-9.536743e-07, -9.536743e-07)
 scale = Vector2(0.40625, 0.40625)
 texture = ExtResource("2_t7gc1")
 
+[node name="AttackHitboxComponent" type="Area2D" parent="." unique_id=1182442264]
+position = Vector2(1, 0)
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("4_fui73")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent" unique_id=1493063066]
+position = Vector2(-1, 0)
+shape = SubResource("CircleShape2D_utkwb")
+debug_color = Color(1, 0, 0, 0.41960785)
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1637741916]
 shape = SubResource("CircleShape2D_pyv0a")
 
@@ -33,16 +44,6 @@ shape = SubResource("CircleShape2D_pyv0a")
 script = ExtResource("3_3vg7y")
 Hitbox = NodePath("../AttackHitboxComponent")
 AttackData = ExtResource("4_3vg7y")
-
-[node name="AttackHitboxComponent" type="Area2D" parent="." unique_id=1182442264]
-position = Vector2(1, 0)
-collision_layer = 512
-collision_mask = 64
-script = ExtResource("4_fui73")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent" unique_id=1493063066]
-position = Vector2(-1, 0)
-shape = SubResource("CircleShape2D_utkwb")
 
 [node name="LinearMovementComponent" type="Node" parent="." unique_id=1999358139]
 script = ExtResource("6_movement")

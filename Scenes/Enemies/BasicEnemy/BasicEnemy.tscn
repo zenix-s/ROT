@@ -70,6 +70,7 @@ script = ExtResource("7_entitystats")
 VitalityStat = 5
 AttackStat = 3
 DefenseStat = 1
+Faction = 2
 metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
 [node name="BasicEnemy" type="CharacterBody2D" unique_id=178184045 node_paths=PackedStringArray("EntityStatsComponent", "HurtboxComponent", "DetectionArea", "BodyAttackNode") groups=["Enemy"]]

@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="ProjectileData" load_steps=2 format=3 uid="uid://sn7q2qbxvti8"]
+[gd_resource type="Resource" script_class="ProjectileData" format=3 uid="uid://sn7q2qbxvti8"]
 
 [ext_resource type="Script" uid="uid://bi7dj6vs1ad3f" path="res://Core/Combat/Attacks/ProjectileData.cs" id="1_3cbex"]
 
 [resource]
 script = ExtResource("1_3cbex")
 Name = "Projectile"
-metadata/_custom_type_script = "res://Core/Combat/Attacks/ProjectileData.cs"

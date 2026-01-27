@@ -20,6 +20,15 @@ public partial class AttackDamageComponent : Node
         { GameConstants.Faction.Enemy, GameConstants.GameLayers.EnemyAttack }
     };
 
+    private static readonly Dictionary<GameConstants.Faction, GameConstants.GameLayers> TargetMaskMap = new()
+    {
+        { GameConstants.Faction.Player, GameConstants.GameLayers.EnemyDamageBox },
+        { GameConstants.Faction.Ally, GameConstants.GameLayers.EnemyDamageBox },
+        { GameConstants.Faction.Enemy, GameConstants.GameLayers.PlayerDamageBox }
+    };
+
+    private bool _factionOverridden;
+
     [Export] public AttackHitboxComponent Hitbox { get; set; }
     [Export] public GameConstants.Faction Faction { get; set; }
     [Export] public AttackData AttackData { get; set; }
@@ -34,7 +43,8 @@ public partial class AttackDamageComponent : Node
             return;
         }
 
-        Hitbox.CollisionLayer = (uint)AttackLayerMap[Faction];
+        if (!_factionOverridden)
+            ApplyFaction(Faction);
     }
 
     /// <summary>
@@ -43,8 +53,18 @@ public partial class AttackDamageComponent : Node
     /// </summary>
     public void UpdateStats(EntityStats ownerStats)
     {
+        ApplyFaction(ownerStats.Faction);
         CurrentAttackResult = DamageCalculator.CalculateRawDamage(ownerStats, AttackData);
         if (Hitbox != null)
             Hitbox.AttackResult = CurrentAttackResult;
+    }
+
+    private void ApplyFaction(GameConstants.Faction faction)
+    {
+        Faction = faction;
+        if (Hitbox == null) return;
+        Hitbox.CollisionLayer = (uint)AttackLayerMap[faction];
+        Hitbox.CollisionMask = (uint)TargetMaskMap[faction];
+        _factionOverridden = true;
     }
 }

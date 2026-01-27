@@ -65,7 +65,11 @@ public partial class Player : CharacterBody2D
             Vector2 directionToMouse = (mousePosition - GlobalPosition).Normalized();
 
             Projectile projectile = ProjectileScene.Instantiate<Projectile>();
-            projectile.Execute(GlobalPosition, directionToMouse, EntityStatsComponent.EntityStats);
+            Vector2 spawnOffset = directionToMouse * 16; // Spawn a bit in front of the player
+            projectile.Execute(
+                direction: directionToMouse,
+                position: GlobalPosition + spawnOffset,
+                ownerStats: EntityStatsComponent.EntityStats);
             GetParent().AddChild(projectile);
 
             _canAttack = false;
