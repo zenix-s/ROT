@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://d3dpj10elmcbg"]
 
+[ext_resource type="Script" uid="uid://b4njggxyxrq7k" path="res://Scenes/Levels/Tower/Level0/Level.cs" id="1_oaj1e"]
 [ext_resource type="Texture2D" uid="uid://bi6cd4yfbft2q" path="res://Assets/Terrain/terrain.png" id="1_vedx3"]
 [ext_resource type="PackedScene" uid="uid://basicenemy" path="res://Scenes/Enemies/BasicEnemy/BasicEnemy.tscn" id="2_x2kx1"]
 
@@ -392,6 +393,7 @@ terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
 sources/0 = SubResource("TileSetAtlasSource_x2kx1")
 
 [node name="Level" type="Node2D" unique_id=1089290294]
+script = ExtResource("1_oaj1e")
 
 [node name="Label" type="Label" parent="." unique_id=742101338]
 offset_left = 184.0

@@ -1,17 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://bx6kvvtoehxks"]
+[gd_scene format=3 uid="uid://bx6kvvtoehxks"]
 
 [ext_resource type="Script" uid="uid://bj8y5oo2tmkfh" path="res://Scenes/Main/Main.cs" id="1_p8rbg"]
 
-[node name="Main" type="Node2D" node_paths=PackedStringArray("_camera", "_worldContainer")]
+[node name="Main" type="Node2D" unique_id=1193630444 node_paths=PackedStringArray("_camera", "_worldContainer")]
 script = ExtResource("1_p8rbg")
 _camera = NodePath("Camera")
 _worldContainer = NodePath("WorldContainer")
 
-[node name="WorldContainer" type="Node2D" parent="."]
+[node name="WorldContainer" type="Node2D" parent="." unique_id=1865224841]
 
-[node name="Camera" type="Camera2D" parent="."]
+[node name="Camera" type="Camera2D" parent="." unique_id=1803418699]
 position = Vector2(322, 180)
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="MenuContainer" type="CanvasLayer" parent="." unique_id=1302913215]
 
-[node name="MenuContainer" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=1809551266]

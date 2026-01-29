@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using RotOfTime.Autoload;
+
 namespace RotOfTime.Core.GameData;
 
 /// <summary>
@@ -8,4 +11,5 @@ public class MetaData
 {
     public int Version { get; set; } = 1;
     public int Money { get; set; }
+    public List<Milestone> CompletedMilestones { get; set; } = [];
 }

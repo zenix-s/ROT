@@ -27,6 +27,8 @@ public partial class Main : Node2D
     public override void _Process(double delta)
     {
         CameraFollowPlayer();
+        if (Input.IsActionJustPressed("save_game"))
+            GameManager.Instance.SaveMeta();
     }
 
     private void OnMenuChangeRequested(SceneExtensionManager.MenuScene menuScene)

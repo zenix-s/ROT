@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using RotOfTime.Core;
 using RotOfTime.Core.GameData;
@@ -32,10 +33,14 @@ public partial class GameManager : Node
     private void LoadMeta()
     {
         Meta = SaveManager.LoadMeta() ?? new MetaData();
+        Milestones.LoadMilestones(Meta.CompletedMilestones);
+        GD.Print("GameManager: Meta loaded");
+        GD.Print("Milestones: " + string.Join(", ", Meta.CompletedMilestones));
     }
 
-    private void SaveMeta()
+    public void SaveMeta()
     {
+        Meta.CompletedMilestones = Milestones.CompletedMilestones.ToList();
         SaveManager.SaveMeta(Meta);
     }
 
