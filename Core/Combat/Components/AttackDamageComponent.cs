@@ -5,7 +5,7 @@ using RotOfTime.Core.Combat.Calculations;
 using RotOfTime.Core.Combat.Results;
 using RotOfTime.Core.Entities;
 
-namespace RotOfTime.Core.Components;
+namespace RotOfTime.Core.Combat.Components;
 
 /// <summary>
 ///     Component that centralizes damage calculation for attacks.

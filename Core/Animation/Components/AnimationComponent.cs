@@ -1,6 +1,8 @@
 using System;
 using Godot;
 
+namespace RotOfTime.Core.Animation.Components;
+
 public partial class AnimationComponent : Node
 {
     [Export] public AnimatedSprite2D AnimatedSprite2D;

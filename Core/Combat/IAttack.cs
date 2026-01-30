@@ -1,6 +1,7 @@
 using Godot;
-using RotOfTime.Core.Components;
 using RotOfTime.Core.Entities;
+using AttackDamageComponent = RotOfTime.Core.Combat.Components.AttackDamageComponent;
+using AttackHitboxComponent = RotOfTime.Core.Combat.Components.AttackHitboxComponent;
 
 namespace RotOfTime.Core.Combat;
 

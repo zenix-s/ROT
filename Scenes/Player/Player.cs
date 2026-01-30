@@ -1,9 +1,11 @@
 using System;
 using Godot;
 using RotOfTime.Autoload;
+using RotOfTime.Core.Animation.Components;
 using RotOfTime.Core.Combat.Results;
-using RotOfTime.Core.Components;
+using RotOfTime.Core.Entities.Components;
 using RotOfTime.Scenes.Attacks.Projectiles;
+using HurtboxComponent = RotOfTime.Core.Combat.Components.HurtboxComponent;
 
 namespace RotOfTime.Scenes.Player;
 
@@ -67,9 +69,9 @@ public partial class Player : CharacterBody2D
             Projectile projectile = ProjectileScene.Instantiate<Projectile>();
             Vector2 spawnOffset = directionToMouse * 16; // Spawn a bit in front of the player
             projectile.Execute(
-                direction: directionToMouse,
-                position: GlobalPosition + spawnOffset,
-                ownerStats: EntityStatsComponent.EntityStats);
+                directionToMouse,
+                GlobalPosition + spawnOffset,
+                EntityStatsComponent.EntityStats);
             GetParent().AddChild(projectile);
 
             _canAttack = false;

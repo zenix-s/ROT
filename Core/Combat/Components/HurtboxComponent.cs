@@ -1,8 +1,7 @@
 using Godot;
-using RotOfTime.Core.Combat;
 using RotOfTime.Core.Combat.Results;
 
-namespace RotOfTime.Core.Components;
+namespace RotOfTime.Core.Combat.Components;
 
 /// <summary>
 ///     Hurtbox component for receiving attacks.
@@ -30,7 +29,8 @@ public partial class HurtboxComponent : Area2D
     /// </summary>
     public void ReceiveAttack(IAttack attack)
     {
-        EmitSignal(SignalName.AttackReceived, attack.DamageComponent?.CurrentAttackResult ?? AttackResult.None);
+        EmitSignal(SignalName.AttackReceived,
+            attack.DamageComponent?.CurrentAttackResult ?? AttackResult.None);
     }
 
     private void OnHurtboxAreaEntered(Area2D area)

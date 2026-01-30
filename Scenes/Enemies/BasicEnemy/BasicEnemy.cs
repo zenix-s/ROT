@@ -2,7 +2,8 @@ using System;
 using Godot;
 using RotOfTime.Core.Combat;
 using RotOfTime.Core.Combat.Results;
-using RotOfTime.Core.Components;
+using RotOfTime.Core.Entities.Components;
+using HurtboxComponent = RotOfTime.Core.Combat.Components.HurtboxComponent;
 
 namespace RotOfTime.Scenes.Enemies.BasicEnemy;
 

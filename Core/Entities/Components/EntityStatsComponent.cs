@@ -2,9 +2,8 @@ using System;
 using Godot;
 using RotOfTime.Core.Combat.Calculations;
 using RotOfTime.Core.Combat.Results;
-using RotOfTime.Core.Entities;
 
-namespace RotOfTime.Core.Components;
+namespace RotOfTime.Core.Entities.Components;
 
 public partial class EntityStatsComponent : Node
 {

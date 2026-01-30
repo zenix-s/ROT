@@ -1,7 +1,7 @@
 using Godot;
 using RotOfTime.Core.Combat.Results;
 
-namespace RotOfTime.Core.Components;
+namespace RotOfTime.Core.Combat.Components;
 
 /// <summary>
 ///     Hitbox component that detects collisions with hurtboxes.
