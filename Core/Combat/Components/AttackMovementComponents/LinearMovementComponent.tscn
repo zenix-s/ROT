@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://1qy8qyop20af"]
+
+[ext_resource type="Script" uid="uid://d3mdiyui48mnx" path="res://Core/Combat/Components/AttackMovementComponents/LinearMovementComponent.cs" id="1_7jjol"]
+
+[node name="LinearMovementComponent" type="Node" unique_id=926155009]
+script = ExtResource("1_7jjol")

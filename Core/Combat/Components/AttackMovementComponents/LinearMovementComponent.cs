@@ -1,6 +1,6 @@
 using Godot;
 
-namespace RotOfTime.Core.Combat.Components;
+namespace RotOfTime.Core.Combat.Components.AttackMovementComponents;
 
 /// <summary>
 ///     Linear movement component for projectiles.

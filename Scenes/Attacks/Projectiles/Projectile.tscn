@@ -2,16 +2,16 @@
 
 [ext_resource type="Script" uid="uid://b0o1knn14pl2p" path="res://Scenes/Attacks/Projectiles/Projectile.cs" id="1_k1yxc"]
 [ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="2_t7gc1"]
-[ext_resource type="Script" uid="uid://bme4d2c100jlf" path="res://Core/Combat/Components/AttackDamageComponent.cs" id="3_3vg7y"]
 [ext_resource type="Resource" uid="uid://sn7q2qbxvti8" path="res://Scenes/Attacks/Projectiles/ProjectileAttackData.tres" id="4_3vg7y"]
-[ext_resource type="Script" uid="uid://dmjy7sqfwj6nb" path="res://Core/Combat/Components/AttackHitboxComponent.cs" id="4_fui73"]
-[ext_resource type="Script" uid="uid://d3mdiyui48mnx" path="res://Core/Combat/Components/LinearMovementComponent.cs" id="6_movement"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_utkwb"]
-radius = 8.0
+[ext_resource type="PackedScene" uid="uid://1qy8qyop20af" path="res://Core/Combat/Components/AttackMovementComponents/LinearMovementComponent.tscn" id="4_fui73"]
+[ext_resource type="PackedScene" uid="uid://cvalmi68e40ck" path="res://Core/Combat/Components/AttackDamageComponent.tscn" id="5_pyv0a"]
+[ext_resource type="PackedScene" uid="uid://55r0yywoqgwi" path="res://Core/Combat/Components/AttackHitboxComponent.tscn" id="6_utkwb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pyv0a"]
 radius = 7.071068
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mbvye"]
+radius = 8.0
 
 [node name="Projectile" type="CharacterBody2D" unique_id=311666828 node_paths=PackedStringArray("MovementComponent", "DamageComponent", "HitboxComponent")]
 collision_layer = 512
@@ -26,26 +26,16 @@ position = Vector2(-9.536743e-07, -9.536743e-07)
 scale = Vector2(0.40625, 0.40625)
 texture = ExtResource("2_t7gc1")
 
-[node name="AttackHitboxComponent" type="Area2D" parent="." unique_id=1182442264]
-position = Vector2(1, 0)
-collision_layer = 0
-collision_mask = 0
-script = ExtResource("4_fui73")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent" unique_id=1493063066]
-position = Vector2(-1, 0)
-shape = SubResource("CircleShape2D_utkwb")
-debug_color = Color(1, 0, 0, 0.41960785)
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1637741916]
 shape = SubResource("CircleShape2D_pyv0a")
 
-[node name="AttackDamageComponent" type="Node" parent="." unique_id=1899509927 node_paths=PackedStringArray("Hitbox")]
-script = ExtResource("3_3vg7y")
-Hitbox = NodePath("../AttackHitboxComponent")
+[node name="LinearMovementComponent" parent="." unique_id=926155009 instance=ExtResource("4_fui73")]
+
+[node name="AttackDamageComponent" parent="." unique_id=1496781152 instance=ExtResource("5_pyv0a")]
 AttackData = ExtResource("4_3vg7y")
 
-[node name="LinearMovementComponent" type="Node" parent="." unique_id=1999358139]
-script = ExtResource("6_movement")
+[node name="AttackHitboxComponent" parent="." unique_id=387566645 instance=ExtResource("6_utkwb")]
 
-[connection signal="area_entered" from="AttackHitboxComponent" to="AttackHitboxComponent" method="OnHitboxBodyEntered"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent" unique_id=2014579449]
+shape = SubResource("CircleShape2D_mbvye")
+debug_color = Color(0.9788559, 0, 0.3966187, 0.41960785)

@@ -1,7 +1,7 @@
 using Godot;
 using RotOfTime.Core.Combat.Attacks;
 
-namespace RotOfTime.Core.Combat.Components;
+namespace RotOfTime.Core.Combat.Components.AttackMovementComponents;
 
 /// <summary>
 ///     Abstract base class for projectile movement behaviors.

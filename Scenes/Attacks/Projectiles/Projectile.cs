@@ -5,6 +5,7 @@ using RotOfTime.Core.Combat.Components;
 using RotOfTime.Core.Entities;
 using AttackDamageComponent = RotOfTime.Core.Combat.Components.AttackDamageComponent;
 using AttackHitboxComponent = RotOfTime.Core.Combat.Components.AttackHitboxComponent;
+using AttackMovementComponent = RotOfTime.Core.Combat.Components.AttackMovementComponents.AttackMovementComponent;
 
 namespace RotOfTime.Scenes.Attacks.Projectiles;
 
