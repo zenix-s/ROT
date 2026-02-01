@@ -20,6 +20,7 @@ public partial class Player : CharacterBody2D
     [Export] public float AttackCooldown = 0.3f;
     [Export] public Label DebugLabel;
     [Export] public EntityStatsComponent EntityStatsComponent;
+    [Export] public EntityMovementComponent EntityMovementComponent;
     [Export] public HurtboxComponent HurtboxComponent;
     [Export] public PackedScene ProjectileScene;
 
@@ -37,12 +38,8 @@ public partial class Player : CharacterBody2D
             "move_top",
             "move_down");
 
-        if (direction.X > 0)
-            AnimationComponent.AnimatedSprite2D.FlipH = false;
-        else if (direction.X < 0)
-            AnimationComponent.AnimatedSprite2D.FlipH = true;
-
-        Velocity = direction.Normalized() * Speed;
+        EntityMovementComponent.Move(direction, Speed);
+        Velocity = EntityMovementComponent.Velocity;
         MoveAndSlide();
 
         HandleAttack(delta);

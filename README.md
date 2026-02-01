@@ -1,10 +1,40 @@
-### 1. Concepto General
+### Concepto General
 
-Un **Action-RPG Metroidvania** en perspectiva cenital (*Top-Down*). El jugador encarna a un mago que debe escalar una torre misteriosa mientras progresa a través de 10 Círculos de Poder, combinando la intensidad del combate de hordas con la narrativa y dificultad de un Soulslike.
+Action-RPG Metroidvania con perspectiva Top-Down. 
+Eres un mago que debe escalar una torre misteriosa mientras progresa a través de 10 Círculos de Poder, combinando combate intenso con narrativa y dificultad.
 
-### 2. Sistema de Combate y Controles (PC)
 
-Se abandona el auto-gameplay pasivo por un sistema de **combate activo y direccional**. El jugador tiene el control total de la puntería, lo que permite un diseño de encuentros mucho más desafiante.
+### Narrativa y Mundo
+
+El mana la base de toda la materia y energia mas basica del universo, una onda que se cree ser la primera orden dada por dios al crear el todo. Cualquiera es capaz de manipular y usar el mana, solo algunos son capaces de usar sus aplicaciones mas avanzadas. Magos, hechizeros, artistas marciales, caballeros, y demas seres que han aprendido a dominar el mana son capaces de realizar proezas que desafian la logica y la naturaleza misma.
+
+* **Contexto:** Eres un mago recién graduado enviado a una torre "segura". Los maestros (Círculo 3-6) ya han limpiado los dos primeros pisos. Tu misión es limpiar enemigos residuales y entrenar.
+* **El Giro:** La torre empieza a cambiar y el peligro escala más allá de lo que los maestros pueden manejar. Lo que era un entrenamiento se convierte en una lucha por la supervivencia y la ascensión divina.
+* **Jerarquía de Poder:** La mayoría de magos son Círculo 4. El Director de tu escuela es Círculo 6. Tú aspiras a romper el límite humano hasta el **Círculo 10 (Nivel 100)**.
+
+
+
+### Estructura de Progresión (Círculos)
+
+El progreso es manual y se realiza en los **Centros de Teletransporte/Hogueras** al inicio de cada piso.
+
+* **Niveles:** 10 niveles por cada Círculo.
+* **Requisitos de Ascensión:** Para pasar al siguiente Círculo (Nivel 10, 20, etc.), se requiere:
+1. Haber alcanzado el nivel máximo del círculo actual.
+2. Encontrar un **Material de Catalización** (exploración).
+3. Superar la prueba de un **Maestro** (Boss/NPC).
+
+
+* **Bloqueo de Habilidad:** No puedes usar hechizos o habilidades de un círculo superior al tuyo (ej. no hay Dash Elemental hasta el nivel 10).
+
+### Sistema de Combate 
+
+Action-RPG con combate activo y direccional. El jugador controla la puntería, permitiendo encuentros desafiantes.
+Elección de hechizos y habilidades estratégicas. 
+4 habilidades asignables y un ataque básico.
+Habilidad de movimiento.
+
+### Controles (PC)
 
 | Acción | Mando (Layout Universal) | Lógica de Diseño |
 | --- | --- | --- |
@@ -28,26 +58,7 @@ Se abandona el auto-gameplay pasivo por un sistema de **combate activo y direcci
 
 ---
 
-### 3. Narrativa y Mundo
-
-* **Contexto:** Eres un mago recién graduado enviado a una torre "segura". Los maestros (Círculo 3-6) ya han limpiado los dos primeros pisos. Tu misión es limpiar enemigos residuales y entrenar.
-* **El Giro:** La torre empieza a cambiar y el peligro escala más allá de lo que los maestros pueden manejar. Lo que era un entrenamiento se convierte en una lucha por la supervivencia y la ascensión divina.
-* **Jerarquía de Poder:** La mayoría de magos son Círculo 4. El Director de tu escuela es Círculo 6. Tú aspiras a romper el límite humano hasta el **Círculo 10 (Nivel 100)**.
-
-### 4. Estructura de Progresión (Círculos)
-
-El progreso es manual y se realiza en los **Centros de Teletransporte/Hogueras** al inicio de cada piso.
-
-* **Niveles:** 10 niveles por cada Círculo.
-* **Requisitos de Ascensión:** Para pasar al siguiente Círculo (Nivel 10, 20, etc.), se requiere:
-1. Haber alcanzado el nivel máximo del círculo actual.
-2. Encontrar un **Material de Catalización** (exploración).
-3. Superar la prueba de un **Maestro** (Boss/NPC).
-
-
-* **Bloqueo de Habilidad:** No puedes usar hechizos o habilidades de un círculo superior al tuyo (ej. no hay Dash Elemental hasta el nivel 10).
-
-### 5. Level Design y Navegación
+### Level Design y Navegación
 
 * **Pisos Diseñados a Mano:** Escenarios fijos para fomentar el aprendizaje del mapa y la colocación estratégica de secretos.
 * **Interconectividad:** * **Hubs de Piso:** Puntos de teletransporte que requieren "Registro de Firma Mágica" para activarse.

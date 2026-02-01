@@ -2,10 +2,11 @@
 
 [ext_resource type="Script" uid="uid://cqdt27wqvvlfu" path="res://Scenes/Player/Player.cs" id="1_ft8w5"]
 [ext_resource type="Texture2D" uid="uid://oca2e8efi0ps" path="res://Scenes/Player/Assets/knight.png" id="1_s0eop"]
-[ext_resource type="Script" uid="uid://1kwvyjmvryoa" path="res://Core/Entities/Components/EntityStatsComponent.cs" id="5_4wape"]
 [ext_resource type="Script" uid="uid://bk4lgfbd2ojpm" path="res://Core/Entities/EntityStats.cs" id="5_fk5o5"]
-[ext_resource type="Script" uid="uid://1s7je03tfckb" path="res://Core/Animation/Components/AnimationComponent.cs" id="6_t26db"]
+[ext_resource type="PackedScene" uid="uid://rkl0t35t4nhs" path="res://Core/Entities/Components/EntityStatsComponent.tscn" id="6_fk5o5"]
 [ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Combat/Components/HurtboxComponent.cs" id="7_fk5o5"]
+[ext_resource type="PackedScene" uid="uid://yaotdtmp3p6j" path="res://Core/Animation/Components/AnimationComponent.tscn" id="7_t26db"]
+[ext_resource type="PackedScene" uid="uid://cpwyoq8ja0vt0" path="res://Core/Entities/Components/EntityMovementComponent.tscn" id="8_fk5o5"]
 [ext_resource type="PackedScene" uid="uid://dwips18xqhtp8" path="res://Scenes/Attacks/Projectiles/Projectile.tscn" id="8_prj01"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ft8w5"]
@@ -52,20 +53,21 @@ height = 16.0
 radius = 4.0
 height = 16.0
 
-[sub_resource type="Resource" id="Resource_t26db"]
+[sub_resource type="Resource" id="Resource_825xp"]
 script = ExtResource("5_fk5o5")
 VitalityStat = 100
 AttackStat = 1
 DefenseStat = 1
 metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
-[node name="Player" type="CharacterBody2D" unique_id=1512431336 node_paths=PackedStringArray("AnimationComponent", "DebugLabel", "EntityStatsComponent", "HurtboxComponent") groups=["Player"]]
+[node name="Player" type="CharacterBody2D" unique_id=1512431336 node_paths=PackedStringArray("AnimationComponent", "DebugLabel", "EntityStatsComponent", "EntityMovementComponent", "HurtboxComponent") groups=["Player"]]
 collision_layer = 2
 motion_mode = 1
 script = ExtResource("1_ft8w5")
 AnimationComponent = NodePath("AnimationComponent")
 DebugLabel = NodePath("DebugLabel")
 EntityStatsComponent = NodePath("EntityStatsComponent")
+EntityMovementComponent = NodePath("EntityMovementComponent")
 HurtboxComponent = NodePath("HurtboxComponent")
 ProjectileScene = ExtResource("8_prj01")
 
@@ -84,20 +86,20 @@ offset_top = -32.0
 offset_right = 21.0
 offset_bottom = -9.0
 
-[node name="AnimationComponent" type="Node" parent="." unique_id=116579168 node_paths=PackedStringArray("AnimatedSprite2D")]
-script = ExtResource("6_t26db")
-AnimatedSprite2D = NodePath("../AnimatedSprite2D")
-
 [node name="HurtboxComponent" type="Area2D" parent="." unique_id=2090109509]
 collision_layer = 32
 collision_mask = 256
 script = ExtResource("7_fk5o5")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent" unique_id=1247842636]
+[node name="HurtboxCollision" type="CollisionShape2D" parent="HurtboxComponent" unique_id=1247842636]
 position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_ji083")
 debug_color = Color(0.85042524, 0.00089003384, 0.9003315, 0.41960785)
 
-[node name="EntityStatsComponent" type="Node" parent="." unique_id=1638163879]
-script = ExtResource("5_4wape")
-EntityStats = SubResource("Resource_t26db")
+[node name="EntityStatsComponent" parent="." unique_id=2020649164 instance=ExtResource("6_fk5o5")]
+EntityStats = SubResource("Resource_825xp")
+
+[node name="AnimationComponent" parent="." unique_id=237662168 node_paths=PackedStringArray("AnimatedSprite2D") instance=ExtResource("7_t26db")]
+AnimatedSprite2D = NodePath("../AnimatedSprite2D")
+
+[node name="EntityMovementComponent" parent="." unique_id=1227869016 instance=ExtResource("8_fk5o5")]

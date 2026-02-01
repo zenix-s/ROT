@@ -40,7 +40,7 @@ public partial class GameManager : Node
 
     public void SaveMeta()
     {
-        Meta.CompletedMilestones = GameStateManager.CompletedMilestones.ToList();
+        Meta.CompletedMilestones = [.. GameStateManager.CompletedMilestones];
         SaveManager.SaveMeta(Meta);
     }
 

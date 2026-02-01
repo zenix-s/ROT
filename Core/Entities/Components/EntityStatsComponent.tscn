@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://rkl0t35t4nhs"]
+
+[ext_resource type="Script" uid="uid://1kwvyjmvryoa" path="res://Core/Entities/Components/EntityStatsComponent.cs" id="1_fiyeg"]
+
+[node name="EntityStatsComponent" type="Node" unique_id=2020649164]
+script = ExtResource("1_fiyeg")
