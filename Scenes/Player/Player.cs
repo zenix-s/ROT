@@ -15,6 +15,10 @@ public partial class Player : CharacterBody2D
 
     private float _attackTimer;
     private bool _canAttack = true;
+    private bool _onDash = false;
+    private float _dashDuration = 0.2f;
+    
+    private Timer _dashTimer;
 
     [Export] public AnimationComponent AnimationComponent;
     [Export] public float AttackCooldown = 0.3f;
@@ -28,6 +32,8 @@ public partial class Player : CharacterBody2D
     {
         SetupStatsComponent();
         SetupHurtboxComponent();
+        _dashTimer = new Timer();
+        AddChild(_dashTimer);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -38,12 +44,34 @@ public partial class Player : CharacterBody2D
             "move_top",
             "move_down");
 
-        EntityMovementComponent.Move(direction, Speed);
-        Velocity = EntityMovementComponent.Velocity;
+        if (_onDash)
+        {
+            // During dash, maintain current velocity
+            Velocity = EntityMovementComponent.Velocity;
+        }
+        else
+        {
+            Velocity = Vector2.Zero;
+            EntityMovementComponent.Move(direction, Speed);
+            Velocity = EntityMovementComponent.Velocity;
+            if (Input.IsActionJustPressed("dash"))
+            {
+                GD.Print("Player Dash!");
+                const int dashSpeed = 600;
+                EntityMovementComponent.Dash(direction, dashSpeed);
+                Velocity = EntityMovementComponent.Velocity;
+                _onDash = true;
+                _dashTimer.Start(_dashDuration);
+                _dashTimer.Timeout += () =>
+                {
+                    _onDash = false;
+                }; 
+            }
+        }
+        
         MoveAndSlide();
-
         HandleAttack(delta);
-
+        
         DebugLabel.Text =
             $"Health: {EntityStatsComponent.CurrentHealth}/{EntityStatsComponent.EntityStats.VitalityStat}\n";
     }
@@ -74,6 +102,7 @@ public partial class Player : CharacterBody2D
             _canAttack = false;
             _attackTimer = AttackCooldown;
         }
+        
     }
 
     private void SetupHurtboxComponent()
@@ -98,7 +127,7 @@ public partial class Player : CharacterBody2D
         EntityStatsComponent.EntityDied += OnPlayerDied;
         EntityStatsComponent.HealthChanged += OnPlayerHealthChanged;
     }
-
+    
     #region Event Handlers
 
     private void OnPlayerHealthChanged(int newHealth)

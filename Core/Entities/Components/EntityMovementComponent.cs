@@ -20,4 +20,9 @@ public partial class EntityMovementComponent : Node
     {
         Velocity = direction.Normalized() * speed;
     }
+    
+    public void Dash(Vector2 direction, float dashSpeed)
+    {
+        Velocity = direction.Normalized() * dashSpeed;
+    }
 }
