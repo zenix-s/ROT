@@ -3,29 +3,40 @@
 Action-RPG Metroidvania con perspectiva Top-Down. 
 Eres un mago que debe escalar una torre misteriosa mientras progresa a través de 10 Círculos de Poder, combinando combate intenso con narrativa y dificultad.
 
-
 ### Narrativa y Mundo
 
-El mana la base de toda la materia y energia mas basica del universo, una onda que se cree ser la primera orden dada por dios al crear el todo. Cualquiera es capaz de manipular y usar el mana, solo algunos son capaces de usar sus aplicaciones mas avanzadas. Magos, hechizeros, artistas marciales, caballeros, y demas seres que han aprendido a dominar el mana son capaces de realizar proezas que desafian la logica y la naturaleza misma.
+En el origen, antes de la materia y el tiempo, existió la Primera Orden. No como una palabra articulada, sino como una Onda Fundamental. Esta onda es la manifestación directa de Dios, quien no es una entidad ajena a la creación, sino su inicio, su sustento y su resolución final (Alfa y Omega).
 
-* **Contexto:** Eres un mago recién graduado enviado a una torre "segura". Los maestros (Círculo 3-6) ya han limpiado los dos primeros pisos. Tu misión es limpiar enemigos residuales y entrenar.
-* **El Giro:** La torre empieza a cambiar y el peligro escala más allá de lo que los maestros pueden manejar. Lo que era un entrenamiento se convierte en una lucha por la supervivencia y la ascensión divina.
-* **Jerarquía de Poder:** La mayoría de magos son Círculo 4. El Director de tu escuela es Círculo 6. Tú aspiras a romper el límite humano hasta el **Círculo 10 (Nivel 100)**.
+La Naturaleza de la Realidad: Todo lo que existe (átomos, almas, estrellas y vacío) no es más que el resultado de la modulación de esta Onda Primordial. La materia es "maná condensado" vibrando en frecuencias bajas; la energía y el alma son vibraciones en frecuencias superiores.
 
+La Capacidad de Manipulación: Todo ser creado posee una "firma de onda" propia. La magia, el arte marcial y la ciencia son, en esencia, la capacidad de sintonizar la propia frecuencia interna con la de la creación para alterar la armonía del entorno.
 
+La figura del Mago: Los magos son aquellos que utilizan un sistema de circulos para poder manipular la realidad a niveles cada vez más profundos. Cada Círculo representa un nivel de comprensión y poder sobre la Onda Primordial.
+
+Los Círculos de Poder: Existen 10 Círculos de Poder, cada uno representando un nivel de habilidad mágica y comprensión del universo. Los magos comienzan en el Círculo 1 y aspiran a alcanzar el Círculo 10, donde se dice que uno puede comprender y manipular la Onda Primordial en su totalidad.
+
+Hasta el momento el ser de mayor circulo fue un mago del 8 circulo Alejandro que desaparecio hace mas de 500 años antes del comienzo de la historia.
+
+### Mecánicas Principales
+
+El jugador asume el rol de un mago que debe escalar una torre mística, enfrentándose a enemigos y desafíos mientras progresa a través de 10 Círculos de Poder. Cada Círculo representa un nivel de habilidad mágica y desbloquea nuevas habilidades y hechizos.
 
 ### Estructura de Progresión (Círculos)
 
-El progreso es manual y se realiza en los **Centros de Teletransporte/Hogueras** al inicio de cada piso.
+Estructura de Progresión: Nodos de Resonancia
 
-* **Niveles:** 10 niveles por cada Círculo.
-* **Requisitos de Ascensión:** Para pasar al siguiente Círculo (Nivel 10, 20, etc.), se requiere:
-1. Haber alcanzado el nivel máximo del círculo actual.
-2. Encontrar un **Material de Catalización** (exploración).
-3. Superar la prueba de un **Maestro** (Boss/NPC).
+La evolución del mago no depende del exterminio de enemigos, sino de su capacidad para sintonizar su propia firma de onda con la Onda Primordial presente en la torre. El progreso es un acto de descubrimiento y comunión metafísica.
+Sintonización de Nivel (1-100): Para aumentar su potencia, el jugador debe localizar y realizar una Comunión en los Nodos de Resonancia (puntos de alta densidad de maná).
+- Existen 10 niveles de sintonización por cada Círculo.
+- Cada Nodo descubierto permite al mago estabilizar una frecuencia superior, aumentando sus estadísticas base.
+- Este sistema incentiva la exploración exhaustiva, ya que el poder está ligado directamente al hallazgo de estos hitos en el escenario.
 
+Ascensión de Círculo (Hitos Armónicos): Al alcanzar el nivel 10 de cada tramo (10, 20, 30...), el mago llega a un límite de saturación armónica. Para trascender al siguiente Círculo de Poder, se deben cumplir tres requisitos:
+- Saturación: Haber recolectado la resonancia suficiente del círculo actual.
+- Catalización: Encontrar un Material de Catalización único, oculto en los estratos de la torre, que actúe como ancla para la nueva frecuencia.
+- La Prueba del Maestro: Superar un encuentro crítico (Boss o desafío de entorno) que valide la estabilidad del mago antes de permitirle acceder a un plano de poder superior.
 
-* **Bloqueo de Habilidad:** No puedes usar hechizos o habilidades de un círculo superior al tuyo (ej. no hay Dash Elemental hasta el nivel 10).
+Bloqueo de Armónicos: El acceso a hechizos y habilidades está estrictamente vinculado al Círculo actual. Intentar manipular una frecuencia del 2º Círculo siendo un mago de 1º es imposible, ya que el cuerpo y el alma del usuario aún no resuenan en esa octava de la realidad.
 
 ### Sistema de Combate 
 
@@ -64,3 +75,7 @@ Habilidad de movimiento.
 * **Interconectividad:** * **Hubs de Piso:** Puntos de teletransporte que requieren "Registro de Firma Mágica" para activarse.
 * **Atajos (Shortcuts):** Escaleras, palancas y ascensores que conectan el final del piso con el inicio.
 * **Backtracking:** Con habilidades nuevas (como el Dash), el jugador regresa a pisos inferiores para acceder a zonas que antes eran una muerte segura (ej. el pasillo de fuego del Piso 1).
+
+### Stack Tecnológico
+* **Motor de Juego:** Godot 4.6
+* **Lenguaje de Programación:** C#
