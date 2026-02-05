@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://cpwyoq8ja0vt0"]
-
-[ext_resource type="Script" uid="uid://e8twappwpu0d" path="res://Core/Entities/Components/EntityMovementComponent.cs" id="1_6jp0v"]
-
-[node name="EntityMovementComponent" type="Node" unique_id=1227869016]
-script = ExtResource("1_6jp0v")

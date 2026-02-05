@@ -6,6 +6,7 @@ namespace RotOfTime.Core.Combat.Components.AttackMovementComponents;
 ///     Linear movement component for projectiles.
 ///     Moves in a straight line, accelerating from initial to target speed.
 /// </summary>
+[GlobalClass]
 public partial class LinearMovementComponent : AttackMovementComponent
 {
     public override Vector2 CalculateVelocity(Vector2 currentVelocity, Vector2 direction, double delta)

@@ -8,6 +8,7 @@ namespace RotOfTime.Core.Combat.Components;
 ///     Reads AttackResult from AttackHitboxComponent and signals for damage processing.
 ///     Relies on i-frames to prevent spam damage.
 /// </summary>
+[GlobalClass]
 public partial class HurtboxComponent : Area2D
 {
     [Signal]

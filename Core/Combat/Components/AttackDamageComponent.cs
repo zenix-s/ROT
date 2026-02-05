@@ -11,6 +11,7 @@ namespace RotOfTime.Core.Combat.Components;
 ///     Component that centralizes damage calculation for attacks.
 ///     Attach this to any attack node alongside an AttackHitboxComponent.
 /// </summary>
+[GlobalClass]
 public partial class AttackDamageComponent : Node
 {
     private static readonly Dictionary<GameConstants.Faction, GameConstants.GameLayers> AttackLayerMap = new()

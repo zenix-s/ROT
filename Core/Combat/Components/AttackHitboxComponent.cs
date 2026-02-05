@@ -7,6 +7,7 @@ namespace RotOfTime.Core.Combat.Components;
 ///     Hitbox component that detects collisions with hurtboxes.
 ///     Works with AttackDamageComponent for damage calculation.
 /// </summary>
+[GlobalClass]
 public partial class AttackHitboxComponent : Area2D
 {
     [Signal]

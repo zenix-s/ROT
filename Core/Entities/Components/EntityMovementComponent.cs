@@ -2,6 +2,7 @@ using Godot;
 
 namespace RotOfTime.Core.Entities.Components;
 
+[GlobalClass]
 public partial class EntityMovementComponent : Node
 {
     public Vector2 Velocity { get; set; } = Vector2.Zero;

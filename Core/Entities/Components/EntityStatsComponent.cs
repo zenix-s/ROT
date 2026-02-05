@@ -5,6 +5,7 @@ using RotOfTime.Core.Combat.Results;
 
 namespace RotOfTime.Core.Entities.Components;
 
+[GlobalClass]
 public partial class EntityStatsComponent : Node
 {
     [Signal]
