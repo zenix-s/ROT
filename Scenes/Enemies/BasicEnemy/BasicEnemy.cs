@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using RotOfTime.Core.Combat;
+using RotOfTime.Core.Combat.Components;
 using RotOfTime.Core.Combat.Results;
 using RotOfTime.Core.Entities.Components;
 using HurtboxComponent = RotOfTime.Core.Combat.Components.HurtboxComponent;
@@ -9,14 +10,13 @@ namespace RotOfTime.Scenes.Enemies.BasicEnemy;
 
 public partial class BasicEnemy : CharacterBody2D
 {
-    private IAttack _bodyAttack;
-    private Node2D _target;
-
     [Export] public EntityStatsComponent EntityStatsComponent;
     [Export] public HurtboxComponent HurtboxComponent;
     [Export] public float Speed { get; set; } = 50f;
     [Export] public Area2D DetectionArea { get; set; }
-    [Export] public Node2D BodyAttackNode { get; set; }
+    [Export] public AttackManagerComponent AttackManagerComponent;
+
+    public Node2D Target { get; private set; }
 
     public override void _Ready()
     {
@@ -29,32 +29,26 @@ public partial class BasicEnemy : CharacterBody2D
             DetectionArea.BodyExited += OnDetectionAreaBodyExited;
         }
 
-        if (BodyAttackNode is IAttack attack)
-        {
-            _bodyAttack = attack;
-            _bodyAttack.UpdateStats(EntityStatsComponent.EntityStats);
-        }
+        AttackManagerComponent.RegisterAttack(
+            AttackKeys.BasicAttack,
+            GD.Load<PackedScene>("res://Scenes/Attacks/Body/RockBody/RockBody.tscn"));
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        if (_target == null) return;
-
-        Vector2 direction = (_target.GlobalPosition - GlobalPosition).Normalized();
-        Velocity = direction * Speed;
-        MoveAndSlide();
+        // Movement logic delegated to StateMachine
     }
 
     private void OnDetectionAreaBodyEntered(Node2D body)
     {
         if (body is Player.Player)
-            _target = body;
+            Target = body;
     }
 
     private void OnDetectionAreaBodyExited(Node2D body)
     {
-        if (body == _target)
-            _target = null;
+        if (body == Target)
+            Target = null;
     }
 
     private void SetupHurtboxComponent()

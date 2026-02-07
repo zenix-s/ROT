@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using RotOfTime.Core.Combat;
 using RotOfTime.Core.Combat.Attacks;
@@ -21,18 +22,20 @@ public partial class Projectile : CharacterBody2D, IAttack
     [Export] public AttackDamageComponent DamageComponent { get; set; }
     [Export] public AttackHitboxComponent HitboxComponent { get; set; }
 
-    public void UpdateStats(EntityStats ownerStats)
-    {
-        DamageComponent?.UpdateStats(ownerStats);
-    }
+    public event Action CastCompleted;
+    public event Action AttackFinished;
+    public float Cooldown => 0.3f;
+    public bool IsInstantCast => true;
+    public bool AllowMovementDuringCast => true;
 
     public void Execute(Vector2 direction, Vector2 position, EntityStats ownerStats)
     {
         GlobalPosition = position;
         Direction = direction.Normalized();
         Rotation = Direction.Angle();
-        UpdateStats(ownerStats);
+        DamageComponent?.UpdateStats(ownerStats);
         _isLaunched = true;
+        CastCompleted?.Invoke();
     }
 
     public void ApplySettings(ProjectileData settings)
@@ -71,6 +74,7 @@ public partial class Projectile : CharacterBody2D, IAttack
 
     protected virtual void OnImpact()
     {
+        AttackFinished?.Invoke();
         QueueFree();
     }
 
@@ -100,6 +104,7 @@ public partial class Projectile : CharacterBody2D, IAttack
     private void OnLifetimeTimeout()
     {
         BeforeLifetimeTimeout();
+        AttackFinished?.Invoke();
         QueueFree();
     }
 

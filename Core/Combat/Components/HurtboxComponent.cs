@@ -25,15 +25,6 @@ public partial class HurtboxComponent : Area2D
         _invincibilityTimer.Timeout += OnInvincibilityTimeout;
     }
 
-    /// <summary>
-    ///     Called by attacks to trigger damage.
-    /// </summary>
-    public void ReceiveAttack(IAttack attack)
-    {
-        EmitSignal(SignalName.AttackReceived,
-            attack.DamageComponent?.CurrentAttackResult ?? AttackResult.None);
-    }
-
     private void OnHurtboxAreaEntered(Area2D area)
     {
         if (area is not AttackHitboxComponent hitbox) return;

@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using RotOfTime.Core.Combat;
 using RotOfTime.Core.Entities;
@@ -15,14 +16,15 @@ public partial class RockBody : Area2D, IAttack
     [Export] public AttackDamageComponent DamageComponent { get; set; }
     [Export] public AttackHitboxComponent HitboxComponent { get; set; }
 
-    public void UpdateStats(EntityStats ownerStats)
-    {
-        DamageComponent?.UpdateStats(ownerStats);
-    }
+    public event Action CastCompleted;
+    public event Action AttackFinished;
+    public float Cooldown => 2.0f;
+    public bool IsInstantCast => true;
+    public bool AllowMovementDuringCast => true;
 
     public void Execute(Vector2 direction, Vector2 position, EntityStats ownerStats)
     {
-        // Melee attack: no projectile execution needed
-        UpdateStats(ownerStats);
+        DamageComponent?.UpdateStats(ownerStats);
+        CastCompleted?.Invoke();
     }
 }

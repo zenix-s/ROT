@@ -21,12 +21,14 @@ public partial class GameManager : Node
 
     public SaveManager SaveManager { get; private set; }
     public GameStateManager GameStateManager { get; private set; }
+    public AbilityManager AbilityManager { get; private set; }
 
     public override void _Ready()
     {
         Instance = this;
         SaveManager = new SaveManager();
         GameStateManager = new GameStateManager();
+        AbilityManager = new AbilityManager();
         LoadMeta();
     }
 

@@ -1,7 +1,6 @@
+using System;
 using Godot;
 using RotOfTime.Core.Entities;
-using AttackDamageComponent = RotOfTime.Core.Combat.Components.AttackDamageComponent;
-using AttackHitboxComponent = RotOfTime.Core.Combat.Components.AttackHitboxComponent;
 
 namespace RotOfTime.Core.Combat;
 
@@ -12,19 +11,30 @@ namespace RotOfTime.Core.Combat;
 public interface IAttack
 {
     /// <summary>
-    ///     The damage component that handles damage calculation and hit tracking.
+    ///     The cooldown duration in seconds before this attack can be used again.
     /// </summary>
-    AttackDamageComponent DamageComponent { get; }
+    float Cooldown { get; }
 
     /// <summary>
-    ///     The hitbox component that detects collisions with hurtboxes.
+    ///     If true, the attack fires instantly without entering CastingState.
     /// </summary>
-    AttackHitboxComponent HitboxComponent { get; }
+    bool IsInstantCast { get; }
 
     /// <summary>
-    ///     Update the attack's damage based on the owner's stats.
+    ///     If true, the player can move during the cast phase.
+    ///     Only relevant for non-instant attacks.
     /// </summary>
-    void UpdateStats(EntityStats ownerStats);
+    bool AllowMovementDuringCast { get; }
+
+    /// <summary>
+    ///     Emitted when the cast phase is complete and the player can act again.
+    /// </summary>
+    event Action CastCompleted;
+
+    /// <summary>
+    ///     Emitted when the entire attack lifecycle is done.
+    /// </summary>
+    event Action AttackFinished;
 
     /// <summary>
     ///     Execute the attack from a given position in a given direction.
