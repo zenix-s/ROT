@@ -1,45 +1,53 @@
 using System.Collections.Generic;
 using Godot;
-using RotOfTime.Core.Combat;
+using RotOfTime.Scenes.Player;
 
 namespace RotOfTime.Autoload;
 
 /// <summary>
 ///     Manages player ability loadout.
 ///     Owned by GameManager, initialized after game data is loaded.
+///     Currently uses hardcoded defaults. Will be expanded to support
+///     player ability selection and persistence.
 /// </summary>
 public class AbilityManager
 {
-    private readonly Dictionary<StringName, string> _loadout = [];
+    /// <summary>
+    ///     Default spawner scene paths mapped to PlayerAttackSlot.
+    ///     These are the PackedScene paths for each attack spawner.
+    ///     The spawner scenes themselves contain the configuration (cooldown, cast duration, etc.)
+    ///     as exported properties.
+    /// </summary>
+    private readonly Dictionary<PlayerAttackSlot, string> _loadout = [];
 
     public AbilityManager()
     {
         SetupDefaultLoadout();
     }
 
-    public void EquipAbility(StringName key, string scenePath)
+    public void EquipAbility(PlayerAttackSlot slot, string spawnerScenePath)
     {
-        _loadout[key] = scenePath;
+        _loadout[slot] = spawnerScenePath;
     }
 
-    public void UnequipAbility(StringName key)
+    public void UnequipAbility(PlayerAttackSlot slot)
     {
-        _loadout.Remove(key);
+        _loadout.Remove(slot);
     }
 
-    public Dictionary<StringName, string> GetLoadout()
+    public Dictionary<PlayerAttackSlot, string> GetLoadout()
     {
-        return new Dictionary<StringName, string>(_loadout);
+        return new Dictionary<PlayerAttackSlot, string>(_loadout);
     }
 
-    public string GetAbilityScene(StringName key)
+    public string GetAbilityScenePath(PlayerAttackSlot slot)
     {
-        return _loadout.GetValueOrDefault(key);
+        return _loadout.GetValueOrDefault(slot);
     }
 
-    public bool HasAbility(StringName key)
+    public bool HasAbility(PlayerAttackSlot slot)
     {
-        return _loadout.ContainsKey(key);
+        return _loadout.ContainsKey(slot);
     }
 
     public void SaveLoadout()
@@ -54,6 +62,9 @@ public class AbilityManager
 
     private void SetupDefaultLoadout()
     {
-        EquipAbility(AttackKeys.BasicAttack, "res://Scenes/Attacks/Projectiles/Projectile.tscn");
+        // TODO: These paths will point to spawner scenes once they're created in the editor.
+        // For now the PlayerAttackManager uses [Export] references to spawner nodes
+        // that are children in the Player scene tree, so this loadout is not actively
+        // used until the dynamic ability equipping system is implemented.
     }
 }

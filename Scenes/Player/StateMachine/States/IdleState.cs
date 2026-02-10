@@ -1,6 +1,5 @@
 using Godot;
-using RotOfTime.Core.Combat;
-using RotOfTime.Core.Combat.Components;
+using RotOfTime.Core.Entities.Components;
 using RotOfTime.Core.Entities.StateMachine;
 
 namespace RotOfTime.Scenes.Player.StateMachine.States;
@@ -18,7 +17,7 @@ public partial class IdleState : State<Player>
         TargetEntity.Velocity = Vector2.Zero;
         TargetEntity.MoveAndSlide();
 
-        var input = TargetEntity.EntityInputComponent;
+        EntityInputComponent input = TargetEntity.EntityInputComponent;
         Vector2 direction = input.Direction;
 
         if (input.IsDashJustPressed && direction != Vector2.Zero)
@@ -38,24 +37,24 @@ public partial class IdleState : State<Player>
 
     private bool TryFireAttack()
     {
-        StringName key = TargetEntity.EntityInputComponent.GetPressedAttackKey();
-        if (key == null)
+        PlayerAttackSlot? slot = TargetEntity.EntityInputComponent.GetPressedAttackSlot();
+        if (slot == null)
             return false;
 
         Vector2 mousePos = TargetEntity.GetGlobalMousePosition();
         Vector2 dir = (mousePos - TargetEntity.GlobalPosition).Normalized();
         Vector2 spawnPos = TargetEntity.GlobalPosition + dir * 16;
 
-        IAttack attack = TargetEntity.AttackManagerComponent.TryFire(
-            key, dir, spawnPos, TargetEntity.EntityStatsComponent.EntityStats);
+        bool fired = TargetEntity.AttackManager.TryFire(
+            slot.Value, dir, spawnPos, TargetEntity.EntityStatsComponent.EntityStats);
 
-        if (attack == null)
+        if (!fired)
             return false;
 
-        var metadata = TargetEntity.AttackManagerComponent.GetAttackMetadata(key);
-        if (metadata is { IsInstantCast: false })
+        var spawner = TargetEntity.AttackManager.GetSpawner(slot.Value);
+        if (spawner is { IsInstantCast: false })
         {
-            TargetEntity.ActiveAttackKey = key;
+            TargetEntity.ActiveAttackSlot = slot.Value;
             StateMachine.ChangeState<CastingState>();
         }
 

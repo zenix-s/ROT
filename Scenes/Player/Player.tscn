@@ -8,11 +8,11 @@
 [ext_resource type="Script" uid="uid://1s7je03tfckb" path="res://Core/Animation/Components/AnimationComponent.cs" id="7_ji083"]
 [ext_resource type="Script" uid="uid://1kwvyjmvryoa" path="res://Core/Entities/Components/EntityStatsComponent.cs" id="8_0kmp4"]
 [ext_resource type="Script" uid="uid://dsskae1dr0d6c" path="res://Core/Entities/Components/EntityInputComponent.cs" id="9_825xp"]
-[ext_resource type="Script" path="res://Core/Combat/Components/AttackManagerComponent.cs" id="15_amgr"]
 [ext_resource type="Script" uid="uid://rtdfketabos0" path="res://Scenes/Player/StateMachine/PlayerStateMachine.cs" id="10_ji083"]
 [ext_resource type="Script" uid="uid://cq3hd2ie26l7c" path="res://Scenes/Player/StateMachine/States/IdleState.cs" id="11_0kmp4"]
 [ext_resource type="Script" uid="uid://b5mw2kp7rn4xj" path="res://Scenes/Player/StateMachine/States/MoveState.cs" id="12_mv5st"]
 [ext_resource type="Script" uid="uid://dclwwy1bsewdm" path="res://Scenes/Player/StateMachine/States/CastingState.cs" id="13_at5st"]
+[ext_resource type="Script" uid="uid://cp5drchfh5b2y" path="res://Scenes/Player/Components/PlayerAttackManager.cs" id="14_0u84n"]
 [ext_resource type="Script" uid="uid://dh7ds4tfap2xr" path="res://Scenes/Player/StateMachine/States/DashState.cs" id="14_ds5st"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ft8w5"]
@@ -66,7 +66,7 @@ AttackStat = 10
 DefenseStat = 10
 metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
-[node name="Player" type="CharacterBody2D" unique_id=1512431336 node_paths=PackedStringArray("AnimationComponent", "DebugLabel", "EntityStatsComponent", "EntityInputComponent", "EntityMovementComponent", "HurtboxComponent", "AttackManagerComponent") groups=["Player"]]
+[node name="Player" type="CharacterBody2D" unique_id=1512431336 node_paths=PackedStringArray("AnimationComponent", "DebugLabel", "EntityStatsComponent", "EntityInputComponent", "EntityMovementComponent", "HurtboxComponent") groups=["Player"]]
 collision_layer = 2
 motion_mode = 1
 script = ExtResource("1_ft8w5")
@@ -76,7 +76,6 @@ EntityStatsComponent = NodePath("EntityStatsComponent")
 EntityInputComponent = NodePath("EntityInputComponent")
 EntityMovementComponent = NodePath("EntityMovementComponent")
 HurtboxComponent = NodePath("HurtboxComponent")
-AttackManagerComponent = NodePath("AttackManagerComponent")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1053701812]
 sprite_frames = SubResource("SpriteFrames_4wape")
@@ -121,9 +120,6 @@ script = ExtResource("8_0kmp4")
 EntityStats = SubResource("Resource_i5acl")
 metadata/_custom_type_script = "uid://1kwvyjmvryoa"
 
-[node name="AttackManagerComponent" type="Node" parent="."]
-script = ExtResource("15_amgr")
-
 [node name="PlayerStateMachine" type="Node" parent="." unique_id=448834565]
 script = ExtResource("10_ji083")
 
@@ -138,3 +134,7 @@ script = ExtResource("13_at5st")
 
 [node name="DashState" type="Node" parent="PlayerStateMachine" unique_id=233993904]
 script = ExtResource("14_ds5st")
+
+[node name="PlayerAttackManager" type="Node" parent="." unique_id=81337677]
+script = ExtResource("14_0u84n")
+metadata/_custom_type_script = "uid://cp5drchfh5b2y"

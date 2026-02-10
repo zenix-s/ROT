@@ -1,131 +1,248 @@
+using System;
 using System.Collections.Generic;
 using Godot;
+using RotOfTime.Core.Combat.Components.AttackSpawnerComponents;
 using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Core.Combat.Components;
 
-[GlobalClass]
-public partial class AttackManagerComponent : Node
+/// <summary>
+///     Abstract generic attack manager that orchestrates attack execution, cooldowns, and casting.
+///     Each entity type provides its own TSlot enum defining available attack slots.
+///     Concrete implementations discover/register their spawner components.
+/// </summary>
+public abstract partial class AttackManagerComponent<TSlot> : Node
+    where TSlot : struct, Enum
 {
-    private readonly Dictionary<StringName, AttackSlotEntry> _attacks = new();
+    private readonly Dictionary<TSlot, AttackSpawnerComponent> _slots = [];
+    private readonly Dictionary<TSlot, float> _cooldowns = [];
+    private readonly Dictionary<TSlot, ActiveExecution> _activeExecutions = [];
+    private readonly List<TSlot> _completedExecutions = [];
 
+    private TSlot? _activeCastSlot;
+
+    /// <summary>
+    ///     Emitted when a cast starts. StringName is the TSlot.ToString().
+    /// </summary>
     [Signal]
-    public delegate void CastStartedEventHandler(StringName attackKey);
+    public delegate void CastStartedEventHandler(StringName slot);
 
+    /// <summary>
+    ///     Emitted when a cast phase completes. StringName is the TSlot.ToString().
+    /// </summary>
     [Signal]
-    public delegate void CastCompletedEventHandler(StringName attackKey);
+    public delegate void CastCompletedEventHandler(StringName slot);
 
+    /// <summary>
+    ///     Emitted when an attack execution finishes entirely. StringName is the TSlot.ToString().
+    /// </summary>
     [Signal]
-    public delegate void AttackFinishedEventHandler(StringName attackKey);
+    public delegate void AttackFinishedEventHandler(StringName slot);
 
-    public void RegisterAttack(StringName key, PackedScene scene)
+    /// <summary>
+    ///     Whether any non-instant cast is currently active.
+    /// </summary>
+    public bool IsCasting => _activeCastSlot.HasValue;
+
+    /// <summary>
+    ///     The currently active cast slot, if any.
+    /// </summary>
+    public TSlot? ActiveCastSlot => _activeCastSlot;
+
+    /// <summary>
+    ///     Whether movement is allowed during the current cast.
+    /// </summary>
+    public bool AllowMovementDuringCast
     {
-        if (_attacks.ContainsKey(key))
+        get
         {
-            GD.PrintErr($"AttackManagerComponent: Key '{key}' already registered. Unregister first.");
+            if (!_activeCastSlot.HasValue)
+                return true;
+
+            if (_slots.TryGetValue(_activeCastSlot.Value, out var spawner))
+                return spawner.AllowMovementDuringCast;
+
+            return true;
+        }
+    }
+
+    /// <summary>
+    ///     Register an attack spawner for a slot.
+    /// </summary>
+    protected void RegisterSlot(TSlot slot, AttackSpawnerComponent spawner)
+    {
+        if (_slots.ContainsKey(slot))
+        {
+            GD.PrintErr($"AttackManagerComponent: Slot '{slot}' already registered. Unregister first.");
             return;
         }
 
-        // Temp instance to read metadata
-        var tempNode = scene.Instantiate<Node2D>();
-        if (tempNode is not IAttack attack)
-        {
-            GD.PrintErr($"AttackManagerComponent: Scene for key '{key}' does not implement IAttack.");
-            tempNode.QueueFree();
-            return;
-        }
-
-        var entry = new AttackSlotEntry
-        {
-            Scene = scene,
-            Cooldown = attack.Cooldown,
-            CooldownRemaining = 0f,
-            IsInstantCast = attack.IsInstantCast,
-            AllowMovementDuringCast = attack.AllowMovementDuringCast
-        };
-
-        _attacks[key] = entry;
-        tempNode.QueueFree();
+        _slots[slot] = spawner;
+        _cooldowns[slot] = 0f;
     }
 
-    public void UnregisterAttack(StringName key)
+    /// <summary>
+    ///     Unregister an attack spawner from a slot.
+    /// </summary>
+    protected void UnregisterSlot(TSlot slot)
     {
-        _attacks.Remove(key);
+        _slots.Remove(slot);
+        _cooldowns.Remove(slot);
+        _activeExecutions.Remove(slot);
+
+        if (_activeCastSlot.HasValue && EqualityComparer<TSlot>.Default.Equals(_activeCastSlot.Value, slot))
+            _activeCastSlot = null;
     }
 
-    public IAttack TryFire(StringName key, Vector2 direction, Vector2 position, EntityStats stats)
+    /// <summary>
+    ///     Attempt to fire an attack from the given slot.
+    /// </summary>
+    public bool TryFire(TSlot slot, Vector2 direction, Vector2 position, EntityStats stats)
     {
-        if (!_attacks.TryGetValue(key, out var entry))
-            return null;
+        if (!_slots.TryGetValue(slot, out var spawner))
+            return false;
 
-        if (entry.CooldownRemaining > 0f)
-            return null;
+        // Check cooldown
+        if (_cooldowns.TryGetValue(slot, out var cooldown) && cooldown > 0f)
+            return false;
 
-        var node = entry.Scene.Instantiate<Node2D>();
-        if (node is not IAttack attack)
+        // Block new casts if a casted ability is already active
+        if (_activeCastSlot.HasValue && !spawner.IsInstantCast)
+            return false;
+
+        // Reset and activate the spawner
+        spawner.Reset();
+        spawner.Activate(direction, position, stats);
+
+        // Track execution
+        var execution = new ActiveExecution { ElapsedTime = 0f, CastCompleted = false };
+        _activeExecutions[slot] = execution;
+        _cooldowns[slot] = spawner.Cooldown;
+
+        // Track active cast for non-instant abilities
+        if (!spawner.IsInstantCast)
+            _activeCastSlot = slot;
+
+        EmitSignal(SignalName.CastStarted, SlotToStringName(slot));
+
+        // Instant cast completes immediately
+        if (spawner.IsInstantCast)
         {
-            node.QueueFree();
-            return null;
+            execution.CastCompleted = true;
+            EmitSignal(SignalName.CastCompleted, SlotToStringName(slot));
         }
 
-        attack.Execute(direction, position, stats);
-        GetTree().CurrentScene.AddChild(node);
-
-        entry.CooldownRemaining = entry.Cooldown;
-
-        EmitSignal(SignalName.CastStarted, key);
-
-        // Subscribe to IAttack events to re-emit as signals
-        StringName capturedKey = key;
-
-        if (attack.IsInstantCast)
-        {
-            EmitSignal(SignalName.CastCompleted, capturedKey);
-        }
-        else
-        {
-            attack.CastCompleted += () => EmitSignal(SignalName.CastCompleted, capturedKey);
-        }
-
-        attack.AttackFinished += () => EmitSignal(SignalName.AttackFinished, capturedKey);
-
-        return attack;
+        return true;
     }
 
-    public bool IsOnCooldown(StringName key)
+    /// <summary>
+    ///     Check if a slot is on cooldown.
+    /// </summary>
+    public bool IsOnCooldown(TSlot slot)
     {
-        return _attacks.TryGetValue(key, out var entry) && entry.CooldownRemaining > 0f;
+        return _cooldowns.TryGetValue(slot, out var cooldown) && cooldown > 0f;
     }
 
-    public float GetCooldownProgress(StringName key)
+    /// <summary>
+    ///     Get the cooldown progress (0 = ready, 1 = just started) for a slot.
+    /// </summary>
+    public float GetCooldownProgress(TSlot slot)
     {
-        if (!_attacks.TryGetValue(key, out var entry) || entry.Cooldown <= 0f)
+        if (!_slots.TryGetValue(slot, out var spawner) || spawner.Cooldown <= 0f)
             return 0f;
 
-        return Mathf.Clamp(entry.CooldownRemaining / entry.Cooldown, 0f, 1f);
+        if (!_cooldowns.TryGetValue(slot, out var remaining))
+            return 0f;
+
+        return Mathf.Clamp(remaining / spawner.Cooldown, 0f, 1f);
     }
 
-    public AttackSlotEntry GetAttackMetadata(StringName key)
+    /// <summary>
+    ///     Get the spawner assigned to a slot.
+    /// </summary>
+    public AttackSpawnerComponent GetSpawner(TSlot slot)
     {
-        return _attacks.GetValueOrDefault(key);
+        return _slots.GetValueOrDefault(slot);
+    }
+
+    /// <summary>
+    ///     Check if a slot has a spawner registered.
+    /// </summary>
+    public bool HasSlot(TSlot slot)
+    {
+        return _slots.ContainsKey(slot);
     }
 
     public override void _Process(double delta)
     {
-        float dt = (float)delta;
-        foreach (var entry in _attacks.Values)
+        var dt = (float)delta;
+
+        // Update cooldowns
+        foreach (var slot in _cooldowns.Keys)
         {
-            if (entry.CooldownRemaining > 0f)
-                entry.CooldownRemaining -= dt;
+            if (_cooldowns[slot] > 0f)
+                _cooldowns[slot] -= dt;
+        }
+
+        // Process active executions
+        _completedExecutions.Clear();
+
+        foreach (var (slot, execution) in _activeExecutions)
+        {
+            if (!_slots.TryGetValue(slot, out var spawner))
+            {
+                _completedExecutions.Add(slot);
+                continue;
+            }
+
+            execution.ElapsedTime += dt;
+
+            // Let spawner handle its multi-shot logic
+            spawner.Process(delta);
+
+            // Check if cast phase is complete
+            if (!execution.CastCompleted && execution.ElapsedTime >= spawner.CastDuration)
+            {
+                execution.CastCompleted = true;
+                EmitSignal(SignalName.CastCompleted, SlotToStringName(slot));
+
+                if (_activeCastSlot.HasValue &&
+                    EqualityComparer<TSlot>.Default.Equals(_activeCastSlot.Value, slot))
+                    _activeCastSlot = null;
+            }
+
+            // Check if execution is fully complete
+            if (spawner.IsComplete)
+                _completedExecutions.Add(slot);
+        }
+
+        // Remove completed executions
+        foreach (var slot in _completedExecutions)
+        {
+            _activeExecutions.Remove(slot);
+            EmitSignal(SignalName.AttackFinished, SlotToStringName(slot));
         }
     }
 
-    public class AttackSlotEntry
+    /// <summary>
+    ///     Convert a TSlot enum value to a StringName for signal emission.
+    /// </summary>
+    private static StringName SlotToStringName(TSlot slot)
     {
-        public PackedScene Scene { get; set; }
-        public float Cooldown { get; set; }
-        public float CooldownRemaining { get; set; }
-        public bool IsInstantCast { get; set; }
-        public bool AllowMovementDuringCast { get; set; }
+        return slot.ToString();
+    }
+
+    /// <summary>
+    ///     Try to parse a StringName back to a TSlot enum value.
+    /// </summary>
+    public static bool TryParseSlot(StringName name, out TSlot slot)
+    {
+        return Enum.TryParse(name.ToString(), out slot);
+    }
+
+    private class ActiveExecution
+    {
+        public float ElapsedTime { get; set; }
+        public bool CastCompleted { get; set; }
     }
 }

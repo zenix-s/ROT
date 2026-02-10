@@ -3,12 +3,12 @@
 [ext_resource type="Script" uid="uid://bmmfrkxg0r3g4" path="res://Scenes/Enemies/BasicEnemy/BasicEnemy.cs" id="1_enemy"]
 [ext_resource type="Script" uid="uid://1kwvyjmvryoa" path="res://Core/Entities/Components/EntityStatsComponent.cs" id="6_reiwa"]
 [ext_resource type="Script" uid="uid://bk4lgfbd2ojpm" path="res://Core/Entities/EntityStats.cs" id="7_entitystats"]
-[ext_resource type="Script" path="res://Core/Combat/Components/AttackManagerComponent.cs" id="13_amgr"]
 [ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Combat/Components/HurtboxComponent.cs" id="7_reiwa"]
 [ext_resource type="Texture2D" uid="uid://7yvmd8gt5a41" path="res://Scenes/Enemies/BasicEnemy/basic_enemy_run.png" id="9_t2hff"]
 [ext_resource type="Script" uid="uid://djxxiv6qnoyhy" path="res://Scenes/Enemies/BasicEnemy/StateMachine/EnemyStateMachine.cs" id="10_esm"]
 [ext_resource type="Script" uid="uid://bt65f6gwu47u" path="res://Scenes/Enemies/BasicEnemy/StateMachine/States/IdleState.cs" id="11_is"]
 [ext_resource type="Script" uid="uid://dan3m1ygtbyme" path="res://Scenes/Enemies/BasicEnemy/StateMachine/States/ChasingState.cs" id="12_cs"]
+[ext_resource type="Script" uid="uid://cmi324gm7goub" path="res://Core/Combat/Components/AttackManagerComponent.cs" id="13_amgr"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
 
@@ -76,13 +76,12 @@ metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 [sub_resource type="CircleShape2D" id="CircleShape2D_hurtbox"]
 radius = 12.0
 
-[node name="BasicEnemy" type="CharacterBody2D" unique_id=178184045 node_paths=PackedStringArray("EntityStatsComponent", "HurtboxComponent", "DetectionArea", "AttackManagerComponent") groups=["Enemy"]]
+[node name="BasicEnemy" type="CharacterBody2D" unique_id=178184045 node_paths=PackedStringArray("EntityStatsComponent", "HurtboxComponent", "DetectionArea") groups=["Enemy"]]
 collision_layer = 4
 script = ExtResource("1_enemy")
 EntityStatsComponent = NodePath("EntityStatsComponent")
 HurtboxComponent = NodePath("HurtboxComponent")
 DetectionArea = NodePath("DetectionArea")
-AttackManagerComponent = NodePath("AttackManagerComponent")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=774419387]
 shape = SubResource("CircleShape2D_body")
@@ -102,7 +101,7 @@ monitorable = false
 shape = SubResource("CircleShape2D_detection")
 debug_color = Color(0.42, 0.58, 0.87, 0.2)
 
-[node name="AttackManagerComponent" type="Node" parent="."]
+[node name="AttackManagerComponent" type="Node" parent="." unique_id=582175937]
 script = ExtResource("13_amgr")
 
 [node name="EntityStatsComponent" type="Node" parent="." unique_id=1035887490]

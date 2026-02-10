@@ -1,7 +1,5 @@
 using System;
 using Godot;
-using RotOfTime.Core.Combat;
-using RotOfTime.Core.Combat.Components;
 using RotOfTime.Core.Combat.Results;
 using RotOfTime.Core.Entities.Components;
 using HurtboxComponent = RotOfTime.Core.Combat.Components.HurtboxComponent;
@@ -14,7 +12,8 @@ public partial class BasicEnemy : CharacterBody2D
     [Export] public HurtboxComponent HurtboxComponent;
     [Export] public float Speed { get; set; } = 50f;
     [Export] public Area2D DetectionArea { get; set; }
-    [Export] public AttackManagerComponent AttackManagerComponent;
+
+    // TODO: Add EnemyAttackManager : AttackManagerComponent<EnemyAttackSlot> when enemy attacks are implemented
 
     public Node2D Target { get; private set; }
 
@@ -29,9 +28,7 @@ public partial class BasicEnemy : CharacterBody2D
             DetectionArea.BodyExited += OnDetectionAreaBodyExited;
         }
 
-        AttackManagerComponent.RegisterAttack(
-            AttackKeys.BasicAttack,
-            GD.Load<PackedScene>("res://Scenes/Attacks/Body/RockBody/RockBody.tscn"));
+        // TODO: Register enemy attacks when attack system supports body attacks
     }
 
     public override void _PhysicsProcess(double delta)

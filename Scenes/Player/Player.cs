@@ -2,10 +2,9 @@ using System;
 using Godot;
 using RotOfTime.Autoload;
 using RotOfTime.Core.Animation.Components;
-using RotOfTime.Core.Combat;
-using RotOfTime.Core.Combat.Components;
 using RotOfTime.Core.Combat.Results;
 using RotOfTime.Core.Entities.Components;
+using RotOfTime.Scenes.Player.Components;
 using HurtboxComponent = RotOfTime.Core.Combat.Components.HurtboxComponent;
 
 namespace RotOfTime.Scenes.Player;
@@ -20,34 +19,20 @@ public partial class Player : CharacterBody2D
     [Export] public EntityInputComponent EntityInputComponent;
     [Export] public EntityMovementComponent EntityMovementComponent;
     [Export] public HurtboxComponent HurtboxComponent;
-    [Export] public AttackManagerComponent AttackManagerComponent;
+    [Export] public PlayerAttackManager AttackManager;
 
-    public StringName ActiveAttackKey { get; set; }
+    public PlayerAttackSlot? ActiveAttackSlot { get; set; }
 
     public override void _Ready()
     {
         SetupStatsComponent();
         SetupHurtboxComponent();
-        RegisterAttacks();
     }
 
     public override void _Process(double delta)
     {
         DebugLabel.Text =
             $"Health: {EntityStatsComponent.CurrentHealth}/{EntityStatsComponent.EntityStats.VitalityStat}\n";
-    }
-
-    private void RegisterAttacks()
-    {
-        var loadout = GameManager.Instance.AbilityManager.GetLoadout();
-        foreach (var (key, path) in loadout)
-        {
-            var scene = GD.Load<PackedScene>(path);
-            if (scene != null)
-                AttackManagerComponent.RegisterAttack(key, scene);
-            else
-                GD.PrintErr($"Player: Failed to load attack scene at '{path}' for key '{key}'");
-        }
     }
 
     private void SetupHurtboxComponent()

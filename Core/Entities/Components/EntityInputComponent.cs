@@ -1,5 +1,5 @@
 using Godot;
-using RotOfTime.Core.Combat;
+using RotOfTime.Scenes.Player;
 
 namespace RotOfTime.Core.Entities.Components;
 
@@ -19,22 +19,25 @@ public partial class EntityInputComponent : Node
         _ => false
     };
 
-    public StringName GetPressedAttackKey()
+    /// <summary>
+    ///     Returns the PlayerAttackSlot corresponding to the currently pressed attack input, or null if none.
+    /// </summary>
+    public PlayerAttackSlot? GetPressedAttackSlot()
     {
         if (Input.IsActionJustPressed("attack"))
-            return AttackKeys.BasicAttack;
+            return PlayerAttackSlot.BasicAttack;
 
         if (Input.IsActionJustPressed("ability_1"))
-            return AttackKeys.Ability1;
+            return PlayerAttackSlot.Ability1;
 
         if (Input.IsActionJustPressed("ability_2"))
-            return AttackKeys.Ability2;
+            return PlayerAttackSlot.Ability2;
 
         if (Input.IsActionJustPressed("ability_3"))
-            return AttackKeys.Ability3;
+            return PlayerAttackSlot.Ability3;
 
         if (Input.IsActionJustPressed("ability_4"))
-            return AttackKeys.Ability4;
+            return PlayerAttackSlot.Ability4;
 
         return null;
     }

@@ -1,27 +1,28 @@
 using Godot;
 using RotOfTime.Core.Combat.Components;
 using RotOfTime.Core.Entities.StateMachine;
+using RotOfTime.Scenes.Player.Components;
 
 namespace RotOfTime.Scenes.Player.StateMachine.States;
 
 public partial class CastingState : State<Player>
 {
-    private StringName _activeAttackKey;
+    private PlayerAttackSlot? _activeSlot;
     private bool _allowMovement;
 
     public override void Enter()
     {
-        _activeAttackKey = TargetEntity.ActiveAttackKey;
-        if (_activeAttackKey == null)
+        _activeSlot = TargetEntity.ActiveAttackSlot;
+        if (_activeSlot == null)
         {
             StateMachine.ChangeState<IdleState>();
             return;
         }
 
-        var metadata = TargetEntity.AttackManagerComponent.GetAttackMetadata(_activeAttackKey);
-        _allowMovement = metadata?.AllowMovementDuringCast ?? false;
+        var spawner = TargetEntity.AttackManager.GetSpawner(_activeSlot.Value);
+        _allowMovement = spawner?.AllowMovementDuringCast ?? false;
 
-        TargetEntity.AttackManagerComponent.CastCompleted += OnCastCompleted;
+        TargetEntity.AttackManager.CastCompleted += OnCastCompleted;
 
         if (!_allowMovement)
         {
@@ -32,9 +33,9 @@ public partial class CastingState : State<Player>
 
     public override void Exit()
     {
-        TargetEntity.AttackManagerComponent.CastCompleted -= OnCastCompleted;
-        TargetEntity.ActiveAttackKey = null;
-        _activeAttackKey = null;
+        TargetEntity.AttackManager.CastCompleted -= OnCastCompleted;
+        TargetEntity.ActiveAttackSlot = null;
+        _activeSlot = null;
     }
 
     public override void PhysicsProcess(double delta)
@@ -64,9 +65,13 @@ public partial class CastingState : State<Player>
         }
     }
 
-    private void OnCastCompleted(StringName attackKey)
+    private void OnCastCompleted(StringName slotName)
     {
-        if (attackKey != _activeAttackKey)
+        if (!_activeSlot.HasValue)
+            return;
+
+        // Compare the signal's StringName with our active slot
+        if (slotName != _activeSlot.Value.ToString())
             return;
 
         Vector2 direction = TargetEntity.EntityInputComponent.Direction;
