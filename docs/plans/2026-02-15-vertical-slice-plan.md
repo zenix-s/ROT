@@ -6,7 +6,7 @@
 
 **Architecture:** Godot 4.6 + C#, component-based entity system, resource-driven spell/artifact data, state machine for player control.
 
-**Tech Stack:** Godot 4.6, C# (.NET 8.0), component architecture, resource system
+**Tech Stack:** Godot 4.6, C# (.NET 10.0), component architecture, resource system
 
 **Timeline:** 3-6 months
 
