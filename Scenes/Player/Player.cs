@@ -44,15 +44,9 @@ public partial class Player : CharacterBody2D
         SetupHurtboxComponent();
     }
 
-    /// <summary>
-    ///     Polls input for an attack slot press, fires the attack if ready,
-    ///     and sets <see cref="ActiveAttackSlot"/> for non-instant casts.
-    ///     Returns a result indicating whether anything was fired and whether
-    ///     the caller should transition to CastingState.
-    /// </summary>
     public AttackFireResult TryFireAttack()
     {
-        PlayerAttackSlot? slot = EntityInputComponent.GetPressedAttackSlot();
+        PlayerAttackSlot? slot = GetPressedAttackSlot();
         if (slot == null)
             return AttackFireResult.NotFired;
 
@@ -74,6 +68,23 @@ public partial class Player : CharacterBody2D
         }
 
         return AttackFireResult.FiredInstant;
+    }
+
+    private PlayerAttackSlot? GetPressedAttackSlot()
+    {
+        if (EntityInputComponent.IsAttackJustPressed)
+            return PlayerAttackSlot.BasicAttack;
+
+        if (EntityInputComponent.IsAbility1JustPressed)
+            return PlayerAttackSlot.Ability1;
+
+        if (EntityInputComponent.IsAbility2JustPressed)
+            return PlayerAttackSlot.Ability2;
+
+        if (EntityInputComponent.IsAbility3JustPressed)
+            return PlayerAttackSlot.Ability3;
+
+        return null;
     }
 
     public override void _Process(double delta)

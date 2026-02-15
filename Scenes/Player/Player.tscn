@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://dclwwy1bsewdm" path="res://Scenes/Player/StateMachine/States/CastingState.cs" id="13_at5st"]
 [ext_resource type="Script" uid="uid://cp5drchfh5b2y" path="res://Scenes/Player/Components/PlayerAttackManager.cs" id="14_0u84n"]
 [ext_resource type="Script" uid="uid://dh7ds4tfap2xr" path="res://Scenes/Player/StateMachine/States/DashState.cs" id="14_ds5st"]
+[ext_resource type="Script" uid="uid://b7rjcdxq8pg34" path="res://Core/Combat/Components/AttackSlot.cs" id="15_esmjy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ft8w5"]
 atlas = ExtResource("1_s0eop")
@@ -138,3 +139,15 @@ script = ExtResource("14_ds5st")
 [node name="PlayerAttackManager" type="Node" parent="." unique_id=81337677]
 script = ExtResource("14_0u84n")
 metadata/_custom_type_script = "uid://cp5drchfh5b2y"
+
+[node name="BasicAttack" type="Node" parent="PlayerAttackManager" unique_id=1169379190]
+script = ExtResource("15_esmjy")
+
+[node name="Attack1" type="Node" parent="PlayerAttackManager" unique_id=2039290381]
+script = ExtResource("15_esmjy")
+
+[node name="Attack2" type="Node" parent="PlayerAttackManager" unique_id=751508347]
+script = ExtResource("15_esmjy")
+
+[node name="Attack3" type="Node" parent="PlayerAttackManager" unique_id=1580210714]
+script = ExtResource("15_esmjy")
