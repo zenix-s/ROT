@@ -3,7 +3,7 @@ using Godot;
 namespace RotOfTime.Core.Combat.Attacks;
 
 /// <summary>
-///     Complete definition of an attack: damage stats, timing, scene reference.
+///     Complete definition of an attack: damage stats, cooldown, scene reference.
 ///     This Resource is the single source of truth for what an attack is.
 ///     The attack scene itself has no knowledge of its own stats until initialized.
 /// </summary>
@@ -23,13 +23,4 @@ public partial class AttackData : Resource
     [ExportCategory("Timing")]
     [Export]
     public float CooldownDuration { get; set; }
-
-    [Export] public float CastDuration { get; set; }
-
-    [Export] public bool AllowMovementDuringCast { get; set; } = true;
-
-    /// <summary>
-    ///     Whether this is an instant cast (CastDuration == 0).
-    /// </summary>
-    public bool IsInstantCast => CastDuration <= 0f;
 }

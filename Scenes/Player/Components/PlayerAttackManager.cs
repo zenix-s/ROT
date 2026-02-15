@@ -1,42 +1,61 @@
 using System;
 using Godot;
 using RotOfTime.Autoload;
+using RotOfTime.Core.Combat.Attacks;
 using RotOfTime.Core.Combat.Components;
 
 namespace RotOfTime.Scenes.Player.Components;
 
 /// <summary>
-///     Player-specific attack manager. Maps PlayerAttackSlot enum values
-///     to AttackSlot children discovered in the scene tree.
-///     Each AttackSlot encapsulates its spawner, cooldown, and cast configuration.
+///     Player-specific attack manager. Manages 3 attack slots:
+///     BasicAttack (LMB), Spell1 (Key 1), Spell2 (Key 2).
+///     Each slot has an AttackData resource and a Timer for cooldown tracking.
 /// </summary>
 [GlobalClass]
 public partial class PlayerAttackManager : AttackManagerComponent<PlayerAttackSlot>
 {
-    public AttackSlot BasicAttackSlot { get; set; }
-    public AttackSlot Spell1Slot { get; set; }
-    public AttackSlot Spell2Slot { get; set; }
+    [Export] public AttackData BasicAttackData { get; set; }
+    [Export] public AttackData Spell1Data { get; set; }
+    [Export] public AttackData Spell2Data { get; set; }
 
     public override void _Ready()
     {
-        RegisterExportedSlots();
-        LoadPlayerAttacks();
+        RegisterSlotsAndTimers();
     }
 
-    private void LoadPlayerAttacks()
+    private void RegisterSlotsAndTimers()
     {
-        // GameManager.Instance.AbilityManager.LoadPlayerAttack(PlayerAttackSlot.BasicAttack, BasicAttackSlot);
+        // Register BasicAttack
+        if (BasicAttackData != null)
+        {
+            RegisterSlot(PlayerAttackSlot.BasicAttack, BasicAttackData);
+            CreateTimerForSlot(PlayerAttackSlot.BasicAttack);
+        }
+
+        // Register Spell1
+        if (Spell1Data != null)
+        {
+            RegisterSlot(PlayerAttackSlot.Spell1, Spell1Data);
+            CreateTimerForSlot(PlayerAttackSlot.Spell1);
+        }
+
+        // Register Spell2
+        if (Spell2Data != null)
+        {
+            RegisterSlot(PlayerAttackSlot.Spell2, Spell2Data);
+            CreateTimerForSlot(PlayerAttackSlot.Spell2);
+        }
     }
 
-    private void RegisterExportedSlots()
+    private void CreateTimerForSlot(PlayerAttackSlot slot)
     {
-        if (BasicAttackSlot != null)
-            RegisterSlot(PlayerAttackSlot.BasicAttack, BasicAttackSlot);
+        var timer = new Timer
+        {
+            OneShot = true,
+            Name = $"{slot}Timer"
+        };
 
-        if (Spell1Slot != null)
-            RegisterSlot(PlayerAttackSlot.Spell1, Spell1Slot);
-
-        if (Spell2Slot != null)
-            RegisterSlot(PlayerAttackSlot.Spell2, Spell2Slot);
+        AddChild(timer);
+        RegisterTimer(slot, timer);
     }
 }

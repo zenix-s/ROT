@@ -26,11 +26,6 @@ public partial class IdleState : State<Player>
         }
 
         var fireResult = TargetEntity.TryFireAttack();
-        if (fireResult == AttackFireResult.FiredNeedsCast)
-        {
-            StateMachine.ChangeState<CastingState>();
-            return;
-        }
         if (fireResult == AttackFireResult.FiredInstant)
             return;
 
