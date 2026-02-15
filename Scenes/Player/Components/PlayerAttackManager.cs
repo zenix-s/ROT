@@ -14,9 +14,8 @@ namespace RotOfTime.Scenes.Player.Components;
 public partial class PlayerAttackManager : AttackManagerComponent<PlayerAttackSlot>
 {
     public AttackSlot BasicAttackSlot { get; set; }
-    public AttackSlot Ability1Slot { get; set; }
-    public AttackSlot Ability2Slot { get; set; }
-    public AttackSlot Ability3Slot { get; set; }
+    public AttackSlot Spell1Slot { get; set; }
+    public AttackSlot Spell2Slot { get; set; }
 
     public override void _Ready()
     {
@@ -34,13 +33,10 @@ public partial class PlayerAttackManager : AttackManagerComponent<PlayerAttackSl
         if (BasicAttackSlot != null)
             RegisterSlot(PlayerAttackSlot.BasicAttack, BasicAttackSlot);
 
-        if (Ability1Slot != null)
-            RegisterSlot(PlayerAttackSlot.Ability1, Ability1Slot);
+        if (Spell1Slot != null)
+            RegisterSlot(PlayerAttackSlot.Spell1, Spell1Slot);
 
-        if (Ability2Slot != null)
-            RegisterSlot(PlayerAttackSlot.Ability2, Ability2Slot);
-
-        if (Ability3Slot != null)
-            RegisterSlot(PlayerAttackSlot.Ability3, Ability3Slot);
+        if (Spell2Slot != null)
+            RegisterSlot(PlayerAttackSlot.Spell2, Spell2Slot);
     }
 }

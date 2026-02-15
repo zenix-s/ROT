@@ -9,17 +9,6 @@ public partial class EntityInputComponent : Node
     public bool IsAttackJustPressed => Input.IsActionJustPressed("attack");
     public bool IsDashJustPressed => Input.IsActionJustPressed("dash");
 
-    public bool IsAbility1JustPressed => Input.IsActionJustPressed("ability_1");
-    public bool IsAbility2JustPressed => Input.IsActionJustPressed("ability_2");
-    public bool IsAbility3JustPressed => Input.IsActionJustPressed("ability_3");
-    public bool IsAbility4JustPressed => Input.IsActionJustPressed("ability_4");
-
-    public bool IsAbilityJustPressed(int index) => index switch
-    {
-        0 => IsAbility1JustPressed,
-        1 => IsAbility2JustPressed,
-        2 => IsAbility3JustPressed,
-        3 => IsAbility4JustPressed,
-        _ => false
-    };
+    public bool IsSpell1JustPressed => Input.IsActionJustPressed("spell_1");
+    public bool IsSpell2JustPressed => Input.IsActionJustPressed("spell_2");
 }

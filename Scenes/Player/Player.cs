@@ -75,14 +75,11 @@ public partial class Player : CharacterBody2D
         if (EntityInputComponent.IsAttackJustPressed)
             return PlayerAttackSlot.BasicAttack;
 
-        if (EntityInputComponent.IsAbility1JustPressed)
-            return PlayerAttackSlot.Ability1;
+        if (EntityInputComponent.IsSpell1JustPressed)
+            return PlayerAttackSlot.Spell1;
 
-        if (EntityInputComponent.IsAbility2JustPressed)
-            return PlayerAttackSlot.Ability2;
-
-        if (EntityInputComponent.IsAbility3JustPressed)
-            return PlayerAttackSlot.Ability3;
+        if (EntityInputComponent.IsSpell2JustPressed)
+            return PlayerAttackSlot.Spell2;
 
         return null;
     }
