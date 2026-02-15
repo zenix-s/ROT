@@ -28,8 +28,6 @@ public partial class HurtboxComponent : Area2D
     private void OnHurtboxAreaEntered(Area2D area)
     {
         if (area is not AttackHitboxComponent hitbox) return;
-        // hitbox.AttackConnected
-        // Emit htis signalhitbox.AttackConnected
         EmitSignal(SignalName.AttackReceived, hitbox.AttackResult);
     }
 

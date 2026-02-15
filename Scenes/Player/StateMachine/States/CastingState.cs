@@ -1,7 +1,6 @@
 using Godot;
 using RotOfTime.Core.Combat.Components;
 using RotOfTime.Core.Entities.StateMachine;
-using RotOfTime.Scenes.Player.Components;
 
 namespace RotOfTime.Scenes.Player.StateMachine.States;
 
@@ -19,8 +18,8 @@ public partial class CastingState : State<Player>
             return;
         }
 
-        var spawner = TargetEntity.AttackManager.GetSpawner(_activeSlot.Value);
-        _allowMovement = spawner?.AllowMovementDuringCast ?? false;
+        AttackSlot slot = TargetEntity.AttackManager.GetSlot(_activeSlot.Value);
+        _allowMovement = slot?.AllowMovementDuringCast ?? false;
 
         TargetEntity.AttackManager.CastCompleted += OnCastCompleted;
 

@@ -14,4 +14,6 @@ position = Vector2(322, 180)
 
 [node name="MenuContainer" type="CanvasLayer" parent="." unique_id=1302913215]
 
+[node name="Attacks" type="Node2D" parent="." unique_id=1809551267]
+
 [node name="UI" type="CanvasLayer" parent="." unique_id=1809551266]

@@ -2,57 +2,55 @@ using Godot;
 using RotOfTime.Core.Combat.Attacks;
 using RotOfTime.Core.Combat.Components;
 using RotOfTime.Core.Entities;
-using AttackDamageComponent = RotOfTime.Core.Combat.Components.AttackDamageComponent;
 using AttackHitboxComponent = RotOfTime.Core.Combat.Components.AttackHitboxComponent;
 using AttackMovementComponent = RotOfTime.Core.Combat.Components.AttackMovementComponents.AttackMovementComponent;
 
 namespace RotOfTime.Scenes.Attacks.Projectiles;
 
+/// <summary>
+///     Base projectile that moves through the scene and damages on contact.
+///     Has no knowledge of its own stats until Execute() injects them.
+///     The node is already positioned in the scene tree when Execute() is called.
+/// </summary>
 public partial class Projectile : CharacterBody2D, IAttack
 {
-    private bool _isLaunched;
-    private int _lifetime = 5;
     private Timer _lifetimeTimer;
     protected Vector2 Direction;
 
     [Export] public AttackMovementComponent MovementComponent { get; set; }
-    [Export] public ProjectileData AttackData { get; set; }
-    [Export] public AttackDamageComponent DamageComponent { get; set; }
     [Export] public AttackHitboxComponent HitboxComponent { get; set; }
-
-    public void Execute(Vector2 direction, Vector2 position, EntityStats ownerStats)
-    {
-        GlobalPosition = position;
-        Direction = direction.Normalized();
-        Rotation = Direction.Angle();
-        DamageComponent?.UpdateStats(ownerStats);
-        _isLaunched = true;
-    }
-
-    public void ApplySettings(ProjectileData settings)
-    {
-        if (settings == null) return;
-        AttackData = settings;
-        _lifetime = settings.Lifetime;
-    }
 
     public override void _Ready()
     {
-        if (AttackData is null || DamageComponent is null || HitboxComponent is null || MovementComponent is null)
+        if (HitboxComponent is null || MovementComponent is null)
         {
-            GD.PrintErr($"Projectile: Missing components or AttackData on {Name}");
+            GD.PrintErr($"Projectile: Missing components on {Name}");
             QueueFree();
             return;
         }
 
-        _lifetime = AttackData.Lifetime;
-        MovementComponent?.Initialize(AttackData);
-
-        if (!_isLaunched)
-            Direction = Vector2.Right.Rotated(GlobalRotation);
+        // Default direction from rotation (set by spawner before AddChild)
+        Direction = Vector2.Right.Rotated(GlobalRotation);
 
         SetupLifetimeTimer();
         SetupHitboxComponent();
+    }
+
+    public void Execute(Vector2 direction, EntityStats ownerStats, AttackData attackData,
+        float damageMultiplier = 1.0f)
+    {
+        Direction = direction.Normalized();
+
+        // Initialize movement from ProjectileData (node is in tree, components are ready)
+        if (attackData is ProjectileData projectileData)
+        {
+            MovementComponent.Initialize(projectileData);
+            _lifetimeTimer.WaitTime = projectileData.Lifetime;
+            _lifetimeTimer.Start();
+        }
+
+        // Initialize damage on the hitbox
+        HitboxComponent?.Initialize(ownerStats, attackData, damageMultiplier);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -76,11 +74,10 @@ public partial class Projectile : CharacterBody2D, IAttack
     private void SetupLifetimeTimer()
     {
         _lifetimeTimer = new Timer();
-        _lifetimeTimer.WaitTime = _lifetime;
+        _lifetimeTimer.WaitTime = 5;
         _lifetimeTimer.OneShot = true;
         _lifetimeTimer.Timeout += OnLifetimeTimeout;
         AddChild(_lifetimeTimer);
-        _lifetimeTimer.Start();
     }
 
     private void SetupHitboxComponent()

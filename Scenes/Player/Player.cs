@@ -9,6 +9,21 @@ using HurtboxComponent = RotOfTime.Core.Combat.Components.HurtboxComponent;
 
 namespace RotOfTime.Scenes.Player;
 
+/// <summary>
+///     Result of a <see cref="Player.TryFireAttack"/> call.
+/// </summary>
+public enum AttackFireResult
+{
+    /// <summary>No attack was fired (no input or slot on cooldown).</summary>
+    NotFired,
+
+    /// <summary>An instant-cast attack was fired. No state transition needed.</summary>
+    FiredInstant,
+
+    /// <summary>A non-instant-cast attack was fired. Caller should transition to CastingState.</summary>
+    FiredNeedsCast,
+}
+
 public partial class Player : CharacterBody2D
 {
     public const float Speed = 200.0f;
@@ -27,6 +42,38 @@ public partial class Player : CharacterBody2D
     {
         SetupStatsComponent();
         SetupHurtboxComponent();
+    }
+
+    /// <summary>
+    ///     Polls input for an attack slot press, fires the attack if ready,
+    ///     and sets <see cref="ActiveAttackSlot"/> for non-instant casts.
+    ///     Returns a result indicating whether anything was fired and whether
+    ///     the caller should transition to CastingState.
+    /// </summary>
+    public AttackFireResult TryFireAttack()
+    {
+        PlayerAttackSlot? slot = EntityInputComponent.GetPressedAttackSlot();
+        if (slot == null)
+            return AttackFireResult.NotFired;
+
+        Vector2 mousePos = GetGlobalMousePosition();
+        Vector2 dir = (mousePos - GlobalPosition).Normalized();
+        Vector2 spawnPos = GlobalPosition + dir * 16;
+
+        bool fired = AttackManager.TryFire(
+            slot.Value, dir, spawnPos, EntityStatsComponent.EntityStats, this);
+
+        if (!fired)
+            return AttackFireResult.NotFired;
+
+        var attackSlot = AttackManager.GetSlot(slot.Value);
+        if (attackSlot is { IsInstantCast: false })
+        {
+            ActiveAttackSlot = slot.Value;
+            return AttackFireResult.FiredNeedsCast;
+        }
+
+        return AttackFireResult.FiredInstant;
     }
 
     public override void _Process(double delta)

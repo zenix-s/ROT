@@ -6,7 +6,6 @@ namespace RotOfTime.Core.Combat.Results;
 ///     Result of an attack calculation (attacker side).
 ///     Contains the raw attack output before defense is applied.
 /// </summary>
-[GlobalClass]
 public partial class AttackResult : Resource
 {
     public AttackResult()
@@ -20,9 +19,9 @@ public partial class AttackResult : Resource
         IsCritical = isCritical;
     }
 
-    [Export] public int RawDamage { get; set; }
-    [Export] public string AttackName { get; set; } = "";
-    [Export] public bool IsCritical { get; set; }
+    public int RawDamage { get; init; }
+    public string AttackName { get; init; } = "";
+    public bool IsCritical { get; init; }
 
     /// <summary>
     ///     Result for missed or invalid attacks.

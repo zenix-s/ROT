@@ -5,40 +5,32 @@ using RotOfTime.Core.Entities;
 namespace RotOfTime.Core.Combat.Components.AttackSpawnerComponents;
 
 /// <summary>
-///     Spawns multiple attacks in a burst with a configurable delay between each.
-///     Follows the owner's position for each subsequent shot so attacks
-///     originate from the entity's current location, not the cast point.
+///     Invoca multiples ataques en burst desde una posicion fija.
 /// </summary>
 [GlobalClass]
-public partial class BurstSpawner : AttackSpawnerComponent
+public partial class TurretSpawner : AttackSpawnerComponent
 {
     private AttackData _attackData;
-    private Vector2 _direction;
-    private Node2D _ownerNode;
+    private Vector2 _fixedDirection;
+    private Vector2 _fixedPosition;
     private EntityStats _ownerStats;
     private int _spawned;
     private float _timeSinceLastSpawn;
 
     public int Count { get; set; } = 3;
     public float DelayBetweenShots { get; set; } = 0.25f;
-    public float SpawnOffset { get; set; } = 16f;
-
+    
     public override bool IsComplete => _spawned >= Count;
 
-    public override void Activate(
-        Vector2 direction,
-        Vector2 position,
-        EntityStats ownerStats,
-        AttackData attackData,
-        Node2D ownerNode
-    )
+    public override void Activate(Vector2 direction, Vector2 position, EntityStats ownerStats, AttackData attackData,
+        Node2D ownerNode)
     {
-        _direction = direction.Normalized();
-        _ownerNode = ownerNode;
+        _fixedDirection = direction.Normalized();
+        _fixedPosition = position;
         _ownerStats = ownerStats;
         _attackData = attackData;
-
-        SpawnAttackInstance(_direction, position, _ownerStats, _attackData);
+        
+        SpawnAttackInstance(_fixedDirection, _fixedPosition, _ownerStats, _attackData);
         _spawned = 1;
         _timeSinceLastSpawn = 0f;
     }
@@ -52,8 +44,7 @@ public partial class BurstSpawner : AttackSpawnerComponent
 
         while (_timeSinceLastSpawn >= DelayBetweenShots && _spawned < Count)
         {
-            Vector2 currentPos = _ownerNode.GlobalPosition + _direction * SpawnOffset;
-            SpawnAttackInstance(_direction, currentPos, _ownerStats, _attackData);
+            SpawnAttackInstance(_fixedDirection, _fixedPosition, _ownerStats, _attackData);
             _spawned++;
             _timeSinceLastSpawn -= DelayBetweenShots;
         }
@@ -63,8 +54,8 @@ public partial class BurstSpawner : AttackSpawnerComponent
     {
         _spawned = 0;
         _timeSinceLastSpawn = 0f;
-        _direction = Vector2.Zero;
-        _ownerNode = null;
+        _fixedDirection = Vector2.Zero;
+        _fixedPosition = Vector2.Zero;
         _ownerStats = null;
         _attackData = null;
     }

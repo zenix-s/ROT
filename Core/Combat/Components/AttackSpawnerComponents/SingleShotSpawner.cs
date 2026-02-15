@@ -1,12 +1,9 @@
 using Godot;
+using RotOfTime.Core.Combat.Attacks;
 using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Core.Combat.Components.AttackSpawnerComponents;
 
-/// <summary>
-///     Spawns a single attack immediately on activation.
-///     Replaces SingleShotStrategy.
-/// </summary>
 [GlobalClass]
 public partial class SingleShotSpawner : AttackSpawnerComponent
 {
@@ -14,15 +11,15 @@ public partial class SingleShotSpawner : AttackSpawnerComponent
 
     public override bool IsComplete => _hasSpawned;
 
-    public override void Activate(Vector2 direction, Vector2 position, EntityStats ownerStats)
+    public override void Activate(Vector2 direction, Vector2 position, EntityStats ownerStats, AttackData attackData,
+        Node2D ownerNode)
     {
-        SpawnAttackInstance(direction, position, ownerStats);
+        SpawnAttackInstance(direction, position, ownerStats, attackData);
         _hasSpawned = true;
     }
 
     public override void Process(double delta)
     {
-        // Single shot spawns everything in Activate, nothing to do here.
     }
 
     public override void Reset()

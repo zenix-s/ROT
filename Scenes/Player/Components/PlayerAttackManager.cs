@@ -1,44 +1,46 @@
+using System;
 using Godot;
+using RotOfTime.Autoload;
 using RotOfTime.Core.Combat.Components;
-using RotOfTime.Core.Combat.Components.AttackSpawnerComponents;
-using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Scenes.Player.Components;
 
 /// <summary>
 ///     Player-specific attack manager. Maps PlayerAttackSlot enum values
-///     to AttackSpawnerComponent children discovered in the scene tree.
-///     Spawners are expected to be child nodes named matching the enum values.
+///     to AttackSlot children discovered in the scene tree.
+///     Each AttackSlot encapsulates its spawner, cooldown, and cast configuration.
 /// </summary>
 [GlobalClass]
 public partial class PlayerAttackManager : AttackManagerComponent<PlayerAttackSlot>
 {
-    [Export] public AttackSpawnerComponent BasicAttackSpawner { get; set; }
-    [Export] public AttackSpawnerComponent Ability1Spawner { get; set; }
-    [Export] public AttackSpawnerComponent Ability2Spawner { get; set; }
-    [Export] public AttackSpawnerComponent Ability3Spawner { get; set; }
-    [Export] public AttackSpawnerComponent Ability4Spawner { get; set; }
+    public AttackSlot BasicAttackSlot { get; set; }
+    public AttackSlot Ability1Slot { get; set; }
+    public AttackSlot Ability2Slot { get; set; }
+    public AttackSlot Ability3Slot { get; set; }
 
     public override void _Ready()
     {
-        RegisterExportedSpawners();
+        RegisterExportedSlots();
+        LoadPlayerAttacks();
     }
 
-    private void RegisterExportedSpawners()
+    private void LoadPlayerAttacks()
     {
-        if (BasicAttackSpawner != null)
-            RegisterSlot(PlayerAttackSlot.BasicAttack, BasicAttackSpawner);
+        // GameManager.Instance.AbilityManager.LoadPlayerAttack(PlayerAttackSlot.BasicAttack, BasicAttackSlot);
+    }
 
-        if (Ability1Spawner != null)
-            RegisterSlot(PlayerAttackSlot.Ability1, Ability1Spawner);
+    private void RegisterExportedSlots()
+    {
+        if (BasicAttackSlot != null)
+            RegisterSlot(PlayerAttackSlot.BasicAttack, BasicAttackSlot);
 
-        if (Ability2Spawner != null)
-            RegisterSlot(PlayerAttackSlot.Ability2, Ability2Spawner);
+        if (Ability1Slot != null)
+            RegisterSlot(PlayerAttackSlot.Ability1, Ability1Slot);
 
-        if (Ability3Spawner != null)
-            RegisterSlot(PlayerAttackSlot.Ability3, Ability3Spawner);
+        if (Ability2Slot != null)
+            RegisterSlot(PlayerAttackSlot.Ability2, Ability2Slot);
 
-        if (Ability4Spawner != null)
-            RegisterSlot(PlayerAttackSlot.Ability4, Ability4Spawner);
+        if (Ability3Slot != null)
+            RegisterSlot(PlayerAttackSlot.Ability3, Ability3Slot);
     }
 }

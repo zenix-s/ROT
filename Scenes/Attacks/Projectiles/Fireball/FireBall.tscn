@@ -3,8 +3,6 @@
 [ext_resource type="Script" uid="uid://dvgsmmqtd1rom" path="res://Scenes/Attacks/Projectiles/Fireball/Fireball.cs" id="1_fireball"]
 [ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="3_sprite"]
 [ext_resource type="Script" uid="uid://dmjy7sqfwj6nb" path="res://Core/Combat/Components/AttackHitboxComponent.cs" id="4_nvk5s"]
-[ext_resource type="Script" uid="uid://bme4d2c100jlf" path="res://Core/Combat/Components/AttackDamageComponent.cs" id="5_jfoat"]
-[ext_resource type="Resource" uid="uid://dombbca3uk0ap" path="res://Scenes/Attacks/Projectiles/Fireball/FireballAttackData.tres" id="5_sr3fb"]
 [ext_resource type="Script" uid="uid://d3mdiyui48mnx" path="res://Core/Combat/Components/AttackMovementComponents/LinearMovementComponent.cs" id="6_a87f2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6oscf"]
@@ -13,12 +11,10 @@ radius = 7.071068
 [sub_resource type="CircleShape2D" id="CircleShape2D_nvk5s"]
 radius = 8.0
 
-[node name="Fireball" type="CharacterBody2D" unique_id=1324186922 node_paths=PackedStringArray("MovementComponent", "DamageComponent", "HitboxComponent")]
+[node name="Fireball" type="CharacterBody2D" unique_id=1324186922 node_paths=PackedStringArray("MovementComponent", "HitboxComponent")]
 collision_layer = 512
 script = ExtResource("1_fireball")
 MovementComponent = NodePath("LinearMovementComponent")
-AttackData = ExtResource("5_sr3fb")
-DamageComponent = NodePath("AttackDamageComponent")
 HitboxComponent = NodePath("AttackHitboxComponent")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=840735952]
@@ -34,12 +30,6 @@ metadata/_custom_type_script = "uid://dmjy7sqfwj6nb"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent" unique_id=352414945]
 shape = SubResource("CircleShape2D_nvk5s")
-
-[node name="AttackDamageComponent" type="Node" parent="." unique_id=1961555299 node_paths=PackedStringArray("Hitbox")]
-script = ExtResource("5_jfoat")
-Hitbox = NodePath("../AttackHitboxComponent")
-AttackData = ExtResource("5_sr3fb")
-metadata/_custom_type_script = "uid://bme4d2c100jlf"
 
 [node name="LinearMovementComponent" type="Node" parent="." unique_id=1420792368]
 script = ExtResource("6_a87f2")
