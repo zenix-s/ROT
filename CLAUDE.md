@@ -91,7 +91,7 @@ This project uses `.slnx` (XML-based solution format), not `.sln`. Godot regener
 
 ### Autoload Singletons (`Autoload/`)
 Registered in `project.godot` `[autoload]` section:
-- **GameManager** (`Instance` property) - Runtime meta-progression state. Creates SaveManager, GameStateManager, AbilityManager, and ProgressionManager internally.
+- **GameManager** (`Instance` property) - Runtime meta-progression state. Creates SaveManager, GameStateManager, AbilityManager, ProgressionManager, and ArtifactManager internally.
 - **SceneManager** (`Instance` property) - Scene transitions via signals (`SceneChangeRequested`, `MenuChangeRequested`)
 
 Not autoloads (plain C# classes created by GameManager):
@@ -99,6 +99,7 @@ Not autoloads (plain C# classes created by GameManager):
 - **GameStateManager** - Milestone tracking with C# 13 `extension` blocks
 - **AbilityManager** - Player ability loadout management (stub)
 - **ProgressionManager** - Elevation/Resonance tracking, stat multiplier calculation (plain C# class, not a Godot Node)
+- **ArtifactManager** - Artifact ownership/equipment, stat bonus calculation (plain C# class, not a Godot Node)
 
 ### Entity System (`Core/Entities/`)
 Reusable components attached to any entity (Player, Enemies):
@@ -166,7 +167,7 @@ AttackHitboxComponent overlaps HurtboxComponent
 - **LinearMovementComponent** - Straight-line with MoveToward acceleration
 
 ### Save System (`Core/GameData/`)
-- **MetaData** - Permanent progression (completed milestones, current elevation, unlocked resonances). Serialized to JSON.
+- **MetaData** - Permanent progression (completed milestones, current elevation, unlocked resonances, artifact slots/owned/equipped). Serialized to JSON.
 - **GameData/PlayerData** - Planned for run state (not yet implemented)
 
 ### Scene Management (`Core/SceneExtensionManager.cs`)
@@ -209,14 +210,14 @@ Static dictionaries map enums to scene paths:
 
 ## Current Development Phase
 
-Pre-alpha. Attack system refactor completed. Progression system implemented. Next: Artifact System, then Spells.
+Pre-alpha. Attack system refactor completed. Progression system implemented. Artifact system implemented. Next: Spells.
 
 See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase plan.
 
 **Current status (Vertical Slice):**
 - [x] Phase 1: Attack System Refactor
 - [x] Phase 2, Tasks 1-2: Progression System (Elevations & Resonances)
-- [ ] Phase 2, Tasks 3-4: Artifact System (slots, equip/unequip, stat modifiers)
+- [x] Phase 2, Tasks 3-4: Artifact System (slots, equip/unequip, stat modifiers)
 - [ ] Phase 3: Spells (2-3 spells beyond Carbon Bolt)
 - [ ] Phase 4: Enemy AI and Combat
 - [ ] Phase 5-6: Level Design + Boss
@@ -239,3 +240,11 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - **Deleted:** `ResonanceData.cs`, `ElevationData.cs` — YAGNI, all resonances have identical mechanics (+20% HP, +10% DMG), no need for per-resonance Resources
 - **Key decision:** `EntityStatsComponent` uses simple `HealthMultiplier`/`DamageMultiplier` float properties (no dependency on GameManager). `Player.cs` acts as coordinator bridging global state to components.
 - **Save/load:** `MetaData` extended with `CurrentElevation` and `UnlockedResonances` fields, wired through `GameManager.LoadMeta()`/`SaveMeta()`
+
+### 2026-02-16: Artifact System Architecture
+- **Plan said:** `ArtifactManagerComponent` (Godot Node child of Player), `ArtifactSlot` struct, enum `ArtifactEffect` with hardcoded effect types
+- **Actual:** `ArtifactManager` as plain C# class owned by `GameManager` (same pattern as ProgressionManager)
+- **Simplified effects:** `ArtifactData` Resource with `HealthBonus`/`DamageBonus` floats. No enum/Resource for effects — YAGNI until mechanical effects (potions, regen) have supporting systems
+- **Persistence:** Resource paths stored in MetaData, loaded via `GD.Load<ArtifactData>(path)`
+- **Coordination:** `Player.ApplyAllMultipliers()` combines progression + artifact bonuses into EntityStatsComponent multipliers
+- **3 example artifacts:** Escudo de Grafito (+20% HP, 1 slot), Lente de Foco (+15% DMG, 1 slot), Nucleo Denso (+25% HP +15% DMG, 2 slots)

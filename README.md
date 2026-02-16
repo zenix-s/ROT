@@ -160,13 +160,25 @@ Cooldowns gestionados por Timers de Godot (OneShot), no por tracking manual de d
 **Flujo de datos:**
 ```
 GameManager.LoadMeta() → ProgressionManager.LoadResonanceKeys()
-Player._Ready() → ApplyProgressionMultipliers()
+Player._Ready() → ApplyAllMultipliers()
   → Lee ProgressionManager.GetHealthMultiplier() / GetDamageMultiplier()
-  → Setea EntityStatsComponent.HealthMultiplier / DamageMultiplier
+  → Lee ArtifactManager.GetTotalHealthBonus() / GetTotalDamageBonus()
+  → Combina ambos en EntityStatsComponent.HealthMultiplier / DamageMultiplier
   → EntityStatsComponent.RecalculateStats()
 ```
 
 **Principio clave:** `EntityStatsComponent` no tiene dependencia de `GameManager` ni de `ProgressionManager`. Usa propiedades simples (`HealthMultiplier`, `DamageMultiplier`) que el coordinador (`Player.cs`) setea. Esto mantiene los componentes reutilizables para enemigos y otras entidades.
+
+## Sistema de Artefactos (Post-Implementacion)
+
+`ArtifactManager` es una clase C# plana propiedad de `GameManager`. Gestiona artefactos owned/equipped con sistema de slots.
+
+**Estructura:**
+- `ArtifactData` (Resource): Nombre, Descripcion, SlotCost (1-3), HealthBonus, DamageBonus
+- `ArtifactManager`: Equip/Unequip con validacion de slots, suma de bonuses, persistencia via resource paths
+- 3 artefactos de ejemplo: Escudo de Grafito (+20% HP), Lente de Foco (+15% DMG), Nucleo Denso (+25% HP +15% DMG, 2 slots)
+
+**Slots:** Empieza con 1, max 3 (se desbloquean en Elevaciones 3 y 5).
 
 ## Patrones Clave
 
@@ -222,3 +234,19 @@ Se implemento el sistema de progresion como clase C# plana en vez de componente 
 **Archivos creados:** `Autoload/ProgressionManager.cs`
 **Archivos modificados:** `GameManager.cs`, `EntityStatsComponent.cs`, `MetaData.cs`, `Player.cs`
 **Archivos eliminados:** `ResonanceData.cs`, `ElevationData.cs` (YAGNI)
+
+## 2026-02-16: Sistema de Artefactos
+
+Se implemento el sistema de artefactos como clase C# plana, mismo patron que ProgressionManager:
+
+| | Plan original | Implementacion final |
+|---|---|---|
+| **Manager** | `ArtifactManagerComponent` (Node hijo de Player) | `ArtifactManager` (clase C# en GameManager) |
+| **Efectos** | Enum `ArtifactEffect` con tipos hardcodeados | `HealthBonus`/`DamageBonus` floats directos (YAGNI) |
+| **Persistencia** | No definida | Resource paths en MetaData |
+| **Coordinacion** | Directa via Export | `Player.ApplyAllMultipliers()` combina progresion + artefactos |
+
+**Razon:** Efectos mecanicos (pociones, regen, invulnerabilidad) requieren sistemas que no existen. Solo implementamos multiplicadores de stats que ya tenemos.
+
+**Archivos creados:** `Core/Artifacts/ArtifactData.cs`, `Core/Artifacts/ArtifactManager.cs`, 3 `.tres`
+**Archivos modificados:** `GameManager.cs`, `MetaData.cs`, `Player.cs`

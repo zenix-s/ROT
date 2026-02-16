@@ -263,7 +263,14 @@ git commit -m "feat: integrate ProgressionComponent with EntityStatsComponent fo
 
 ---
 
-### Task 3: Artifact System - Data Layer
+### Task 3: Artifact System - Data Layer ---- COMPLETADO
+
+> **NOTA:** La implementacion difiere del plan original. Ver `CLAUDE.md` Decisions Log 2026-02-16.
+> - `ArtifactManager` (clase C# plana en GameManager) en vez de `ArtifactManagerComponent` (Node)
+> - Sin `ArtifactSlot` struct ni enum `ArtifactEffect` — YAGNI
+> - `ArtifactData` Resource con `HealthBonus`/`DamageBonus` floats directos
+> - Persistencia via resource paths en MetaData
+> - `Player.ApplyAllMultipliers()` combina progresion + artefactos
 
 **Files:**
 - Create: `Core/Artifacts/ArtifactData.cs`
@@ -407,7 +414,12 @@ git commit -m "feat: add Artifact data structures and ArtifactManagerComponent"
 
 ---
 
-### Task 4: Create Test Artifact Resources
+### Task 4: Create Test Artifact Resources ---- COMPLETADO
+
+> **NOTA:** Se crearon 3 artefactos (no los del plan original).
+> - Escudo de Grafito (+20% HP, 1 slot) en vez de Vial de Curacion
+> - Lente de Foco (+15% DMG, 1 slot)
+> - Nucleo Denso (+25% HP +15% DMG, 2 slots) en vez de Escudo de Grafito
 
 **Files:**
 - Create: `Resources/Artifacts/VialDeCuracion.tres`
