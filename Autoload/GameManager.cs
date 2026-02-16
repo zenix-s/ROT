@@ -22,6 +22,7 @@ public partial class GameManager : Node
     public SaveManager SaveManager { get; private set; }
     public GameStateManager GameStateManager { get; private set; }
     public AbilityManager AbilityManager { get; private set; }
+    public ProgressionManager ProgressionManager { get; private set; }
 
     public override void _Ready()
     {
@@ -29,6 +30,7 @@ public partial class GameManager : Node
         SaveManager = new SaveManager();
         GameStateManager = new GameStateManager();
         AbilityManager = new AbilityManager();
+        ProgressionManager = new ProgressionManager();
         LoadMeta();
     }
 
@@ -36,13 +38,20 @@ public partial class GameManager : Node
     {
         Meta = SaveManager.LoadMeta() ?? new MetaData();
         GameStateManager.LoadMilestones(Meta.CompletedMilestones);
+        ProgressionManager.CurrentElevation = Meta.CurrentElevation;
+        ProgressionManager.LoadResonanceKeys(Meta.UnlockedResonances);
         GD.Print("GameManager: Meta loaded");
         GD.Print("Milestones: " + string.Join(", ", Meta.CompletedMilestones));
+        GD.Print($"Progression: Elevation {ProgressionManager.CurrentElevation}, " +
+                 $"HP mult {ProgressionManager.GetHealthMultiplier():F2}x, " +
+                 $"DMG mult {ProgressionManager.GetDamageMultiplier():F2}x");
     }
 
     public void SaveMeta()
     {
         Meta.CompletedMilestones = [.. GameStateManager.CompletedMilestones];
+        Meta.CurrentElevation = ProgressionManager.CurrentElevation;
+        Meta.UnlockedResonances = ProgressionManager.GetResonanceKeys();
         SaveManager.SaveMeta(Meta);
     }
 

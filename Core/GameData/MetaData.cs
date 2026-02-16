@@ -10,4 +10,6 @@ namespace RotOfTime.Core.GameData;
 public class MetaData
 {
     public List<Milestone> CompletedMilestones { get; set; } = [];
+    public int CurrentElevation { get; set; } = 1;
+    public List<string> UnlockedResonances { get; set; } = [];
 }

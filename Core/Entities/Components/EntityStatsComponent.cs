@@ -21,6 +21,18 @@ public partial class EntityStatsComponent : Node
 
     public int CurrentHealth { get; private set; }
 
+    /// <summary>Set by the entity coordinator (e.g. Player.cs). Defaults to 1.0 (no bonus).</summary>
+    public float HealthMultiplier { get; set; } = 1.0f;
+
+    /// <summary>Set by the entity coordinator (e.g. Player.cs). Defaults to 1.0 (no bonus).</summary>
+    public float DamageMultiplier { get; set; } = 1.0f;
+
+    /// <summary>Max health factoring in external multipliers.</summary>
+    public int MaxHealth => Mathf.RoundToInt(EntityStats.VitalityStat * HealthMultiplier);
+
+    /// <summary>Attack power factoring in external multipliers.</summary>
+    public int AttackPower => Mathf.RoundToInt(EntityStats.AttackStat * DamageMultiplier);
+
     public override void _Ready()
     {
         if (EntityStats == null)
@@ -31,9 +43,8 @@ public partial class EntityStatsComponent : Node
 
     private void SetupHealth()
     {
-        CurrentHealth = EntityStats.VitalityStat;
+        CurrentHealth = MaxHealth;
     }
-
 
     public void TakeDamage(AttackResult attackResult)
     {
@@ -48,8 +59,20 @@ public partial class EntityStatsComponent : Node
             EmitSignal(SignalName.EntityDied);
     }
 
+    /// <summary>
+    /// Recalculates MaxHealth and clamps CurrentHealth. Call after multipliers change.
+    /// </summary>
+    public void RecalculateStats()
+    {
+        int newMax = MaxHealth;
+        if (CurrentHealth > newMax)
+            CurrentHealth = newMax;
+
+        EmitSignal(SignalName.StatsUpdated);
+    }
+
     public void ResetStats()
     {
-        CurrentHealth = EntityStats.VitalityStat;
+        CurrentHealth = MaxHealth;
     }
 }

@@ -39,6 +39,7 @@ public partial class Player : CharacterBody2D
     {
         SetupStatsComponent();
         SetupHurtboxComponent();
+        ApplyProgressionMultipliers();
     }
 
     public AttackFireResult TryFireAttack()
@@ -77,8 +78,12 @@ public partial class Player : CharacterBody2D
 
     public override void _Process(double delta)
     {
+        var prog = GameManager.Instance?.ProgressionManager;
+
         DebugLabel.Text =
-            $"Health: {EntityStatsComponent.CurrentHealth}/{EntityStatsComponent.EntityStats.VitalityStat}\n";
+            $"HP: {EntityStatsComponent.CurrentHealth}/{EntityStatsComponent.MaxHealth}\n" +
+            $"ATK: {EntityStatsComponent.AttackPower} ({EntityStatsComponent.DamageMultiplier:F2}x)\n" +
+            $"Elev: {prog?.CurrentElevation ?? 1}";
     }
 
     private void SetupHurtboxComponent()
@@ -102,6 +107,17 @@ public partial class Player : CharacterBody2D
             throw new InvalidOperationException("StatsComponent is not set");
         EntityStatsComponent.EntityDied += OnPlayerDied;
         EntityStatsComponent.HealthChanged += OnPlayerHealthChanged;
+    }
+
+    private void ApplyProgressionMultipliers()
+    {
+        var prog = GameManager.Instance?.ProgressionManager;
+        if (prog == null)
+            return;
+
+        EntityStatsComponent.HealthMultiplier = prog.GetHealthMultiplier();
+        EntityStatsComponent.DamageMultiplier = prog.GetDamageMultiplier();
+        EntityStatsComponent.RecalculateStats();
     }
 
     #region Event Handlers
