@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ProjectileData" format=3 uid="uid://dbbdpgopbl6w5"]
+
+[ext_resource type="PackedScene" uid="uid://dwips18xqhtp8" path="res://Scenes/Attacks/Projectiles/Projectile.tscn" id="1_08s58"]
+[ext_resource type="Script" uid="uid://bi7dj6vs1ad3f" path="res://Core/Combat/Attacks/ProjectileData.cs" id="2_n1ove"]
+
+[resource]
+script = ExtResource("2_n1ove")
+InitialSpeed = 300
+TargetSpeed = 300
+Lifetime = 3
+Name = "Carbon bolt"
+AttackScene = ExtResource("1_08s58")
+CooldownDuration = 0.4
+metadata/_custom_type_script = "uid://bi7dj6vs1ad3f"

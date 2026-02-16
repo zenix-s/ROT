@@ -19,9 +19,6 @@ public enum AttackFireResult
 
     /// <summary>An instant-cast attack was fired. No state transition needed.</summary>
     FiredInstant,
-
-    /// <summary>A non-instant-cast attack was fired. Caller should transition to CastingState.</summary>
-    FiredNeedsCast,
 }
 
 public partial class Player : CharacterBody2D
@@ -60,13 +57,7 @@ public partial class Player : CharacterBody2D
         if (!fired)
             return AttackFireResult.NotFired;
 
-        var attackSlot = AttackManager.GetSlot(slot.Value);
-        if (attackSlot is { IsInstantCast: false })
-        {
-            ActiveAttackSlot = slot.Value;
-            return AttackFireResult.FiredNeedsCast;
-        }
-
+        // All attacks are instant (no casting phase)
         return AttackFireResult.FiredInstant;
     }
 
@@ -75,14 +66,11 @@ public partial class Player : CharacterBody2D
         if (EntityInputComponent.IsAttackJustPressed)
             return PlayerAttackSlot.BasicAttack;
 
-        if (EntityInputComponent.IsAbility1JustPressed)
-            return PlayerAttackSlot.Ability1;
+        if (EntityInputComponent.IsSkill1JustPressed)
+            return PlayerAttackSlot.Spell1;
 
-        if (EntityInputComponent.IsAbility2JustPressed)
-            return PlayerAttackSlot.Ability2;
-
-        if (EntityInputComponent.IsAbility3JustPressed)
-            return PlayerAttackSlot.Ability3;
+        if (EntityInputComponent.IsSkill2JustPressed)
+            return PlayerAttackSlot.Spell2;
 
         return null;
     }

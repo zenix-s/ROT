@@ -1,88 +1,54 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using RotOfTime.Core.Combat.Attacks;
 using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Core.Combat.Components;
 
 /// <summary>
-///     Abstract generic attack manager that routes attack requests from the state machine
-///     to AttackSlot instances. Each entity type provides its own TSlot enum defining
-///     available attack slots. All lifecycle management (cooldown, cast timing, execution)
-///     is delegated to the AttackSlot.
+///     Abstract generic attack manager that routes attack requests to attack scenes.
+///     Uses Timer nodes for cooldown tracking (no manual cooldown logic).
+///     All attacks are instant (no casting phase).
 /// </summary>
 public abstract partial class AttackManagerComponent<TSlot> : Node
     where TSlot : struct, Enum
 {
-    private readonly Dictionary<TSlot, AttackSlot> _slots = [];
-    private readonly HashSet<TSlot> _activeExecutions = [];
-    private readonly List<TSlot> _completedExecutions = [];
-
-    private TSlot? _activeCastSlot;
+    private readonly Dictionary<TSlot, AttackData> _slotData = new();
+    private readonly Dictionary<TSlot, Timer> _slotTimers = new();
 
     /// <summary>
-    ///     Emitted when a cast starts. StringName is the TSlot.ToString().
+    ///     Emitted when an attack is fired. StringName is the TSlot.ToString().
     /// </summary>
     [Signal]
-    public delegate void CastStartedEventHandler(StringName slot);
+    public delegate void AttackFiredEventHandler(StringName slot);
 
-    /// <summary>
-    ///     Emitted when a cast phase completes. StringName is the TSlot.ToString().
-    /// </summary>
-    [Signal]
-    public delegate void CastCompletedEventHandler(StringName slot);
-
-    /// <summary>
-    ///     Emitted when an attack execution finishes entirely. StringName is the TSlot.ToString().
-    /// </summary>
-    [Signal]
-    public delegate void AttackFinishedEventHandler(StringName slot);
-
-    /// <summary>
-    ///     Whether any non-instant cast is currently active.
-    /// </summary>
-    public bool IsCasting => _activeCastSlot.HasValue;
-
-    /// <summary>
-    ///     The currently active cast slot, if any.
-    /// </summary>
-    public TSlot? ActiveCastSlot => _activeCastSlot;
-
-    /// <summary>
-    ///     Whether movement is allowed during the current cast.
-    /// </summary>
-    public bool AllowMovementDuringCast
+    protected void RegisterSlot(TSlot slotKey, AttackData data)
     {
-        get
-        {
-            if (!_activeCastSlot.HasValue)
-                return true;
-
-            if (_slots.TryGetValue(_activeCastSlot.Value, out var slot))
-                return slot.AllowMovementDuringCast;
-
-            return true;
-        }
-    }
-
-    protected void RegisterSlot(TSlot slotKey, AttackSlot slot)
-    {
-        if (_slots.ContainsKey(slotKey))
+        if (_slotData.ContainsKey(slotKey))
         {
             GD.PrintErr($"AttackManagerComponent: Slot '{slotKey}' already registered. Unregister first.");
             return;
         }
 
-        _slots[slotKey] = slot;
+        _slotData[slotKey] = data;
+    }
+
+    protected void RegisterTimer(TSlot slotKey, Timer timer)
+    {
+        if (_slotTimers.ContainsKey(slotKey))
+        {
+            GD.PrintErr($"AttackManagerComponent: Timer for slot '{slotKey}' already registered.");
+            return;
+        }
+
+        _slotTimers[slotKey] = timer;
     }
 
     protected void UnregisterSlot(TSlot slotKey)
     {
-        _slots.Remove(slotKey);
-        _activeExecutions.Remove(slotKey);
-
-        if (_activeCastSlot.HasValue && EqualityComparer<TSlot>.Default.Equals(_activeCastSlot.Value, slotKey))
-            _activeCastSlot = null;
+        _slotData.Remove(slotKey);
+        _slotTimers.Remove(slotKey);
     }
 
     /// <summary>
@@ -95,30 +61,50 @@ public abstract partial class AttackManagerComponent<TSlot> : Node
     /// <param name="ownerNode">The entity node that owns this attack (for position tracking)</param>
     public bool TryFire(TSlot slotKey, Vector2 direction, Vector2 position, EntityStats stats, Node2D ownerNode)
     {
-        if (!_slots.TryGetValue(slotKey, out var slot))
+        if (!_slotData.TryGetValue(slotKey, out var data))
             return false;
 
-        if (!slot.IsReady)
+        if (!_slotTimers.TryGetValue(slotKey, out var timer))
             return false;
 
-        // Block new non-instant casts if one is already active
-        if (_activeCastSlot.HasValue && !slot.IsInstantCast)
-            return false;
+        if (!timer.IsStopped())
+            return false; // On cooldown
 
-        slot.Activate(direction, position, stats, ownerNode);
-        _activeExecutions.Add(slotKey);
+        SpawnAttack(data, direction, position, stats);
+        timer.Start(data.CooldownDuration);
 
-        // Track active cast for non-instant abilities
-        if (!slot.IsInstantCast)
-            _activeCastSlot = slotKey;
-
-        EmitSignal(SignalName.CastStarted, SlotToStringName(slotKey));
-
-        // Instant cast completes immediately
-        if (slot.IsInstantCast)
-            EmitSignal(SignalName.CastCompleted, SlotToStringName(slotKey));
-
+        EmitSignal(SignalName.AttackFired, SlotToStringName(slotKey));
         return true;
+    }
+
+    private void SpawnAttack(AttackData data, Vector2 direction, Vector2 position, EntityStats stats)
+    {
+        if (data?.AttackScene == null)
+        {
+            GD.PrintErr($"AttackManagerComponent: AttackData or AttackScene is null.");
+            return;
+        }
+
+        var attack = data.AttackScene.Instantiate<Node2D>();
+        attack.GlobalPosition = position;
+        attack.Rotation = direction.Angle();
+
+        // Find or create attack container
+        var root = GetTree().Root;
+        var attackContainer = root.GetNodeOrNull<Node2D>("Main/Attacks");
+
+        if (attackContainer == null)
+        {
+            GD.PrintErr("AttackManagerComponent: 'Main/Attacks' container not found. Cannot spawn attack.");
+            attack.QueueFree();
+            return;
+        }
+
+        attackContainer.AddChild(attack);
+
+        // Execute attack if it implements IAttack
+        if (attack is IAttack iAttack)
+            iAttack.Execute(direction, stats, data);
     }
 
     /// <summary>
@@ -126,7 +112,10 @@ public abstract partial class AttackManagerComponent<TSlot> : Node
     /// </summary>
     public bool IsOnCooldown(TSlot slotKey)
     {
-        return _slots.TryGetValue(slotKey, out var slot) && !slot.IsReady;
+        if (!_slotTimers.TryGetValue(slotKey, out var timer))
+            return false;
+
+        return !timer.IsStopped();
     }
 
     /// <summary>
@@ -134,18 +123,21 @@ public abstract partial class AttackManagerComponent<TSlot> : Node
     /// </summary>
     public float GetCooldownProgress(TSlot slotKey)
     {
-        if (!_slots.TryGetValue(slotKey, out var slot))
+        if (!_slotTimers.TryGetValue(slotKey, out var timer))
             return 0f;
 
-        return slot.GetCooldownProgress();
+        if (timer.IsStopped())
+            return 0f;
+
+        return Mathf.Clamp((float)(timer.TimeLeft / timer.WaitTime), 0f, 1f);
     }
 
     /// <summary>
-    ///     Get the AttackSlot assigned to a slot key.
+    ///     Get the AttackData assigned to a slot key.
     /// </summary>
-    public AttackSlot GetSlot(TSlot slotKey)
+    public AttackData GetSlotData(TSlot slotKey)
     {
-        return _slots.GetValueOrDefault(slotKey);
+        return _slotData.GetValueOrDefault(slotKey);
     }
 
     /// <summary>
@@ -153,42 +145,7 @@ public abstract partial class AttackManagerComponent<TSlot> : Node
     /// </summary>
     public bool HasSlot(TSlot slotKey)
     {
-        return _slots.ContainsKey(slotKey);
-    }
-
-    public override void _Process(double delta)
-    {
-        _completedExecutions.Clear();
-
-        // Tick all slots (cooldowns always tick, even when not executing)
-        foreach (var (slotKey, slot) in _slots)
-            slot.Process(delta);
-
-        // Check active executions for cast completion and execution completion
-        foreach (var slotKey in _activeExecutions)
-        {
-            var slot = _slots[slotKey];
-
-            // Check if cast phase completed for the active cast slot
-            if (_activeCastSlot.HasValue
-                && EqualityComparer<TSlot>.Default.Equals(_activeCastSlot.Value, slotKey)
-                && slot.IsCastComplete)
-            {
-                EmitSignal(SignalName.CastCompleted, SlotToStringName(slotKey));
-                _activeCastSlot = null;
-            }
-
-            // Check if execution is fully complete
-            if (slot.IsExecutionComplete)
-                _completedExecutions.Add(slotKey);
-        }
-
-        // Remove completed executions and emit signals
-        foreach (var slotKey in _completedExecutions)
-        {
-            _activeExecutions.Remove(slotKey);
-            EmitSignal(SignalName.AttackFinished, SlotToStringName(slotKey));
-        }
+        return _slotData.ContainsKey(slotKey);
     }
 
     /// <summary>

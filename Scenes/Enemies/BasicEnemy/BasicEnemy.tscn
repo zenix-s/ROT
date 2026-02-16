@@ -8,7 +8,6 @@
 [ext_resource type="Script" uid="uid://djxxiv6qnoyhy" path="res://Scenes/Enemies/BasicEnemy/StateMachine/EnemyStateMachine.cs" id="10_esm"]
 [ext_resource type="Script" uid="uid://bt65f6gwu47u" path="res://Scenes/Enemies/BasicEnemy/StateMachine/States/IdleState.cs" id="11_is"]
 [ext_resource type="Script" uid="uid://dan3m1ygtbyme" path="res://Scenes/Enemies/BasicEnemy/StateMachine/States/ChasingState.cs" id="12_cs"]
-[ext_resource type="Script" uid="uid://cmi324gm7goub" path="res://Core/Combat/Components/AttackManagerComponent.cs" id="13_amgr"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
 
@@ -100,9 +99,6 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=1880664763]
 shape = SubResource("CircleShape2D_detection")
 debug_color = Color(0.42, 0.58, 0.87, 0.2)
-
-[node name="AttackManagerComponent" type="Node" parent="." unique_id=582175937]
-script = ExtResource("13_amgr")
 
 [node name="EntityStatsComponent" type="Node" parent="." unique_id=1035887490]
 script = ExtResource("6_reiwa")
