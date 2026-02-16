@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ArtifactData" format=3]
+
+[resource]
+ArtifactName = "Escudo de Grafito"
+Description = "Refuerza la estructura molecular del portador. +20% vida."
+SlotCost = 1
+HealthBonus = 0.2
+DamageBonus = 0.0

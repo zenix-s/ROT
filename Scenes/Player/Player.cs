@@ -39,7 +39,7 @@ public partial class Player : CharacterBody2D
     {
         SetupStatsComponent();
         SetupHurtboxComponent();
-        ApplyProgressionMultipliers();
+        ApplyAllMultipliers();
     }
 
     public AttackFireResult TryFireAttack()
@@ -78,12 +78,14 @@ public partial class Player : CharacterBody2D
 
     public override void _Process(double delta)
     {
-        var prog = GameManager.Instance?.ProgressionManager;
+        var gm = GameManager.Instance;
+        var prog = gm?.ProgressionManager;
+        var arts = gm?.ArtifactManager;
 
         DebugLabel.Text =
             $"HP: {EntityStatsComponent.CurrentHealth}/{EntityStatsComponent.MaxHealth}\n" +
             $"ATK: {EntityStatsComponent.AttackPower} ({EntityStatsComponent.DamageMultiplier:F2}x)\n" +
-            $"Elev: {prog?.CurrentElevation ?? 1}";
+            $"Elev: {prog?.CurrentElevation ?? 1} | Arts: {arts?.UsedSlots ?? 0}/{arts?.MaxSlots ?? 1}";
     }
 
     private void SetupHurtboxComponent()
@@ -109,14 +111,23 @@ public partial class Player : CharacterBody2D
         EntityStatsComponent.HealthChanged += OnPlayerHealthChanged;
     }
 
-    private void ApplyProgressionMultipliers()
+    /// <summary>
+    ///     Applies stat multipliers from Progression and Artifacts to EntityStatsComponent.
+    ///     Call on _Ready and whenever equipment or progression changes.
+    /// </summary>
+    private void ApplyAllMultipliers()
     {
         var prog = GameManager.Instance?.ProgressionManager;
-        if (prog == null)
-            return;
+        var arts = GameManager.Instance?.ArtifactManager;
 
-        EntityStatsComponent.HealthMultiplier = prog.GetHealthMultiplier();
-        EntityStatsComponent.DamageMultiplier = prog.GetDamageMultiplier();
+        float hpMult = prog?.GetHealthMultiplier() ?? 1.0f;
+        float dmgMult = prog?.GetDamageMultiplier() ?? 1.0f;
+
+        hpMult += arts?.GetTotalHealthBonus() ?? 0f;
+        dmgMult += arts?.GetTotalDamageBonus() ?? 0f;
+
+        EntityStatsComponent.HealthMultiplier = hpMult;
+        EntityStatsComponent.DamageMultiplier = dmgMult;
         EntityStatsComponent.RecalculateStats();
     }
 

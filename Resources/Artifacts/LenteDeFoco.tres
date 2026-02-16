@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ArtifactData" format=3]
+
+[resource]
+ArtifactName = "Lente de Foco"
+Description = "Concentra la energia de los hechizos. +15% da\u00f1o."
+SlotCost = 1
+HealthBonus = 0.0
+DamageBonus = 0.15
