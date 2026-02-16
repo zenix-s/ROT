@@ -66,7 +66,7 @@ AttackStat = 10
 DefenseStat = 10
 metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
-[node name="Player" type="CharacterBody2D" unique_id=1512431336 node_paths=PackedStringArray("AnimationComponent", "DebugLabel", "EntityStatsComponent", "EntityInputComponent", "EntityMovementComponent", "HurtboxComponent") groups=["Player"]]
+[node name="Player" type="CharacterBody2D" unique_id=1512431336 node_paths=PackedStringArray("AnimationComponent", "DebugLabel", "EntityStatsComponent", "EntityInputComponent", "EntityMovementComponent", "HurtboxComponent", "AttackManager") groups=["Player"]]
 collision_layer = 2
 motion_mode = 1
 script = ExtResource("1_ft8w5")
@@ -76,6 +76,7 @@ EntityStatsComponent = NodePath("EntityStatsComponent")
 EntityInputComponent = NodePath("EntityInputComponent")
 EntityMovementComponent = NodePath("EntityMovementComponent")
 HurtboxComponent = NodePath("HurtboxComponent")
+AttackManager = NodePath("PlayerAttackManager")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1053701812]
 sprite_frames = SubResource("SpriteFrames_4wape")
