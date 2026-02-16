@@ -6,5 +6,10 @@
 [resource]
 script = ExtResource("2_n1ove")
 Name = "Carbon bolt"
+DamageCoefficient = 1.0
 AttackScene = ExtResource("1_08s58")
+CooldownDuration = 0.4
+InitialSpeed = 300
+TargetSpeed = 300
+Lifetime = 3
 metadata/_custom_type_script = "uid://bi7dj6vs1ad3f"
