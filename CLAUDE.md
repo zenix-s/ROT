@@ -91,20 +91,21 @@ This project uses `.slnx` (XML-based solution format), not `.sln`. Godot regener
 
 ### Autoload Singletons (`Autoload/`)
 Registered in `project.godot` `[autoload]` section:
-- **GameManager** (`Instance` property) - Runtime meta-progression state. Creates SaveManager, GameStateManager, and AbilityManager internally.
+- **GameManager** (`Instance` property) - Runtime meta-progression state. Creates SaveManager, GameStateManager, AbilityManager, and ProgressionManager internally.
 - **SceneManager** (`Instance` property) - Scene transitions via signals (`SceneChangeRequested`, `MenuChangeRequested`)
 
 Not autoloads (plain C# classes created by GameManager):
 - **SaveManager** - File I/O for persistence (JSON to `user://saves/`)
 - **GameStateManager** - Milestone tracking with C# 13 `extension` blocks
 - **AbilityManager** - Player ability loadout management (stub)
+- **ProgressionManager** - Elevation/Resonance tracking, stat multiplier calculation (plain C# class, not a Godot Node)
 
 ### Entity System (`Core/Entities/`)
 Reusable components attached to any entity (Player, Enemies):
 - **EntityStats** - `[Resource]` with VitalityStat, AttackStat, DefenseStat, Faction
 - **EntityInputComponent** (Node) - Input polling: Direction, IsAttackJustPressed, IsDashJustPressed, IsSkill1JustPressed, IsSkill2JustPressed
 - **EntityMovementComponent** (Node) - Velocity management: Move(), Dash(), KnockBack(), StopMovement()
-- **EntityStatsComponent** (Node) - Health management, TakeDamage(AttackResult), signals: HealthChanged, EntityDied, StatsUpdated
+- **EntityStatsComponent** (Node) - Health management with external multipliers (HealthMultiplier, DamageMultiplier), computed MaxHealth/AttackPower, TakeDamage(AttackResult), RecalculateStats(), signals: HealthChanged, EntityDied, StatsUpdated
 
 ### State Machine (`Core/Entities/StateMachine/`)
 Generic abstract state machine pattern:
@@ -165,7 +166,7 @@ AttackHitboxComponent overlaps HurtboxComponent
 - **LinearMovementComponent** - Straight-line with MoveToward acceleration
 
 ### Save System (`Core/GameData/`)
-- **MetaData** - Permanent progression (completed milestones). Serialized to JSON.
+- **MetaData** - Permanent progression (completed milestones, current elevation, unlocked resonances). Serialized to JSON.
 - **GameData/PlayerData** - Planned for run state (not yet implemented)
 
 ### Scene Management (`Core/SceneExtensionManager.cs`)
@@ -208,16 +209,18 @@ Static dictionaries map enums to scene paths:
 
 ## Current Development Phase
 
-Pre-alpha. Attack system refactor completed. Next: Vertical Slice prototype.
+Pre-alpha. Attack system refactor completed. Progression system implemented. Next: Artifact System, then Spells.
 
 See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase plan.
 
-**Immediate priorities (Vertical Slice Phase 1):**
-1. Implement Progression System (Elevations & Resonances)
-2. Create Artifact System (slots, equip/unequip, stat modifiers)
-3. Build spell system (2-3 spells beyond Carbon Bolt)
-4. Design Floors 1-3 with Metroidvania connectivity
-5. Create 2-3 enemy types with proper AI and attacks
+**Current status (Vertical Slice):**
+- [x] Phase 1: Attack System Refactor
+- [x] Phase 2, Tasks 1-2: Progression System (Elevations & Resonances)
+- [ ] Phase 2, Tasks 3-4: Artifact System (slots, equip/unequip, stat modifiers)
+- [ ] Phase 3: Spells (2-3 spells beyond Carbon Bolt)
+- [ ] Phase 4: Enemy AI and Combat
+- [ ] Phase 5-6: Level Design + Boss
+- [ ] Phase 7-9: UI, Save/Load, Polish
 
 ## Decisions Log
 
@@ -229,3 +232,10 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - Cooldowns now use Godot Timer nodes (OneShot) instead of manual `_cooldownRemaining` delta tracking
 - PlayerAttackManager exports AttackData resources directly (no intermediate AttackSlot nodes)
 - Reduced from 4 attack slots to 3 (BasicAttack + 2 Spells)
+
+### 2026-02-16: Progression System Architecture
+- **Plan said:** `ProgressionComponent` as Godot Node child of Player, with `ResonanceData` and `ElevationData` Resources
+- **Actual:** `ProgressionManager` as plain C# class owned by `GameManager` — progression is global game state, not entity-specific
+- **Deleted:** `ResonanceData.cs`, `ElevationData.cs` — YAGNI, all resonances have identical mechanics (+20% HP, +10% DMG), no need for per-resonance Resources
+- **Key decision:** `EntityStatsComponent` uses simple `HealthMultiplier`/`DamageMultiplier` float properties (no dependency on GameManager). `Player.cs` acts as coordinator bridging global state to components.
+- **Save/load:** `MetaData` extended with `CurrentElevation` and `UnlockedResonances` fields, wired through `GameManager.LoadMeta()`/`SaveMeta()`

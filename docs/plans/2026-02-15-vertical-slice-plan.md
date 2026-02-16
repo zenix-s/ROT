@@ -39,16 +39,21 @@ See `docs/plans/2026-02-15-attack-system-refactor.md` for full details.
 - Make spells self-contained (IAttack per scene)
 
 **Validation:**
-- [ ] Basic attack fires correctly
-- [ ] 2 spell slots functional
-- [ ] Cooldowns work via Timers
-- [ ] No console errors
+- [x] Basic attack fires correctly
+- [x] 2 spell slots functional
+- [x] Cooldowns work via Timers
+- [x] No console errors
 
 ---
 
 ## Phase 2: Core Systems Foundation (Week 3-4)
 
-### Task 1: Resonance System - Data Layer
+### Task 1: Resonance System - Data Layer ---- COMPLETADO
+
+> **NOTA:** La implementacion difiere del plan original. Ver `CLAUDE.md` Decisions Log 2026-02-16.
+> - `ProgressionManager` (clase C# plana en GameManager) en vez de `ProgressionComponent` (Node)
+> - Sin `ResonanceData`/`ElevationData` Resources (YAGNI: todas las resonancias son identicas)
+> - `EntityStatsComponent` usa `HealthMultiplier`/`DamageMultiplier` simples, Player.cs como coordinador
 
 **Files:**
 - Create: `Core/Progression/ResonanceData.cs`
@@ -186,7 +191,11 @@ git commit -m "feat: add Resonance and Elevation data structures + ProgressionCo
 
 ---
 
-### Task 2: Integrate Progression with EntityStatsComponent
+### Task 2: Integrate Progression with EntityStatsComponent ---- COMPLETADO
+
+> **NOTA:** Integrado via `Player.ApplyProgressionMultipliers()` que lee de `ProgressionManager`
+> y setea multiplicadores en `EntityStatsComponent`. Sin Export de ProgressionComponent.
+> Save/load integrado via `MetaData.CurrentElevation` y `MetaData.UnlockedResonances`.
 
 **Files:**
 - Modify: `Core/Entities/Components/EntityStatsComponent.cs`
