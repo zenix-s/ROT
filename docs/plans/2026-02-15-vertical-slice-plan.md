@@ -482,7 +482,11 @@ git commit -m "feat: add 3 base artifact resources (Vial, Lente, Escudo)"
 
 ## Phase 3: Spells Implementation (Week 5-6)
 
-### Task 5: Create Basic Attack (Carbon Bolt)
+### Task 5: Create Basic Attack (Carbon Bolt) ---- COMPLETADO
+
+> **NOTA:** Carbon Bolt ya existía como `Projectile.tscn` + `CarbonBolt.tres` (ProjectileData).
+> No se creó una escena nueva — usa la base `Projectile` directamente.
+> Ya estaba wired en `Player.tscn` como `BasicAttackData`. Speed 300, cooldown 0.4s, lifetime 3s.
 
 **Files:**
 - Create: `Scenes/Attacks/Spells/CarbonBolt/CarbonBolt.tscn`
@@ -580,7 +584,11 @@ git commit -m "feat: implement Carbon Bolt (basic attack)"
 
 ---
 
-### Task 6: Create Spell 1 (Fireball)
+### Task 6: Create Spell 1 (Fireball) ---- COMPLETADO
+
+> **NOTA:** `Fireball.cs` y `FireBall.tscn` ya existían de antes del refactor.
+> Se creó `Resources/Attacks/Fireball.tres` (ProjectileData) con speed 200, cooldown 2.0s,
+> lifetime 4s, DamageCoefficient 1.5. Wired como `Spell1Data` en `Player.tscn`.
 
 **Files:**
 - Create: `Scenes/Attacks/Spells/Fireball/Fireball.tscn`
@@ -600,7 +608,16 @@ git commit -m "feat: implement Fireball spell (Spell1 slot)"
 
 ---
 
-### Task 7: Create Spell 2 (Ice Shard)
+### Task 7: Create Spell 2 (Ice Shard) ---- COMPLETADO
+
+> **NOTA:** La implementacion difiere del plan original.
+> - Sin status effect (slow) — YAGNI, no hay sistema de status effects
+> - En vez de un projectil simple, Ice Shard es un **burst de 3 proyectiles** disparados en secuencia rápida (0.1s delay)
+> - `IceShard.cs` implementa `IAttack` como `Node2D` spawner, no como `Projectile`
+> - Spawna 3 instancias de `Projectile.tscn` con `IceShardProjectile.tres` (speed 350, lifetime 3s, dmg 0.5 per projectile)
+> - `IceShard.tres` (AttackData) tiene cooldown 1.2s, wired como `Spell2Data` en `Player.tscn`
+> - La lógica de burst está contenida en `IceShard.Execute()` — si se necesita reutilizar el patrón,
+>   se extraerá a un componente de estrategia de spawning (como AttackMovementComponent para movimiento)
 
 **Files:**
 - Create: `Scenes/Attacks/Spells/IceShard/IceShard.tscn`

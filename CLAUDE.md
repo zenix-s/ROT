@@ -210,7 +210,7 @@ Static dictionaries map enums to scene paths:
 
 ## Current Development Phase
 
-Pre-alpha. Attack system refactor completed. Progression system implemented. Artifact system implemented. Next: Spells.
+Pre-alpha. Attack system refactor completed. Progression system implemented. Artifact system implemented. Spells implemented. Next: Enemy AI and Combat.
 
 See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase plan.
 
@@ -218,7 +218,7 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - [x] Phase 1: Attack System Refactor
 - [x] Phase 2, Tasks 1-2: Progression System (Elevations & Resonances)
 - [x] Phase 2, Tasks 3-4: Artifact System (slots, equip/unequip, stat modifiers)
-- [ ] Phase 3: Spells (2-3 spells beyond Carbon Bolt)
+- [x] Phase 3: Spells (Carbon Bolt + Fireball + Ice Shard burst)
 - [ ] Phase 4: Enemy AI and Combat
 - [ ] Phase 5-6: Level Design + Boss
 - [ ] Phase 7-9: UI, Save/Load, Polish
@@ -248,3 +248,10 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - **Persistence:** Resource paths stored in MetaData, loaded via `GD.Load<ArtifactData>(path)`
 - **Coordination:** `Player.ApplyAllMultipliers()` combines progression + artifact bonuses into EntityStatsComponent multipliers
 - **3 example artifacts:** Escudo de Grafito (+20% HP, 1 slot), Lente de Foco (+15% DMG, 1 slot), Nucleo Denso (+25% HP +15% DMG, 2 slots)
+
+### 2026-02-16: Spells Implementation
+- **Carbon Bolt:** Already existed as `Projectile.tscn` + `CarbonBolt.tres`. No changes needed — was already wired as `BasicAttackData` in `Player.tscn`.
+- **Fireball:** Scene and script already existed (`FireBall.tscn`, `Fireball.cs`). Created proper `Resources/Attacks/Fireball.tres` (ProjectileData: speed 200, cooldown 2.0s, lifetime 4s, dmg 1.5x). Old stub `FireballAttackData.tres` left in place.
+- **Ice Shard (burst):** Plan said single projectile with slow effect. Actual: **burst of 3 projectiles** fired in rapid sequence (0.1s delay). No slow — YAGNI, no status effect system exists.
+- **Key decision:** Burst logic lives in `IceShard.Execute()` (self-contained). If burst pattern is needed again, extract to a spawn strategy component (analogous to `AttackMovementComponent` for movement). Not premature — only 1 user.
+- **IceShard architecture:** Node2D implementing IAttack (not a Projectile). Exports `ProjectileScene` + `SubProjectileData`. Spawns into `Main/Attacks` container. Self-destructs after all projectiles fired.
