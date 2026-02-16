@@ -1,6 +1,8 @@
 # Stack Tecnológico
 * **Motor de Juego:** Godot 4.6
-* **Lenguaje de Programación:** C#
+* **Lenguaje de Programación:** C# (.NET 10.0)
+* **Formato de solución:** `.slnx` (XML-based, no `.sln` - Godot regenera `.sln` en cada build)
+* **Estado actual:** Pre-alpha
  
 # Introducción y concepto del juego
 El juego se llama **Rot of Time** (La Putrefacción del Tiempo).
@@ -104,3 +106,86 @@ piso 4 - 5 -6 interconectados y enemigos medio xylos por infeccion de robots de 
 piso 7 - 8 - 9 intercontectados y similar a anterior pero aqui existen unos nodos que Ismael nos dice que tenemos que destruir para parar la infeccion xylos(esto termina resultando una trampa, la locura y influencia del ejambre por darnos su alma se ha intensificado y el realidad estamos liberando el cuerpo de ismael del piso 10 donde el se encerro por voluntad propia al ver que se estaba volviendo loco y su alma fragmentandose,
 
 piso 10 enfrentameitno final con Ismael Xylos. 
+
+# Arquitectura del Código
+
+## Estructura de Directorios
+
+```
+ROT/
+├── Autoload/           # Singletons globales (GameManager, SceneManager)
+├── Core/               # Lógica reutilizable independiente de escenas
+│   ├── Animation/      # Componentes de animación
+│   ├── Combat/         # Sistema de combate (2 capas: datos + comportamiento)
+│   │   ├── Attacks/    # Resources: AttackData, ProjectileData, IAttack
+│   │   ├── Calculations/ # DamageCalculator (C# puro, sin dependencias Godot)
+│   │   ├── Components/ # Hitbox, Hurtbox, AttackManagerComponent
+│   │   └── Results/    # AttackResult (Resource), DamageResult (record)
+│   ├── Entities/       # Componentes de entidad genéricos
+│   │   ├── Components/ # Input, Movement, Stats
+│   │   └── StateMachine/ # Patrón state machine genérico (IState, State<T>, StateMachine<T>)
+│   └── GameData/       # Persistencia (MetaData)
+├── Resources/          # .tres files (CarbonBolt, etc.)
+├── Scenes/             # Escenas Godot (.tscn) y scripts asociados
+│   ├── Attacks/        # Implementaciones de ataques (Projectile, Fireball, RockBody)
+│   ├── Enemies/        # Enemigos con StateMachine propia
+│   ├── Levels/         # Niveles de la torre
+│   ├── Main/           # Escena principal (punto de entrada del juego)
+│   ├── Menus/          # UI (StartMenu)
+│   └── Player/         # Player + PlayerAttackManager + StateMachine
+└── Assets/             # Sprites, texturas, audio
+```
+
+## Sistema de Combate (Post-Refactor)
+
+El sistema de combate usa una arquitectura de **2 capas** que separa datos de comportamiento:
+
+**Capa de datos (Resources .tres):**
+- `AttackData`: Nombre, coeficiente de daño, cooldown, escena del ataque
+- `ProjectileData` (hereda de AttackData): Velocidad, aceleración, lifetime
+
+**Capa de comportamiento (Escenas que implementan IAttack):**
+- Las escenas de ataque no conocen sus propias stats hasta que `Execute()` las inyecta
+- Ejemplos: Projectile (base), Fireball (con explosión), RockBody (melee)
+
+**Flujo:** Player → PlayerAttackManager → Instancia escena → IAttack.Execute()
+
+Cooldowns gestionados por Timers de Godot (OneShot), no por tracking manual de delta.
+
+## Patrones Clave
+
+- **Resources** (`[GlobalClass]`) para datos serializables: EntityStats, AttackData, AttackResult
+- **Records C#** para datos internos: DamageResult
+- **Signals** para desacoplamiento entre componentes
+- **State Machine genérica** (`StateMachine<T>`, `State<T>`) usada por Player y Enemies
+- **Clases abstractas genéricas** para lógica compartida (no se pueden usar directamente en .tscn)
+- **Ataques se instancian en** contenedor `Main/Attacks` (nodo hijo de la escena principal)
+
+# Decisiones de Desarrollo
+
+## 2026-02-15: Simplificación del Scope
+
+Se redujo el scope del juego para hacerlo viable en 12-18 meses de desarrollo solo:
+- **5 Elevaciones × 3 Resonancias = 15 objetivos** (en vez de sistema abierto)
+- **1 ataque básico + 2 slots de hechizo** (8-10 hechizos totales)
+- **Sistema de artefactos** tipo Charms de Hollow Knight (10-15 artefactos, 1-3 slots)
+- **1 final sólido** (en vez de múltiples finales)
+- **8-10 horas** de gameplay objetivo
+- **Sin grinding:** progresión por exploración y retos, no por farmeo
+
+## 2026-02-15: Refactor del Sistema de Ataques
+
+Se simplificó la arquitectura de ataques que estaba sobreingeniería:
+
+| | Antes | Después |
+|---|---|---|
+| **Capas** | 5 (Player → AttackManager → AttackSlot → SpawnerComponent → IAttack) | 2 (Player → AttackManagerComponent → IAttack) |
+| **Líneas de código** | ~600 | ~200 |
+| **Slots de ataque** | 4 (Ability1-4) | 3 (BasicAttack + Spell1 + Spell2) |
+| **Fase de casteo** | Sí (CastingState con duración configurable) | No (todos los ataques son instantáneos) |
+| **Cooldowns** | Tracking manual con `_cooldownRemaining` y delta | Timers de Godot (OneShot) |
+| **Configuración** | AttackSlot intermedios como nodos | AttackData exportados directamente |
+
+**Archivos eliminados:** AttackSlot.cs, AttackSpawnerComponent.cs, SingleShotSpawner.cs, BurstSpawner.cs, TurretSpawner.cs, CastingState.cs
+
+**Resultado:** -914 líneas netas, 10 archivos eliminados. Sistema funcional confirmado en Godot.
