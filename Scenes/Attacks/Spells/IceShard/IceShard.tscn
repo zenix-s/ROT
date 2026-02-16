@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scenes/Attacks/Spells/IceShard/IceShard.cs" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dwips18xqhtp8" path="res://Scenes/Attacks/Projectiles/Projectile.tscn" id="2_projectile"]
+[ext_resource type="Resource" path="res://Resources/Attacks/IceShardProjectile.tres" id="3_subdata"]
+
+[node name="IceShard" type="Node2D"]
+script = ExtResource("1_script")
+ProjectileScene = ExtResource("2_projectile")
+SubProjectileData = ExtResource("3_subdata")
+BurstCount = 3
+BurstDelay = 0.1

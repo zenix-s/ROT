@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ProjectileData" format=3]
+
+[ext_resource type="Script" uid="uid://bi7dj6vs1ad3f" path="res://Core/Combat/Attacks/ProjectileData.cs" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+InitialSpeed = 350
+TargetSpeed = 350
+Lifetime = 3
+Name = "Ice Shard Projectile"
+DamageCoefficient = 0.5
+CooldownDuration = 0.0
+metadata/_custom_type_script = "uid://bi7dj6vs1ad3f"

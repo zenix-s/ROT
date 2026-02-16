@@ -14,6 +14,8 @@
 [ext_resource type="Script" uid="uid://cp5drchfh5b2y" path="res://Scenes/Player/Components/PlayerAttackManager.cs" id="14_0u84n"]
 [ext_resource type="Script" uid="uid://dh7ds4tfap2xr" path="res://Scenes/Player/StateMachine/States/DashState.cs" id="14_ds5st"]
 [ext_resource type="Resource" uid="uid://dbbdpgopbl6w5" path="res://Resources/Attacks/CarbonBolt.tres" id="15_esmjy"]
+[ext_resource type="Resource" path="res://Resources/Attacks/Fireball.tres" id="16_fireball"]
+[ext_resource type="Resource" path="res://Resources/Attacks/IceShard.tres" id="17_iceshard"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ft8w5"]
 atlas = ExtResource("1_s0eop")
@@ -136,4 +138,6 @@ script = ExtResource("14_ds5st")
 [node name="PlayerAttackManager" type="Node" parent="." unique_id=81337677]
 script = ExtResource("14_0u84n")
 BasicAttackData = ExtResource("15_esmjy")
+Spell1Data = ExtResource("16_fireball")
+Spell2Data = ExtResource("17_iceshard")
 metadata/_custom_type_script = "uid://cp5drchfh5b2y"
