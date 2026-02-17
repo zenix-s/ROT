@@ -57,6 +57,10 @@ animations = [{
 radius = 5.0
 height = 16.0
 
+[sub_resource type="LabelSettings" id="LabelSettings_6tu5v"]
+line_spacing = 1.0
+font_size = 10
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ji083"]
 radius = 4.0
 height = 16.0
@@ -90,10 +94,14 @@ position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_l3ax4")
 
 [node name="DebugLabel" type="Label" parent="." unique_id=1977987461]
-offset_left = -19.0
-offset_top = -32.0
-offset_right = 21.0
-offset_bottom = -9.0
+offset_left = -16.0
+offset_top = -56.0
+offset_right = 24.0
+offset_bottom = -8.0
+text = "HELLO
+helo
+helo"
+label_settings = SubResource("LabelSettings_6tu5v")
 
 [node name="HurtboxComponent" type="Area2D" parent="." unique_id=2090109509]
 collision_layer = 32
