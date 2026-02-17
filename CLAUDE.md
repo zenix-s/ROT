@@ -219,9 +219,15 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - [x] Phase 2, Tasks 1-2: Progression System (Elevations & Resonances)
 - [x] Phase 2, Tasks 3-4: Artifact System (slots, equip/unequip, stat modifiers)
 - [x] Phase 3: Spells (Carbon Bolt + Fireball + Ice Shard burst)
-- [ ] Phase 4: Enemy AI and Combat
+- [ ] Phase 4: Enemy AI and Combat ← **SIGUIENTE**
 - [ ] Phase 5-6: Level Design + Boss
 - [ ] Phase 7-9: UI, Save/Load, Polish
+
+**Donde nos quedamos (2026-02-17):**
+- Branch: `feature/vertical-slice`, working tree clean, build passing
+- Phase 3 completada y commiteada. Los 3 spells están wired en `Player.tscn` pero **pendientes de testeo manual en Godot (F5)**
+- Antes de empezar Phase 4, testear en Godot: LMB (Carbon Bolt), Key 1 (Fireball), Key 2 (Ice Shard burst de 3)
+- Phase 4 es Enemy AI (Task 8: Security Robot con chase AI + Task 9: Isotope drops)
 
 ## Decisions Log
 
