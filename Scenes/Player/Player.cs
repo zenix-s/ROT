@@ -85,7 +85,8 @@ public partial class Player : CharacterBody2D
         DebugLabel.Text =
             $"HP: {EntityStatsComponent.CurrentHealth}/{EntityStatsComponent.MaxHealth}\n" +
             $"ATK: {EntityStatsComponent.AttackPower} ({EntityStatsComponent.DamageMultiplier:F2}x)\n" +
-            $"Elev: {prog?.CurrentElevation ?? 1} | Arts: {arts?.UsedSlots ?? 0}/{arts?.MaxSlots ?? 1}";
+            $"Elev: {prog?.CurrentElevation ?? 1} | Arts: {arts?.UsedSlots ?? 0}/{arts?.MaxSlots ?? 1}\n" +
+            $"Isotopes: {gm?.EconomyManager?.Isotopes ?? 0}";
     }
 
     private void SetupHurtboxComponent()

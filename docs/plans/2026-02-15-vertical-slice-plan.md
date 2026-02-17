@@ -641,6 +641,14 @@ git commit -m "feat: implement Ice Shard spell (Spell2 slot)"
 
 ### Task 8: Create Basic Enemy (Security Robot)
 
+> **NOTA:** La implementacion difiere del plan original. Ver `CLAUDE.md` Decisions Log 2026-02-17.
+> - Evolucionamos el `BasicEnemy` existente en vez de crear SecurityRobot desde cero
+> - Agregamos `EnemyAttackManager` (concrete `AttackManagerComponent<EnemyAttackSlot>`) en `Components/`
+> - Agregamos `AttackingState` al state machine: ataca con RockBody cuando Target esta en `AttackRange` (40px)
+> - State flow: Idle → Chasing → Attacking → Chasing/Idle
+> - Arreglamos `RockBodyAttackData.tres` (faltaban DamageCoefficient, CooldownDuration, AttackScene)
+> - Sin NavigationAgent2D — direct chase es suficiente para vertical slice
+
 **Files:**
 - Create: `Scenes/Enemies/SecurityRobot/SecurityRobot.tscn`
 - Create: `Scenes/Enemies/SecurityRobot/SecurityRobot.cs`
@@ -736,6 +744,14 @@ git commit -m "feat: implement basic enemy (SecurityRobot) with chase AI"
 ---
 
 ### Task 9: Isotope Drop System
+
+> **NOTA:** La implementacion difiere del plan original. Ver `CLAUDE.md` Decisions Log 2026-02-17.
+> - `EconomyManager` como clase C# plana en GameManager (no Autoload)
+> - Acceso via `GameManager.Instance.EconomyManager`
+> - Persistencia via `MetaData.Isotopes`, load/save integrado
+> - `IsotopePickup` scene en `Core/Economy/`, spawneada por `BasicEnemy.OnEnemyDied()`
+> - Usa C# event (`IsotopesChanged`) en vez de Godot signal
+> - Debug display del Player actualizado para mostrar isotopes
 
 **Files:**
 - Create: `Core/Economy/IsotopePickup.tscn`

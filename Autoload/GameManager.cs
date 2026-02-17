@@ -2,6 +2,7 @@ using System.Linq;
 using Godot;
 using RotOfTime.Core;
 using RotOfTime.Core.Artifacts;
+using RotOfTime.Core.Economy;
 using RotOfTime.Core.GameData;
 
 namespace RotOfTime.Autoload;
@@ -25,6 +26,7 @@ public partial class GameManager : Node
     public AbilityManager AbilityManager { get; private set; }
     public ProgressionManager ProgressionManager { get; private set; }
     public ArtifactManager ArtifactManager { get; private set; }
+    public EconomyManager EconomyManager { get; private set; }
 
     public override void _Ready()
     {
@@ -34,6 +36,7 @@ public partial class GameManager : Node
         AbilityManager = new AbilityManager();
         ProgressionManager = new ProgressionManager();
         ArtifactManager = new ArtifactManager();
+        EconomyManager = new EconomyManager();
         LoadMeta();
     }
 
@@ -45,6 +48,7 @@ public partial class GameManager : Node
         ProgressionManager.LoadResonanceKeys(Meta.UnlockedResonances);
         ArtifactManager.MaxSlots = Meta.ArtifactMaxSlots;
         ArtifactManager.LoadFromPaths(Meta.OwnedArtifacts, Meta.EquippedArtifacts);
+        EconomyManager.Load(Meta.Isotopes);
         GD.Print("GameManager: Meta loaded");
         GD.Print("Milestones: " + string.Join(", ", Meta.CompletedMilestones));
         GD.Print($"Progression: Elevation {ProgressionManager.CurrentElevation}, " +
@@ -53,6 +57,7 @@ public partial class GameManager : Node
         GD.Print($"Artifacts: {ArtifactManager.Owned.Count} owned, " +
                  $"{ArtifactManager.Equipped.Count} equipped, " +
                  $"{ArtifactManager.UsedSlots}/{ArtifactManager.MaxSlots} slots");
+        GD.Print($"Isotopes: {EconomyManager.Isotopes}");
     }
 
     public void SaveMeta()
@@ -63,6 +68,7 @@ public partial class GameManager : Node
         Meta.ArtifactMaxSlots = ArtifactManager.MaxSlots;
         Meta.OwnedArtifacts = ArtifactManager.GetOwnedPaths();
         Meta.EquippedArtifacts = ArtifactManager.GetEquippedPaths();
+        Meta.Isotopes = EconomyManager.Isotopes;
         SaveManager.SaveMeta(Meta);
     }
 

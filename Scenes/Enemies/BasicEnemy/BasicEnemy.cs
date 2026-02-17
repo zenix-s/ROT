@@ -1,7 +1,9 @@
 using System;
 using Godot;
 using RotOfTime.Core.Combat.Results;
+using RotOfTime.Core.Economy;
 using RotOfTime.Core.Entities.Components;
+using RotOfTime.Scenes.Enemies.BasicEnemy.Components;
 using HurtboxComponent = RotOfTime.Core.Combat.Components.HurtboxComponent;
 
 namespace RotOfTime.Scenes.Enemies.BasicEnemy;
@@ -10,10 +12,11 @@ public partial class BasicEnemy : CharacterBody2D
 {
     [Export] public EntityStatsComponent EntityStatsComponent;
     [Export] public HurtboxComponent HurtboxComponent;
+    [Export] public EnemyAttackManager AttackManager;
     [Export] public float Speed { get; set; } = 50f;
+    [Export] public float AttackRange { get; set; } = 40f;
+    [Export] public int IsotopeDropAmount { get; set; } = 10;
     [Export] public Area2D DetectionArea { get; set; }
-
-    // TODO: Add EnemyAttackManager : AttackManagerComponent<EnemyAttackSlot> when enemy attacks are implemented
 
     public Node2D Target { get; private set; }
 
@@ -27,13 +30,27 @@ public partial class BasicEnemy : CharacterBody2D
             DetectionArea.BodyEntered += OnDetectionAreaBodyEntered;
             DetectionArea.BodyExited += OnDetectionAreaBodyExited;
         }
-
-        // TODO: Register enemy attacks when attack system supports body attacks
     }
 
     public override void _PhysicsProcess(double delta)
     {
         // Movement logic delegated to StateMachine
+    }
+
+    /// <summary>
+    ///     Called by AttackingState to fire the body attack toward the player.
+    /// </summary>
+    public void TryBodyAttack(Vector2 direction)
+    {
+        if (AttackManager == null) return;
+
+        AttackManager.TryFire(
+            EnemyAttackSlot.BodyAttack,
+            direction,
+            GlobalPosition,
+            EntityStatsComponent.EntityStats,
+            this
+        );
     }
 
     private void OnDetectionAreaBodyEntered(Node2D body)
@@ -79,7 +96,25 @@ public partial class BasicEnemy : CharacterBody2D
 
     private void OnEnemyDied()
     {
+        SpawnIsotopeDrop();
         QueueFree();
+    }
+
+    private void SpawnIsotopeDrop()
+    {
+        if (IsotopeDropAmount <= 0) return;
+
+        var pickupScene = GD.Load<PackedScene>("res://Core/Economy/IsotopePickup.tscn");
+        if (pickupScene == null)
+        {
+            GD.PrintErr("BasicEnemy: IsotopePickup.tscn not found");
+            return;
+        }
+
+        var pickup = pickupScene.Instantiate<IsotopePickup>();
+        pickup.Amount = IsotopeDropAmount;
+        pickup.GlobalPosition = GlobalPosition;
+        GetParent().AddChild(pickup);
     }
 
     #endregion

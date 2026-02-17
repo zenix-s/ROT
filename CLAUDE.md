@@ -91,7 +91,7 @@ This project uses `.slnx` (XML-based solution format), not `.sln`. Godot regener
 
 ### Autoload Singletons (`Autoload/`)
 Registered in `project.godot` `[autoload]` section:
-- **GameManager** (`Instance` property) - Runtime meta-progression state. Creates SaveManager, GameStateManager, AbilityManager, ProgressionManager, and ArtifactManager internally.
+- **GameManager** (`Instance` property) - Runtime meta-progression state. Creates SaveManager, GameStateManager, AbilityManager, ProgressionManager, ArtifactManager, and EconomyManager internally.
 - **SceneManager** (`Instance` property) - Scene transitions via signals (`SceneChangeRequested`, `MenuChangeRequested`)
 
 Not autoloads (plain C# classes created by GameManager):
@@ -100,6 +100,7 @@ Not autoloads (plain C# classes created by GameManager):
 - **AbilityManager** - Player ability loadout management (stub)
 - **ProgressionManager** - Elevation/Resonance tracking, stat multiplier calculation (plain C# class, not a Godot Node)
 - **ArtifactManager** - Artifact ownership/equipment, stat bonus calculation (plain C# class, not a Godot Node)
+- **EconomyManager** - Isotope currency management, add/spend operations, C# event for changes (plain C# class, not a Godot Node)
 
 ### Entity System (`Core/Entities/`)
 Reusable components attached to any entity (Player, Enemies):
@@ -220,15 +221,16 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - [x] Phase 2, Tasks 1-2: Progression System (Elevations & Resonances)
 - [x] Phase 2, Tasks 3-4: Artifact System (slots, equip/unequip, stat modifiers)
 - [x] Phase 3: Spells (Carbon Bolt + Fireball + Ice Shard burst)
-- [ ] Phase 4: Enemy AI and Combat ← **SIGUIENTE**
+- [ ] Phase 4: Enemy AI and Combat ← **EN PROGRESO**
 - [ ] Phase 5-6: Level Design + Boss
 - [ ] Phase 7-9: UI, Save/Load, Polish
 
 **Donde nos quedamos (2026-02-17):**
-- Branch: `feature/vertical-slice`, working tree clean, build passing
-- Phase 3 completada y commiteada. Los 3 spells están wired en `Player.tscn` pero **pendientes de testeo manual en Godot (F5)**
-- Antes de empezar Phase 4, testear en Godot: LMB (Carbon Bolt), Key 1 (Fireball), Key 2 (Ice Shard burst de 3)
-- Phase 4 es Enemy AI (Task 8: Security Robot con chase AI + Task 9: Isotope drops)
+- Branch: `feature/vertical-slice`, build passing
+- Phase 4 en progreso: Task 8 (Enemy AI con body attack) y Task 9 (Isotope drops) implementados, **pendientes de testeo manual en Godot (F5)**
+- Testear en Godot: enemigo debe perseguir al player, atacar a rango corto (RockBody), morir con spells, y dropear isótopos
+- Spells de Phase 3 también pendientes de testeo: LMB (Carbon Bolt), Key 1 (Fireball), Key 2 (Ice Shard burst de 3)
+- Phase 5 es Level Design (Floor 1 scene)
 
 ## Decisions Log
 
@@ -269,3 +271,21 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - **Solution:** Added `Node2D owner` parameter to `IAttack.Execute()` interface
 - **Changes:** `IAttack.cs`, `AttackManagerComponent.cs`, `IceShard.cs`, `Projectile.cs`, `RockBody.cs`
 - **Future benefit:** Enables planned channeled spells (carbon shard stream) and orbital shields that need to track owner position
+
+### 2026-02-17: Enemy AI Architecture (Phase 4, Task 8)
+- **Plan said:** Create new "SecurityRobot" from scratch with inline AI code
+- **Actual:** Evolved existing `BasicEnemy` — already had chase AI, state machine, hurtbox, stats, sprite
+- **Added:** `EnemyAttackManager` (concrete `AttackManagerComponent<EnemyAttackSlot>`), same pattern as `PlayerAttackManager`
+- **Added:** `AttackingState` in enemy state machine — fires RockBody when in `AttackRange` (40px), creeps at 40% speed
+- **State flow:** Idle → (target detected) → Chasing → (in attack range) → Attacking → (out of range) → Chasing → (target lost) → Idle
+- **Fixed:** `RockBodyAttackData.tres` was missing DamageCoefficient, CooldownDuration, and AttackScene reference
+- **No NavigationAgent2D** — direct chase is sufficient for vertical slice. Pathfinding is premature.
+
+### 2026-02-17: Isotope Drop System (Phase 4, Task 9)
+- **Plan said:** `EconomyManager` as new Autoload singleton
+- **Actual:** `EconomyManager` as plain C# class owned by `GameManager` — consistent with `ProgressionManager` and `ArtifactManager` pattern
+- **Access:** `GameManager.Instance.EconomyManager` instead of `EconomyManager.Instance`
+- **Persistence:** `MetaData.Isotopes` field, loaded/saved through `GameManager.LoadMeta()`/`SaveMeta()`
+- **IsotopePickup:** Area2D scene in `Core/Economy/`, spawned by `BasicEnemy.OnEnemyDied()`, configurable `Amount` export
+- **Uses C# event** (`IsotopesChanged`) instead of Godot signal since EconomyManager is not a Node
+- **Debug display:** Player.cs debug label updated to show isotope count

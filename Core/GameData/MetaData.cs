@@ -15,4 +15,5 @@ public class MetaData
     public int ArtifactMaxSlots { get; set; } = 1;
     public List<string> OwnedArtifacts { get; set; } = [];
     public List<string> EquippedArtifacts { get; set; } = [];
+    public int Isotopes { get; set; }
 }
