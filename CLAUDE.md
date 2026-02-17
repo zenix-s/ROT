@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 The developer is a solo first-time game developer with strong programming skills but no prior game shipping experience. Communication is in Spanish. All design documents are in Spanish.
 
 ### Core Mandate: Scope Guardian
-- **Be brutally honest** ("sin paños calientes") about what is realistic vs overengineered for a solo dev on a 12-18 month timeline.
+- **Be brutally honest** about what is realistic vs overengineered for a solo dev on a 12-18 month timeline.
 - **Actively flag scope creep.** If the developer proposes a feature, system, or abstraction that risks the timeline, say so directly. Do not agree to avoid conflict.
 - **Pragmatism over elegance.** The goal is to ship a playable game, not to build a perfect engine. If a simpler approach gets to "fun" faster, recommend it even if it's less architecturally pure.
 - **YAGNI ruthlessly.** Do not build systems for hypothetical future needs. If it's not in the vertical slice plan, it doesn't exist yet.
@@ -125,10 +125,11 @@ Used by: `PlayerStateMachine` (IdleState, MoveState, DashState) and `EnemyStateM
 - **DamageResult** - C# `record`: RawDamage, FinalDamage, AttackName (internal use only)
 
 **Behavior layer (Scenes implementing IAttack):**
-- **IAttack** - Interface: `Execute(Vector2 direction, EntityStats, AttackData, float damageMultiplier)`
+- **IAttack** - Interface: `Execute(Vector2 direction, EntityStats, AttackData, Node2D owner, float damageMultiplier)`
 - **Projectile** (CharacterBody2D) - Base projectile with movement component and lifetime Timer
 - **Fireball** - Extends Projectile, spawns explosion on impact
 - **RockBody** (Area2D) - Melee body attack
+- **IceShard** (Node2D) - Burst spawner that fires 3 sub-projectiles from owner's position
 
 **Manager:**
 - **AttackManagerComponent\<TSlot\>** - Abstract generic Node. Timer-based cooldowns (Godot OneShot Timers). Spawns attack scenes into `Main/Attacks` container.
@@ -144,7 +145,7 @@ Player.TryFireAttack(slot)
     → AttackManagerComponent.SpawnAttack()
       → Instantiate AttackData.AttackScene as Node2D
       → AddChild to "Main/Attacks" container
-      → Cast to IAttack → Execute(direction, ownerStats, attackData)
+      → Cast to IAttack → Execute(direction, ownerStats, attackData, ownerNode)
         → AttackHitboxComponent.Initialize() → DamageCalculator.CalculateRawDamage() → AttackResult
 ```
 
@@ -261,3 +262,10 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - **Ice Shard (burst):** Plan said single projectile with slow effect. Actual: **burst of 3 projectiles** fired in rapid sequence (0.1s delay). No slow — YAGNI, no status effect system exists.
 - **Key decision:** Burst logic lives in `IceShard.Execute()` (self-contained). If burst pattern is needed again, extract to a spawn strategy component (analogous to `AttackMovementComponent` for movement). Not premature — only 1 user.
 - **IceShard architecture:** Node2D implementing IAttack (not a Projectile). Exports `ProjectileScene` + `SubProjectileData`. Spawns into `Main/Attacks` container. Self-destructs after all projectiles fired.
+
+### 2026-02-17: IAttack Owner Reference
+- **Bug:** IceShard burst spawned projectiles from fixed position instead of following player
+- **Root cause:** `IAttack.Execute()` received position as snapshot, not live reference to owner
+- **Solution:** Added `Node2D owner` parameter to `IAttack.Execute()` interface
+- **Changes:** `IAttack.cs`, `AttackManagerComponent.cs`, `IceShard.cs`, `Projectile.cs`, `RockBody.cs`
+- **Future benefit:** Enables planned channeled spells (carbon shard stream) and orbital shields that need to track owner position

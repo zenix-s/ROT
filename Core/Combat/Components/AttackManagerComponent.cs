@@ -70,14 +70,14 @@ public abstract partial class AttackManagerComponent<TSlot> : Node
         if (!timer.IsStopped())
             return false; // On cooldown
 
-        SpawnAttack(data, direction, position, stats);
+        SpawnAttack(data, direction, position, stats, ownerNode);
         timer.Start(data.CooldownDuration);
 
         EmitSignal(SignalName.AttackFired, SlotToStringName(slotKey));
         return true;
     }
 
-    private void SpawnAttack(AttackData data, Vector2 direction, Vector2 position, EntityStats stats)
+    private void SpawnAttack(AttackData data, Vector2 direction, Vector2 position, EntityStats stats, Node2D owner)
     {
         if (data?.AttackScene == null)
         {
@@ -104,7 +104,7 @@ public abstract partial class AttackManagerComponent<TSlot> : Node
 
         // Execute attack if it implements IAttack
         if (attack is IAttack iAttack)
-            iAttack.Execute(direction, stats, data);
+            iAttack.Execute(direction, stats, data, owner);
     }
 
     /// <summary>

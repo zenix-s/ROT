@@ -37,7 +37,7 @@ public partial class Projectile : CharacterBody2D, IAttack
     }
 
     public void Execute(Vector2 direction, EntityStats ownerStats, AttackData attackData,
-        float damageMultiplier = 1.0f)
+        Node2D owner, float damageMultiplier = 1.0f)
     {
         Direction = direction.Normalized();
 

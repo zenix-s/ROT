@@ -36,15 +36,17 @@ public partial class IceShard : Node2D, IAttack
     private EntityStats _ownerStats;
     private AttackData _attackData;
     private float _damageMultiplier;
+    private Node2D _owner;
     private int _projectilesFired;
     private Timer _burstTimer;
 
     public void Execute(Vector2 direction, EntityStats ownerStats, AttackData attackData,
-        float damageMultiplier = 1.0f)
+        Node2D owner, float damageMultiplier = 1.0f)
     {
         _direction = direction.Normalized();
         _ownerStats = ownerStats;
         _attackData = attackData;
+        _owner = owner;
         _damageMultiplier = damageMultiplier;
 
         // Fire first projectile immediately
@@ -96,13 +98,13 @@ public partial class IceShard : Node2D, IAttack
         }
 
         var projectile = ProjectileScene.Instantiate<Node2D>();
-        projectile.GlobalPosition = GlobalPosition;
+        projectile.GlobalPosition = _owner.GlobalPosition;
         projectile.Rotation = _direction.Angle();
         attackContainer.AddChild(projectile);
 
         // Use SubProjectileData for movement, but parent AttackData's DamageCoefficient for damage
         if (projectile is IAttack iAttack)
-            iAttack.Execute(_direction, _ownerStats, SubProjectileData, _damageMultiplier);
+            iAttack.Execute(_direction, _ownerStats, SubProjectileData, _owner, _damageMultiplier);
 
         _projectilesFired++;
     }

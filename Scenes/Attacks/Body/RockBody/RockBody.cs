@@ -16,7 +16,7 @@ public partial class RockBody : Area2D, IAttack
     [Export] public AttackHitboxComponent HitboxComponent { get; set; }
 
     public void Execute(Vector2 direction, EntityStats ownerStats, AttackData attackData,
-        float damageMultiplier = 1.0f)
+        Node2D owner, float damageMultiplier = 1.0f)
     {
         HitboxComponent?.Initialize(ownerStats, attackData, damageMultiplier);
     }

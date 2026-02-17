@@ -19,7 +19,8 @@ public interface IAttack
     /// <param name="direction">Normalized direction the attack is aimed at</param>
     /// <param name="ownerStats">Stats of the entity that initiated the attack</param>
     /// <param name="attackData">Attack definition with damage coefficient and other stats</param>
+    /// <param name="owner">The entity node that owns this attack (for position tracking in multi-phase attacks)</param>
     /// <param name="damageMultiplier">Multiplier from the spawner pattern (default 1.0)</param>
     void Execute(Vector2 direction, EntityStats ownerStats, AttackData attackData,
-        float damageMultiplier = 1.0f);
+        Node2D owner, float damageMultiplier = 1.0f);
 }
