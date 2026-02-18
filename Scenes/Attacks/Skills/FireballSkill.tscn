@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Core/Combat/Components/AttackSpawnComponents/SingleSpawnComponent.cs" id="1_spawn"]
+[ext_resource type="PackedScene" uid="uid://do7qyryvmcnir" path="res://Scenes/Attacks/Projectiles/Fireball/FireBall.tscn" id="2_proj"]
+[ext_resource type="Resource" path="res://Resources/Attacks/Fireball.tres" id="3_data"]
+
+[node name="FireballSkill" type="Node2D"]
+
+[node name="SingleSpawnComponent" type="Node" parent="."]
+script = ExtResource("1_spawn")
+ProjectileScene = ExtResource("2_proj")
+Data = ExtResource("3_data")
