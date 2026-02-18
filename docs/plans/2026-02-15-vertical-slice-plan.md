@@ -872,6 +872,83 @@ git commit -m "feat: add isotope drop system + EconomyManager autoload"
 
 ---
 
+---
+
+## Prioridades Actuales (Reordenadas 2026-02-18)
+
+> El orden original del plan asumía que UI vendría después del level design. Ajustado:
+> la UI y los sistemas de código se hacen primero (se puede trabajar juntos), el level design
+> y boss los hace el desarrollador en Godot de forma independiente.
+
+### Bloque A: Testeo Phase 4 (manual, en Godot)
+
+- [ ] **A-1:** Verificar que BasicEnemy persigue al player y ataca con RockBody al acercarse
+- [ ] **A-2:** Verificar que BasicEnemy muere al recibir daño de spells y dropea IsotopePickup
+- [ ] **A-3:** Verificar que IsotopePickup se recoge al pasar por encima y actualiza el debug label
+
+---
+
+### Bloque B: HUD
+
+> Backend listo: `EntityStatsComponent.HealthChanged`, `EconomyManager.IsotopesChanged`,
+> `AttackManager.GetCooldownProgress(slot)`. Solo falta la capa de UI.
+
+- [ ] **B-1:** Crear `Scenes/UI/HUD/HUD.tscn` — estructura base (CanvasLayer + contenedor,
+  añadir como hijo de Main.tscn)
+- [ ] **B-2:** Barra de HP — `ProgressBar` que se actualiza con la señal
+  `EntityStatsComponent.HealthChanged`
+- [ ] **B-3:** Contador de isótopos — `Label` que se actualiza con el evento C#
+  `EconomyManager.IsotopesChanged`
+- [ ] **B-4:** Indicador de cooldown del ataque básico — `ProgressBar` que lee
+  `AttackManager.GetCooldownProgress(PlayerAttackSlot.BasicAttack)` en `_Process`
+- [ ] **B-5:** Indicadores de cooldown Spell1 y Spell2 (misma mecánica que B-4,
+  ocultar si el slot no está registrado)
+
+---
+
+### Bloque C: Artifact Menu
+
+> `ArtifactManager` (equip/unequip/owned) está completo. Falta método de crafteo y la UI.
+
+- [ ] **C-1:** Añadir método `Craft(ArtifactData artifact)` a `ArtifactManager` —
+  valida que el jugador tiene isótopos suficientes (`EconomyManager.SpendIsotopes`),
+  añade a owned si no lo tiene ya
+- [ ] **C-2:** Crear `Scenes/UI/Menus/ArtifactMenu/ArtifactMenu.tscn` — estructura base
+  (CanvasLayer, toggle con tecla I o Tab, pausa el juego mientras está abierto)
+- [ ] **C-3:** Panel de inventario — lista los artefactos owned con nombre, coste de slots,
+  y estado (equipado / no equipado)
+- [ ] **C-4:** Botones Equipar / Desequipar — llaman a `ArtifactManager.Equip/Unequip`,
+  muestran slots usados / máximos y llaman a `Player.ApplyAllMultipliers()` al cambiar
+- [ ] **C-5:** Panel de crafteo — lista artefactos craftables con su coste en isótopos,
+  botón llama a `ArtifactManager.Craft()`, se desactiva si no hay isótopos suficientes
+
+---
+
+### Bloque D: Save / Load
+
+> `SaveManager`, `MetaData` y la lógica en `GameManager.SaveMeta/LoadMeta` existen.
+> Hay que verificar cobertura y añadir los puntos de guardado.
+
+- [ ] **D-1:** Auditar `MetaData.cs` — confirmar que cubre CurrentElevation, UnlockedResonances,
+  Isotopes, OwnedArtifacts, EquippedArtifacts y CurrentHealth
+- [ ] **D-2:** Añadir trigger de guardado al morir (`GameManager.PlayerDied()`) y al volver
+  al menú principal
+- [ ] **D-3:** Verificar que `GameManager.LoadMeta()` en `_Ready()` restaura el estado completo
+  (probar: equipar artefacto → cerrar juego → reabrir → sigue equipado)
+
+---
+
+### Bloque E: Level Design + Boss (trabajo manual en Godot — developer)
+
+> Estas tareas requieren diseñar en el editor. Se hacen en paralelo o después de los bloques anteriores.
+
+- [ ] **E-1 (Task 10):** Crear Floor 1 — TileMap grey-box, 3-5 enemies, trigger de Resonancia
+- [ ] **E-2 (Task 10b):** Crear Floor 2 y Floor 3 (estructura similar)
+- [ ] **E-3 (Task 11):** Crear Boss 1 (Soul Fragment 1) con state machine de fases
+- [ ] **E-4 (Task 11b):** Arena del boss — puerta bloqueada + trigger de Elevation 2 al vencer
+
+---
+
 ## Phase 5: Level Design - Floor 1 (Week 9-10)
 
 ### Task 10: Create Floor 1 Scene
