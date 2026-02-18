@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Core/Combat/Components/AttackSpawnComponents/BurstSpawnComponent.cs" id="1_spawn"]
+[ext_resource type="PackedScene" uid="uid://dwips18xqhtp8" path="res://Scenes/Attacks/Projectiles/Projectile.tscn" id="2_proj"]
+[ext_resource type="Resource" uid="uid://023j08qnbkdp" path="res://Resources/Attacks/IceShardProjectile.tres" id="3_data"]
+
+[node name="IceShardSkill" type="Node2D"]
+
+[node name="BurstSpawnComponent" type="Node" parent="."]
+script = ExtResource("1_spawn")
+ProjectileScene = ExtResource("2_proj")
+Data = ExtResource("3_data")
+BurstCount = 3
+BurstDelay = 0.1
