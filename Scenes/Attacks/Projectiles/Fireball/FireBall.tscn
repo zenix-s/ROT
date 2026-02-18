@@ -1,9 +1,8 @@
-[gd_scene format=3 uid="uid://do7qyryvmcnir"]
+[gd_scene load_steps=4 format=3 uid="uid://do7qyryvmcnir"]
 
-[ext_resource type="Script" uid="uid://dvgsmmqtd1rom" path="res://Scenes/Attacks/Projectiles/Fireball/Fireball.cs" id="1_fireball"]
 [ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="3_sprite"]
 [ext_resource type="Script" uid="uid://dmjy7sqfwj6nb" path="res://Core/Combat/Components/AttackHitboxComponent.cs" id="4_nvk5s"]
-[ext_resource type="Script" uid="uid://d3mdiyui48mnx" path="res://Core/Combat/Components/AttackMovementComponents/LinearMovementComponent.cs" id="6_a87f2"]
+[ext_resource type="Script" path="res://Scenes/Attacks/Projectiles/Fireball/Fireball.cs" id="5_fb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6oscf"]
 radius = 7.071068
@@ -11,26 +10,22 @@ radius = 7.071068
 [sub_resource type="CircleShape2D" id="CircleShape2D_nvk5s"]
 radius = 8.0
 
-[node name="Fireball" type="CharacterBody2D" unique_id=1324186922 node_paths=PackedStringArray("MovementComponent", "HitboxComponent")]
+[node name="Fireball" type="Area2D" node_paths=PackedStringArray("HitboxComponent")]
 collision_layer = 512
-script = ExtResource("1_fireball")
-MovementComponent = NodePath("LinearMovementComponent")
+collision_mask = 0
+script = ExtResource("5_fb")
 HitboxComponent = NodePath("AttackHitboxComponent")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=840735952]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_sprite")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1986499348]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_6oscf")
 
-[node name="AttackHitboxComponent" type="Area2D" parent="." unique_id=1383863851]
+[node name="AttackHitboxComponent" type="Area2D" parent="."]
 script = ExtResource("4_nvk5s")
 metadata/_custom_type_script = "uid://dmjy7sqfwj6nb"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent" unique_id=352414945]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent"]
 shape = SubResource("CircleShape2D_nvk5s")
-
-[node name="LinearMovementComponent" type="Node" parent="." unique_id=1420792368]
-script = ExtResource("6_a87f2")
-metadata/_custom_type_script = "uid://d3mdiyui48mnx"

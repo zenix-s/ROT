@@ -1,6 +1,5 @@
-[gd_resource type="Resource" script_class="ProjectileData" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="ProjectileData" format=3]
 
-[ext_resource type="PackedScene" uid="uid://do7qyryvmcnir" path="res://Scenes/Attacks/Projectiles/Fireball/FireBall.tscn" id="1_scene"]
 [ext_resource type="Script" uid="uid://bi7dj6vs1ad3f" path="res://Core/Combat/Attacks/ProjectileData.cs" id="2_script"]
 
 [resource]
@@ -8,8 +7,8 @@ script = ExtResource("2_script")
 InitialSpeed = 200
 TargetSpeed = 200
 Lifetime = 4
+MovementType = 0
 Name = "Fireball"
 DamageCoefficient = 1.5
-AttackScene = ExtResource("1_scene")
 CooldownDuration = 2.0
 metadata/_custom_type_script = "uid://bi7dj6vs1ad3f"

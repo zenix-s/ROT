@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://dwips18xqhtp8"]
 
-[ext_resource type="Script" uid="uid://b0o1knn14pl2p" path="res://Scenes/Attacks/Projectiles/Projectile.cs" id="1_k1yxc"]
 [ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="2_t7gc1"]
-[ext_resource type="Script" uid="uid://d3mdiyui48mnx" path="res://Core/Combat/Components/AttackMovementComponents/LinearMovementComponent.cs" id="4_fui73"]
+[ext_resource type="Script" uid="uid://brtvwd7sxoam" path="res://Scenes/Attacks/Projectiles/Projectile.cs" id="3_proj"]
 [ext_resource type="Script" uid="uid://dmjy7sqfwj6nb" path="res://Core/Combat/Components/AttackHitboxComponent.cs" id="6_utkwb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pyv0a"]
@@ -11,28 +10,24 @@ radius = 7.071068
 [sub_resource type="CircleShape2D" id="CircleShape2D_mbvye"]
 radius = 8.0
 
-[node name="Projectile" type="CharacterBody2D" unique_id=311666828 node_paths=PackedStringArray("MovementComponent", "HitboxComponent")]
+[node name="Projectile" type="Area2D" unique_id=1486777557 node_paths=PackedStringArray("HitboxComponent")]
 collision_layer = 512
-script = ExtResource("1_k1yxc")
-MovementComponent = NodePath("LinearMovementComponent")
+collision_mask = 0
+script = ExtResource("3_proj")
 HitboxComponent = NodePath("AttackHitboxComponent")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1629166414]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1978875070]
 position = Vector2(-9.536743e-07, -9.536743e-07)
 scale = Vector2(0.40625, 0.40625)
 texture = ExtResource("2_t7gc1")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1637741916]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1727957120]
 shape = SubResource("CircleShape2D_pyv0a")
 
-[node name="LinearMovementComponent" type="Node" parent="." unique_id=2527769]
-script = ExtResource("4_fui73")
-metadata/_custom_type_script = "uid://d3mdiyui48mnx"
-
-[node name="AttackHitboxComponent" type="Area2D" parent="." unique_id=935014271]
+[node name="AttackHitboxComponent" type="Area2D" parent="." unique_id=45346983]
 script = ExtResource("6_utkwb")
 metadata/_custom_type_script = "uid://dmjy7sqfwj6nb"
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="AttackHitboxComponent" unique_id=2014579449]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="AttackHitboxComponent" unique_id=554261565]
 shape = SubResource("CircleShape2D_mbvye")
 debug_color = Color(0.9788559, 0, 0.3966187, 0.41960785)

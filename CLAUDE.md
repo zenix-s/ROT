@@ -21,6 +21,7 @@ The developer is a solo first-time game developer with strong programming skills
 - **Challenge assumptions.** If a design decision seems driven by "what AAA games do" rather than "what a solo dev can ship," push back.
 
 ### How to Operate
+- **Never commit automatically.** Always wait for the developer to explicitly ask for a commit.
 - **Treat `docs/plans/2026-02-15-game-design-final.md` as the source of truth** for scope. Anything not in that document needs explicit justification before implementation.
 - **Refer to `docs/plans/2026-02-15-vertical-slice-plan.md`** for the current implementation plan. Stay within the current phase.
 - **When in doubt, ask.** Better to clarify than to build the wrong thing.
@@ -289,3 +290,18 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - **IsotopePickup:** Area2D scene in `Core/Economy/`, spawned by `BasicEnemy.OnEnemyDied()`, configurable `Amount` export
 - **Uses C# event** (`IsotopesChanged`) instead of Godot signal since EconomyManager is not a Node
 - **Debug display:** Player.cs debug label updated to show isotope count
+
+### 2026-02-17: Attack System Refactor v2 — Resource as Orchestrator
+- **Problem:** Each attack scene (Projectile, IceShard, RockBody) manages its own lifecycle independently. No central pipeline for spawn → behavior → impact → cleanup. Adding new attack types requires reimplementing the full pipeline per scene.
+- **Solution:** `AttackData.Spawn(AttackContext)` virtual method — the Resource becomes the orchestrator. Scenes become dumb visual containers.
+- **Key changes:**
+  - `AttackData` gains `virtual Spawn(AttackContext)` — handles instantiation, positioning, hitbox init
+  - `ProjectileData` overrides `Spawn()` — adds movement component init + lifetime Timer
+  - New `BurstAttackData` Resource replaces `IceShard.cs` — generic burst spawner via Resource config
+  - New `AttackContext` record packages world context (direction, position, owner, stats, container)
+  - `IAttack` interface eliminated — no longer needed
+  - Projectiles change from `CharacterBody2D` to `Area2D` — movement handled by `AttackMovementComponent._PhysicsProcess()`
+  - `AttackManagerComponent.SpawnAttack()` reduced to `data.Spawn(ctx)` one-liner
+- **Eliminated:** `IAttack.cs`, `IceShard.cs`, `RockBody.cs` (scene keeps working without script)
+- **Created:** `AttackContext.cs`, `BurstAttackData.cs`
+- **Design doc:** `docs/plans/2026-02-17-attack-system-refactor-v2.md`

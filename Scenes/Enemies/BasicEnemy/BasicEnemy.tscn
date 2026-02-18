@@ -10,7 +10,7 @@
 [ext_resource type="Script" uid="uid://dan3m1ygtbyme" path="res://Scenes/Enemies/BasicEnemy/StateMachine/States/ChasingState.cs" id="12_cs"]
 [ext_resource type="Script" path="res://Scenes/Enemies/BasicEnemy/Components/EnemyAttackManager.cs" id="13_eam"]
 [ext_resource type="Script" path="res://Scenes/Enemies/BasicEnemy/StateMachine/States/AttackingState.cs" id="14_as"]
-[ext_resource type="Resource" uid="uid://g5hkmvpkqu8s" path="res://Scenes/Attacks/Body/RockBody/RockBodyAttackData.tres" id="15_rbad"]
+[ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/RockBodySkill.tscn" id="15_rbad"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
 
@@ -121,7 +121,7 @@ debug_color = Color(0.24, 0.87, 0.36, 0.42)
 
 [node name="EnemyAttackManager" type="Node" parent="."]
 script = ExtResource("13_eam")
-BodyAttackData = ExtResource("15_rbad")
+BodyAttackSkill = ExtResource("15_rbad")
 
 [node name="EnemyStateMachine" type="Node" parent="." unique_id=878295873]
 script = ExtResource("10_esm")
