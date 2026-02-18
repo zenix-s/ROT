@@ -69,9 +69,9 @@ radius = 343.14575
 
 [sub_resource type="Resource" id="Resource_vj441"]
 script = ExtResource("7_entitystats")
-VitalityStat = 10
-AttackStat = 5
-DefenseStat = 5
+VitalityStat = 60
+AttackStat = 25
+DefenseStat = 0
 Faction = 2
 metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
