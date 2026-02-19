@@ -19,6 +19,7 @@ public partial class ElevationItem : Area2D
 
     private void OnBodyEntered(Node2D body)
     {
+        if (body is not Scenes.Player.Player) return;
         string itemId = $"elevation_{Elevation}";
         GameManager.Instance.InventoryManager.AddItem(itemId);
         GameManager.Instance.SaveMeta();

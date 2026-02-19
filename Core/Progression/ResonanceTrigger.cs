@@ -17,6 +17,7 @@ public partial class ResonanceTrigger : Area2D
 
     private void OnBodyEntered(Node2D body)
     {
+        if (body is not Scenes.Player.Player) return;
         GameManager.Instance.InventoryManager.AddItem("resonance");
         GameManager.Instance.SaveMeta();
         GD.Print("ResonanceTrigger: Resonance collected!");
