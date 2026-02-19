@@ -5,8 +5,8 @@ namespace RotOfTime.Scenes.UI;
 
 /// <summary>
 ///     Bonfire UI: activate resonances and advance elevation.
-///     Lives in Main.tscn. Opens via Bonfire.cs (group "BonfireMenu").
-///     Pauses the scene tree while open.
+///     Instantiated on demand by Bonfire.cs. Destroys itself on close.
+///     Player input is blocked via GameManager.IsMenuOpen while open.
 /// </summary>
 public partial class BonfireMenu : CanvasLayer
 {
@@ -20,10 +20,6 @@ public partial class BonfireMenu : CanvasLayer
 
     public override void _Ready()
     {
-        AddToGroup("BonfireMenu");
-        ProcessMode = ProcessModeEnum.Always;
-        Visible = false;
-
         _resonancesLabel = GetNode<Label>("Panel/VBoxContainer/ResonancesLabel");
         _activateButton = GetNode<Button>("Panel/VBoxContainer/ActivateButton");
         _elevationLabel = GetNode<Label>("Panel/VBoxContainer/ElevationLabel");
@@ -35,22 +31,18 @@ public partial class BonfireMenu : CanvasLayer
         _closeButton.Pressed += OnClosePressed;
     }
 
-    public void Initialize(Player.Player player)
-    {
-        _player = player;
-    }
-
     public void Open()
     {
+        _player = GetTree().GetFirstNodeInGroup("player") as Player.Player;
+        GameManager.Instance.IsMenuOpen = true;
         Visible = true;
-        GetTree().Paused = true;
         Refresh();
     }
 
-    public void ForceClose()
+    private void Close()
     {
-        Visible = false;
-        GetTree().Paused = false;
+        GameManager.Instance.IsMenuOpen = false;
+        QueueFree();
     }
 
     private void Refresh()
@@ -97,6 +89,6 @@ public partial class BonfireMenu : CanvasLayer
 
     private void OnClosePressed()
     {
-        ForceClose();
+        Close();
     }
 }

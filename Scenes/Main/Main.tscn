@@ -2,14 +2,11 @@
 
 [ext_resource type="Script" uid="uid://bj8y5oo2tmkfh" path="res://Scenes/Main/Main.cs" id="1_p8rbg"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/HUD/HUD.tscn" id="2_hud"]
-[ext_resource type="PackedScene" path="res://Scenes/UI/BonfireMenu/BonfireMenu.tscn" id="3_bfmenu"]
-
-[node name="Main" type="Node2D" unique_id=1193630444 node_paths=PackedStringArray("_camera", "_worldContainer", "_hud", "_bonfireMenu")]
+[node name="Main" type="Node2D" unique_id=1193630444 node_paths=PackedStringArray("_camera", "_worldContainer", "_hud")]
 script = ExtResource("1_p8rbg")
 _camera = NodePath("Camera")
 _worldContainer = NodePath("WorldContainer")
 _hud = NodePath("UI/HUD")
-_bonfireMenu = NodePath("UI/BonfireMenu")
 
 [node name="WorldContainer" type="Node2D" parent="." unique_id=1865224841]
 
@@ -22,6 +19,6 @@ position = Vector2(322, 180)
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1809551266]
 
-[node name="HUD" parent="UI" instance=ExtResource("2_hud")]
+[node name="HUD" parent="UI" unique_id=910499271 instance=ExtResource("2_hud")]
+layout_mode = 3
 
-[node name="BonfireMenu" parent="UI" instance=ExtResource("3_bfmenu")]

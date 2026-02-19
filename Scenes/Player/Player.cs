@@ -37,6 +37,7 @@ public partial class Player : CharacterBody2D
 
     public override void _Ready()
     {
+        AddToGroup("player");
         SetupStatsComponent();
         SetupHurtboxComponent();
         ApplyAllMultipliers();

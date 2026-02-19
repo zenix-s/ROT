@@ -1,15 +1,15 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://d1hcyn8lhnjvm"]
 
-[ext_resource type="Script" path="res://Scenes/UI/BonfireMenu/BonfireMenu.cs" id="1_bfmenuscript"]
+[ext_resource type="Script" path="res://Scenes/UI/BonfireMenu/BonfireMenu.cs" id="1_bfscript"]
 
-[node name="BonfireMenu" type="CanvasLayer" script=ExtResource("1_bfmenuscript")]
+[node name="BonfireMenu" type="CanvasLayer" script=ExtResource("1_bfscript")]
 layer = 10
 
 [node name="Panel" type="Panel" parent="."]
-offset_left = 200.0
-offset_top = 100.0
-offset_right = 600.0
-offset_bottom = 480.0
+offset_left = 160.0
+offset_top = 55.0
+offset_right = 480.0
+offset_bottom = 305.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
 layout_mode = 1
@@ -20,30 +20,41 @@ offset_left = 20.0
 offset_top = 20.0
 offset_right = -20.0
 offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 12
 
 [node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
 text = "Bonfire"
 
 [node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
+layout_mode = 2
 
 [node name="ResonancesLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
 text = "Resonancias disponibles: 0"
 
 [node name="ActivateButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
 text = "Activar Resonancia"
 
 [node name="HSeparator2" type="HSeparator" parent="Panel/VBoxContainer"]
+layout_mode = 2
 
 [node name="ElevationLabel" type="Label" parent="Panel/VBoxContainer"]
-text = "Item de Elevación recogido"
 visible = false
+layout_mode = 2
+text = "Item de Elevacion recogido"
 
 [node name="ElevationButton" type="Button" parent="Panel/VBoxContainer"]
-text = "Ascender de Elevación"
 visible = false
+layout_mode = 2
+text = "Ascender de Elevacion"
 
 [node name="HSeparator3" type="HSeparator" parent="Panel/VBoxContainer"]
+layout_mode = 2
 
 [node name="CloseButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
 text = "Cerrar"

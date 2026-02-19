@@ -29,6 +29,9 @@ public partial class GameManager : Node
     public EconomyManager EconomyManager { get; private set; }
     public InventoryManager InventoryManager { get; private set; }
 
+    /// <summary>True while any game menu (bonfire, etc.) is open. Blocks player input.</summary>
+    public bool IsMenuOpen { get; set; }
+
     public override void _Ready()
     {
         Instance = this;
