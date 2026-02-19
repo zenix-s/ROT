@@ -1,6 +1,7 @@
 using Godot;
 using RotOfTime.Autoload;
 using RotOfTime.Core;
+using RotOfTime.Scenes.UI;
 using RotOfTime.Scenes.UI.HUD;
 
 namespace RotOfTime.Scenes.Main;
@@ -13,6 +14,7 @@ public partial class Main : Node2D
     private Player.Player _player;
     [Export] private Node _worldContainer;
     [Export] private HUD _hud;
+    [Export] private BonfireMenu _bonfireMenu;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -36,6 +38,7 @@ public partial class Main : Node2D
     private void OnMenuChangeRequested(SceneExtensionManager.MenuScene menuScene)
     {
         _hud.Teardown();
+        _bonfireMenu?.ForceClose();
 
         if (IsInstanceValid(_player))
         {
@@ -69,6 +72,7 @@ public partial class Main : Node2D
         _player.Position = spawnPoint.GlobalPosition;
         _player.Visible = true;
         _hud.Initialize(_player);
+        _bonfireMenu.Initialize(_player);
 
         _isMenuActive = false;
         SetupCamera();
