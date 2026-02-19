@@ -3,6 +3,7 @@ using Godot;
 using RotOfTime.Autoload;
 using RotOfTime.Core.Animation.Components;
 using RotOfTime.Core.Combat.Results;
+using RotOfTime.Core.Entities;
 using RotOfTime.Core.Entities.Components;
 using RotOfTime.Scenes.Player.Components;
 using HurtboxComponent = RotOfTime.Core.Combat.Components.HurtboxComponent;
@@ -37,7 +38,7 @@ public partial class Player : CharacterBody2D
 
     public override void _Ready()
     {
-        AddToGroup("player");
+        AddToGroup(Groups.Player);
         SetupStatsComponent();
         SetupHurtboxComponent();
         ApplyAllMultipliers();

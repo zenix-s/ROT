@@ -1,6 +1,7 @@
 using Godot;
 using RotOfTime.Autoload;
 using RotOfTime.Core;
+using RotOfTime.Core.Entities;
 using RotOfTime.Scenes.UI.HUD;
 
 namespace RotOfTime.Scenes.Main;
@@ -38,7 +39,7 @@ public partial class Main : Node2D
         _hud.Teardown();
 
         // Close any open in-game menus (bonfire, etc.)
-        GetTree().GetFirstNodeInGroup("BonfireMenu")?.QueueFree();
+        GetTree().GetFirstNodeInGroup(Groups.BonfireMenu)?.QueueFree();
         GameManager.Instance.IsMenuOpen = false;
 
         if (IsInstanceValid(_player))

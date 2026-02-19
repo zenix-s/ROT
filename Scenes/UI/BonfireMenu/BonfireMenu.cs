@@ -1,5 +1,6 @@
 using Godot;
 using RotOfTime.Autoload;
+using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Scenes.UI;
 
@@ -33,7 +34,8 @@ public partial class BonfireMenu : CanvasLayer
 
     public void Open()
     {
-        _player = GetTree().GetFirstNodeInGroup("player") as Player.Player;
+        AddToGroup(Groups.BonfireMenu);
+        _player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
         GameManager.Instance.IsMenuOpen = true;
         Visible = true;
         Refresh();

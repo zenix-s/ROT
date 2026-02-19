@@ -21,6 +21,9 @@
 - [ ] **Lore: descripciones de Elevación**
   Añadir `ElevationData` Resource con nombre y descripción de lore por elevación (1-5). Mostrar en BonfireMenu al ascender. Da contexto narrativo al sistema de progresión.
 
+- [ ] **Componente Interactuable/Recogible** *(a futuro — baja prioridad)*
+  Cuando haya 8-10 interactuables distintos en el nivel, extraer un `InteractableComponent` / `CollectibleComponent` reutilizable (similar a HurtboxComponent). Centraliza: detección de player por grupo, prompt "pulsa E", señales de trigger. Por ahora el patrón directo (Area2D + OnBodyEntered) es suficiente. Ver: `Core/Entities/Groups.cs` para los strings de grupos.
+
 - [ ] **Refactor: isótopos a InventoryManager**
   Mover isótopos de `EconomyManager` a `InventoryManager` para unificar todos los coleccionables en un solo lugar. Actualizar HUD, BonfireMenu (crafteo), y `MetaData`. No bloquea nada actualmente — hacer cuando haya tiempo.
 

@@ -1,7 +1,10 @@
 [gd_scene format=3 uid="uid://d1hcyn8lhnjvm"]
 
+[ext_resource type="Script" uid="uid://clpfq2mblssb2" path="res://Scenes/UI/BonfireMenu/BonfireMenu.cs" id="1_bfscript"]
+
 [node name="BonfireMenu" type="CanvasLayer" unique_id=1383015731]
 layer = 10
+script = ExtResource("1_bfscript")
 
 [node name="Panel" type="Panel" parent="." unique_id=737755714]
 offset_left = 160.0

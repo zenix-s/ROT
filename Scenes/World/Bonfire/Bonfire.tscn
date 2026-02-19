@@ -1,19 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://druky6hjr6xcc"]
+[gd_scene format=3 uid="uid://druky6hjr6xcc"]
 
-[ext_resource type="Script" path="res://Scenes/World/Bonfire/Bonfire.cs" id="1_bonfirescr"]
+[ext_resource type="Script" uid="uid://dw5w8aun1g6y7" path="res://Scenes/World/Bonfire/Bonfire.cs" id="1_bonfirescr"]
 
 [sub_resource type="CircleShape2D" id="1_bonfshape"]
 radius = 48.0
 
-[node name="Bonfire" type="Node2D" script=ExtResource("1_bonfirescr")]
+[node name="Bonfire" type="Node2D" unique_id=295686592]
+script = ExtResource("1_bonfirescr")
 
-[node name="Visual" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+[node name="Visual" type="Polygon2D" parent="." unique_id=517114597]
 color = Color(1, 0.5, 0.1, 1)
+polygon = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 
-[node name="DetectionArea" type="Area2D" parent="."]
+[node name="DetectionArea" type="Area2D" parent="." unique_id=769037863]
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=796933276]
 shape = SubResource("1_bonfshape")

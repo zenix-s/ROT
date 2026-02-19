@@ -1,5 +1,6 @@
 using Godot;
 using RotOfTime.Autoload;
+using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Core.Economy;
 
@@ -25,14 +26,14 @@ public partial class IsotopePickup : Area2D
     {
         // Simple bob animation for visual feedback
         _bobTime += (float)delta * 3f;
-        var sprite = GetNodeOrNull<Sprite2D>("Sprite2D");
-        if (sprite != null)
-            sprite.Position = new Vector2(0, Mathf.Sin(_bobTime) * 2f);
+        var visual = GetNodeOrNull<Polygon2D>("Visual");
+        if (visual != null)
+            visual.Position = new Vector2(0, Mathf.Sin(_bobTime) * 2f);
     }
 
     private void OnBodyEntered(Node2D body)
     {
-        if (!body.IsInGroup("Player")) return;
+        if (!body.IsInGroup(Groups.Player)) return;
 
         GameManager.Instance?.EconomyManager?.AddIsotopes(Amount);
         QueueFree();
