@@ -27,7 +27,6 @@ public partial class Player : CharacterBody2D
     public const float Speed = 200.0f;
 
     [Export] public AnimationComponent AnimationComponent;
-    [Export] public Label DebugLabel;
     [Export] public EntityStatsComponent EntityStatsComponent;
     [Export] public EntityInputComponent EntityInputComponent;
     [Export] public EntityMovementComponent EntityMovementComponent;
@@ -76,19 +75,6 @@ public partial class Player : CharacterBody2D
             return PlayerAttackSlot.Spell2;
 
         return null;
-    }
-
-    public override void _Process(double delta)
-    {
-        var gm = GameManager.Instance;
-        var prog = gm?.ProgressionManager;
-        var arts = gm?.ArtifactManager;
-
-        DebugLabel.Text =
-            $"HP: {EntityStatsComponent.CurrentHealth}/{EntityStatsComponent.MaxHealth}\n" +
-            $"ATK: {EntityStatsComponent.AttackPower} ({EntityStatsComponent.DamageMultiplier:F2}x)\n" +
-            $"Elev: {prog?.CurrentElevation ?? 1} | Arts: {arts?.UsedSlots ?? 0}/{arts?.MaxSlots ?? 1}\n" +
-            $"Isotopes: {gm?.EconomyManager?.Isotopes ?? 0}";
     }
 
     private void SetupHurtboxComponent()

@@ -1,17 +1,18 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://vax4s4om88hj"]
 
-[ext_resource type="Script" path="res://Core/Progression/ResonanceTrigger.cs" id="1_resscript"]
+[ext_resource type="Script" uid="uid://crdkcur1eok5r" path="res://Core/Progression/ResonanceTrigger.cs" id="1_resscript"]
 
 [sub_resource type="CircleShape2D" id="1_resshape"]
 radius = 16.0
 
-[node name="ResonanceTrigger" type="Area2D" script=ExtResource("1_resscript")]
+[node name="ResonanceTrigger" type="Area2D" unique_id=383780474]
 collision_layer = 0
 collision_mask = 2
+script = ExtResource("1_resscript")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1691121736]
 shape = SubResource("1_resshape")
 
-[node name="Visual" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+[node name="Visual" type="Polygon2D" parent="." unique_id=459750413]
 color = Color(0.2, 0.8, 1, 1)
+polygon = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)

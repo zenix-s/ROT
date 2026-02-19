@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://bnyljlbxe0n4k"]
+
+[ext_resource type="Script" uid="uid://b28rmkkpn3syx" path="res://Scenes/UI/DebugOverlay/DebugOverlay.cs" id="1_dbgscr"]
+
+[node name="DebugOverlay" type="CanvasLayer" unique_id=223904661]
+layer = 100
+script = ExtResource("1_dbgscr")
+
+[node name="Container" type="Control" parent="." unique_id=960884241]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="Container" unique_id=960884242]
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -288.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 338.0
+mouse_filter = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Container/Panel" unique_id=862502876]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="Label" type="Label" parent="Container/Panel/ScrollContainer" unique_id=862502877]
+layout_mode = 2

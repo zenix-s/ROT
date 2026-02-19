@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bi6cd4yfbft2q" path="res://Assets/Terrain/terrain.png" id="1_vedx3"]
 [ext_resource type="PackedScene" uid="uid://basicenemy" path="res://Scenes/Enemies/BasicEnemy/BasicEnemy.tscn" id="2_x2kx1"]
 [ext_resource type="PackedScene" uid="uid://druky6hjr6xcc" path="res://Scenes/World/Bonfire/Bonfire.tscn" id="4_ipjbi"]
+[ext_resource type="PackedScene" path="res://Core/Progression/ResonanceTrigger.tscn" id="5_6ai4p"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_x2kx1"]
 texture = ExtResource("1_vedx3")
@@ -414,3 +415,6 @@ position = Vector2(882, 353)
 
 [node name="Bonfire" parent="." unique_id=520745702 instance=ExtResource("4_ipjbi")]
 position = Vector2(215, 185)
+
+[node name="ResonanceTrigger" parent="." unique_id=474861273 instance=ExtResource("5_6ai4p")]
+position = Vector2(195, 348)

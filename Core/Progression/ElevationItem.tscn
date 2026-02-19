@@ -1,17 +1,18 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://clr7bjs4unb8d"]
 
-[ext_resource type="Script" path="res://Core/Progression/ElevationItem.cs" id="1_elevscript"]
+[ext_resource type="Script" uid="uid://cd6cufo5wi683" path="res://Core/Progression/ElevationItem.cs" id="1_elevscript"]
 
 [sub_resource type="CircleShape2D" id="1_elevshape"]
 radius = 20.0
 
-[node name="ElevationItem" type="Area2D" script=ExtResource("1_elevscript")]
+[node name="ElevationItem" type="Area2D" unique_id=1429810713]
 collision_layer = 0
 collision_mask = 2
+script = ExtResource("1_elevscript")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=187269051]
 shape = SubResource("1_elevshape")
 
-[node name="Visual" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
+[node name="Visual" type="Polygon2D" parent="." unique_id=55685793]
 color = Color(1, 0.8, 0.2, 1)
+polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
