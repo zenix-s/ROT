@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://Scenes/World/Bonfire/Bonfire.cs" id="1_bonfirescr"]
+
+[sub_resource type="CircleShape2D" id="1_bonfshape"]
+radius = 48.0
+
+[node name="Bonfire" type="Node2D" script=ExtResource("1_bonfirescr")]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 0.5, 0.1, 1)
+
+[node name="DetectionArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+shape = SubResource("1_bonfshape")
