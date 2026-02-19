@@ -116,7 +116,7 @@ public partial class Player : CharacterBody2D
     ///     Applies stat multipliers from Progression and Artifacts to EntityStatsComponent.
     ///     Call on _Ready and whenever equipment or progression changes.
     /// </summary>
-    private void ApplyAllMultipliers()
+    public void ApplyAllMultipliers()
     {
         var prog = GameManager.Instance?.ProgressionManager;
         var arts = GameManager.Instance?.ArtifactManager;
