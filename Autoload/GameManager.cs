@@ -44,14 +44,14 @@ public partial class GameManager : Node
     {
         Meta = SaveManager.LoadMeta() ?? new MetaData();
         GameStateManager.LoadMilestones(Meta.CompletedMilestones);
-        ProgressionManager.CurrentElevation = Meta.CurrentElevation;
-        ProgressionManager.LoadResonanceKeys(Meta.UnlockedResonances);
+        ProgressionManager.Load(Meta.ActivatedResonances, Meta.CurrentElevation);
         ArtifactManager.MaxSlots = Meta.ArtifactMaxSlots;
         ArtifactManager.LoadFromPaths(Meta.OwnedArtifacts, Meta.EquippedArtifacts);
         EconomyManager.Load(Meta.Isotopes);
         GD.Print("GameManager: Meta loaded");
         GD.Print("Milestones: " + string.Join(", ", Meta.CompletedMilestones));
         GD.Print($"Progression: Elevation {ProgressionManager.CurrentElevation}, " +
+                 $"Resonances {ProgressionManager.ActivatedResonances}, " +
                  $"HP mult {ProgressionManager.GetHealthMultiplier():F2}x, " +
                  $"DMG mult {ProgressionManager.GetDamageMultiplier():F2}x");
         GD.Print($"Artifacts: {ArtifactManager.Owned.Count} owned, " +
@@ -64,7 +64,7 @@ public partial class GameManager : Node
     {
         Meta.CompletedMilestones = [.. GameStateManager.CompletedMilestones];
         Meta.CurrentElevation = ProgressionManager.CurrentElevation;
-        Meta.UnlockedResonances = ProgressionManager.GetResonanceKeys();
+        Meta.ActivatedResonances = ProgressionManager.ActivatedResonances;
         Meta.ArtifactMaxSlots = ArtifactManager.MaxSlots;
         Meta.OwnedArtifacts = ArtifactManager.GetOwnedPaths();
         Meta.EquippedArtifacts = ArtifactManager.GetEquippedPaths();
