@@ -27,6 +27,7 @@ public partial class GameManager : Node
     public ProgressionManager ProgressionManager { get; private set; }
     public ArtifactManager ArtifactManager { get; private set; }
     public EconomyManager EconomyManager { get; private set; }
+    public InventoryManager InventoryManager { get; private set; }
 
     public override void _Ready()
     {
@@ -37,6 +38,7 @@ public partial class GameManager : Node
         ProgressionManager = new ProgressionManager();
         ArtifactManager = new ArtifactManager();
         EconomyManager = new EconomyManager();
+        InventoryManager = new InventoryManager();
         LoadMeta();
     }
 
@@ -48,6 +50,7 @@ public partial class GameManager : Node
         ArtifactManager.MaxSlots = Meta.ArtifactMaxSlots;
         ArtifactManager.LoadFromPaths(Meta.OwnedArtifacts, Meta.EquippedArtifacts);
         EconomyManager.Load(Meta.Isotopes);
+        InventoryManager.Load(Meta.Inventory);
         GD.Print("GameManager: Meta loaded");
         GD.Print("Milestones: " + string.Join(", ", Meta.CompletedMilestones));
         GD.Print($"Progression: Elevation {ProgressionManager.CurrentElevation}, " +
@@ -69,6 +72,7 @@ public partial class GameManager : Node
         Meta.OwnedArtifacts = ArtifactManager.GetOwnedPaths();
         Meta.EquippedArtifacts = ArtifactManager.GetEquippedPaths();
         Meta.Isotopes = EconomyManager.Isotopes;
+        Meta.Inventory = InventoryManager.GetAllItems();
         SaveManager.SaveMeta(Meta);
     }
 
