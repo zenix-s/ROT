@@ -49,8 +49,6 @@ public partial class EntityStatsComponent : Node
     public void TakeDamage(AttackResult attackResult)
     {
         DamageResult damageResult = DamageCalculator.CalculateFinalDamage(attackResult, EntityStats);
-        GD.Print(
-            $"Taking damage: {damageResult.RawDamage} raw, {damageResult.FinalDamage} final (after {EntityStats.DefenseStat} defense)");
 
         CurrentHealth = Math.Max(0, CurrentHealth - damageResult.FinalDamage);
         EmitSignal(SignalName.HealthChanged, CurrentHealth);

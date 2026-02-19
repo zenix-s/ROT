@@ -21,7 +21,6 @@ public partial class StartMenu : CanvasLayer
 
     private static void _on_StartButton_pressed()
     {
-        GD.Print("Start Button Pressed");
         SceneManager.Instance.RequestSceneChange(SceneExtensionManager.GameScene.TowerLevel0);
     }
 }

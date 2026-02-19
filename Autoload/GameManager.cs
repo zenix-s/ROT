@@ -54,16 +54,6 @@ public partial class GameManager : Node
         ArtifactManager.LoadFromPaths(Meta.OwnedArtifacts, Meta.EquippedArtifacts);
         EconomyManager.Load(Meta.Isotopes);
         InventoryManager.Load(Meta.Inventory);
-        GD.Print("GameManager: Meta loaded");
-        GD.Print("Milestones: " + string.Join(", ", Meta.CompletedMilestones));
-        GD.Print($"Progression: Elevation {ProgressionManager.CurrentElevation}, " +
-                 $"Resonances {ProgressionManager.ActivatedResonances}, " +
-                 $"HP mult {ProgressionManager.GetHealthMultiplier():F2}x, " +
-                 $"DMG mult {ProgressionManager.GetDamageMultiplier():F2}x");
-        GD.Print($"Artifacts: {ArtifactManager.Owned.Count} owned, " +
-                 $"{ArtifactManager.Equipped.Count} equipped, " +
-                 $"{ArtifactManager.UsedSlots}/{ArtifactManager.MaxSlots} slots");
-        GD.Print($"Isotopes: {EconomyManager.Isotopes}");
     }
 
     public void SaveMeta()
@@ -81,7 +71,6 @@ public partial class GameManager : Node
 
     public void PlayerDied()
     {
-        GD.Print("GameManager: Player died. Returning to main menu.");
-        SceneManager.Instance.RequestMenuChange(SceneExtensionManager.MenuScene.Start);
+SceneManager.Instance.RequestMenuChange(SceneExtensionManager.MenuScene.Start);
     }
 }

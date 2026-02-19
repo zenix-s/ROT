@@ -28,7 +28,6 @@ public class EconomyManager
     {
         if (amount <= 0) return;
         Isotopes += amount;
-        GD.Print($"EconomyManager: +{amount} isotopes (total: {Isotopes})");
         IsotopesChanged?.Invoke(Isotopes);
     }
 
@@ -38,7 +37,6 @@ public class EconomyManager
             return false;
 
         Isotopes -= amount;
-        GD.Print($"EconomyManager: -{amount} isotopes (total: {Isotopes})");
         IsotopesChanged?.Invoke(Isotopes);
         return true;
     }

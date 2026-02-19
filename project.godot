@@ -37,6 +37,10 @@ window/stretch/scale_mode="integer"
 
 project/assembly_name="RotOfTime"
 
+[global_group]
+
+walls=""
+
 [input]
 
 move_left={

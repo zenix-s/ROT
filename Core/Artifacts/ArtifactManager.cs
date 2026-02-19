@@ -37,7 +37,6 @@ public class ArtifactManager
             return false;
 
         _equipped.Add(artifact);
-        GD.Print($"ArtifactManager: Equipped '{artifact.ArtifactName}' ({artifact.SlotCost} slots)");
         return true;
     }
 
@@ -46,7 +45,6 @@ public class ArtifactManager
         if (artifact == null || !_equipped.Remove(artifact))
             return false;
 
-        GD.Print($"ArtifactManager: Unequipped '{artifact.ArtifactName}'");
         return true;
     }
 
@@ -55,7 +53,6 @@ public class ArtifactManager
         if (artifact != null && !_owned.Contains(artifact))
         {
             _owned.Add(artifact);
-            GD.Print($"ArtifactManager: Acquired '{artifact.ArtifactName}'");
         }
     }
 

@@ -19,7 +19,6 @@ public class InventoryManager
     {
         _items.TryGetValue(id, out int current);
         _items[id] = current + amount;
-        GD.Print($"InventoryManager: +{amount}x '{id}' (total: {_items[id]})");
     }
 
     public bool RemoveItem(string id, int amount = 1)
@@ -27,7 +26,6 @@ public class InventoryManager
         if (!HasItem(id, amount)) return false;
         _items[id] -= amount;
         if (_items[id] <= 0) _items.Remove(id);
-        GD.Print($"InventoryManager: -{amount}x '{id}'");
         return true;
     }
 

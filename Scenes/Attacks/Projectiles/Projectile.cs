@@ -29,7 +29,10 @@ public partial class Projectile : Area2D
         }
 
         if (HitboxComponent != null)
+        {
             HitboxComponent.AttackConnected += OnImpact;
+            HitboxComponent.WallHit += OnImpact;
+        }
     }
 
     protected virtual void OnImpact()

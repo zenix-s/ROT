@@ -14,13 +14,11 @@ public class ProgressionManager
     public void ActivateResonance()
     {
         ActivatedResonances++;
-        GD.Print($"ProgressionManager: Resonance activated (total: {ActivatedResonances})");
     }
 
     public void AdvanceElevation()
     {
         CurrentElevation++;
-        GD.Print($"ProgressionManager: Advanced to Elevation {CurrentElevation}");
     }
 
     public float GetHealthMultiplier() => 1.0f + ActivatedResonances * 0.20f;

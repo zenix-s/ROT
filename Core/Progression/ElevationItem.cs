@@ -23,7 +23,6 @@ public partial class ElevationItem : Area2D
         string itemId = $"elevation_{Elevation}";
         GameManager.Instance.InventoryManager.AddItem(itemId);
         GameManager.Instance.SaveMeta();
-        GD.Print($"ElevationItem: elevation_{Elevation} collected!");
         QueueFree();
     }
 }
