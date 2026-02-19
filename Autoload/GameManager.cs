@@ -8,8 +8,8 @@ using RotOfTime.Core.GameData;
 namespace RotOfTime.Autoload;
 
 /// <summary>
-///     Runtime manager for meta-progression.
-///     Holds MetaData and provides money operations.
+///     Runtime manager for meta-progression state.
+///     Holds MetaData and coordinates all manager instances.
 ///     Owns SaveManager and MilestoneManager instances.
 /// </summary>
 public partial class GameManager : Node
@@ -74,7 +74,7 @@ public partial class GameManager : Node
 
     public void PlayerDied()
     {
-        GD.Print("GameManager: Player died. Resetting money to 0.");
+        GD.Print("GameManager: Player died. Returning to main menu.");
         SceneManager.Instance.RequestMenuChange(SceneExtensionManager.MenuScene.Start);
     }
 }
