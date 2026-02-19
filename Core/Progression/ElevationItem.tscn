@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://Core/Progression/ElevationItem.cs" id="1_elevscript"]
+
+[sub_resource type="CircleShape2D" id="1_elevshape"]
+radius = 20.0
+
+[node name="ElevationItem" type="Area2D" script=ExtResource("1_elevscript")]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1_elevshape")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 0.8, 0.2, 1)
