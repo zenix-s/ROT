@@ -12,5 +12,6 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("1_elevshape")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(1, 0.8, 0.2, 1)
+[node name="Visual" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
+color = Color(1, 0.8, 0.2, 1)
