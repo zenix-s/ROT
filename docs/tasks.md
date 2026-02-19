@@ -9,12 +9,20 @@
 
 ### Código
 
-- [ ] **Brainstorming: pipeline de resonancias y elevación**
-  Falta: `ResonanceTrigger` scene (Area2D reutilizable), conexión resonancia→`Player.ApplyAllMultipliers()`, y lógica de avance de elevación al derrotar boss.
-  Ver análisis en conversación 2026-02-18.
+- [x] **Pipeline de resonancias y elevación** (2026-02-19)
+  InventoryManager, ProgressionManager simplificado, ResonanceTrigger, ElevationItem, BonfireMenu, Bonfire. Pendiente: input action `interact` (tecla E) en Godot editor + test manual.
 
-- [ ] **Bloque C: Artifact Menu**
-  Brainstorming pendiente antes de implementar. Implica: método `Craft()` en ArtifactManager, UI de inventario (equip/unequip), panel de crafteo con coste en isótopos.
+- [ ] **Bloque C-1: Panel Artefactos en Bonfire**
+  Panel equip/unequip dentro de `BonfireMenu`. Lista de artifacts poseídos, contador de slots, botones Equipar/Desequipar. Llama `Player.ApplyAllMultipliers()` y `SaveMeta()` al cambiar.
+
+- [ ] **Bloque C-2: Panel Crafteo en Bonfire**
+  Panel de crafteo dentro de `BonfireMenu`. Lista de artifacts crafteables (hardcoded, los `.tres` existentes) con coste en isótopos. Requiere `[Export] int IsotopeCost` en `ArtifactData` y `ArtifactManager.AddOwned()`. Llama `EconomyManager.TrySpend()` y `SaveMeta()` al craftear.
+
+- [ ] **Lore: descripciones de Elevación**
+  Añadir `ElevationData` Resource con nombre y descripción de lore por elevación (1-5). Mostrar en BonfireMenu al ascender. Da contexto narrativo al sistema de progresión.
+
+- [ ] **Refactor: isótopos a InventoryManager**
+  Mover isótopos de `EconomyManager` a `InventoryManager` para unificar todos los coleccionables en un solo lugar. Actualizar HUD, BonfireMenu (crafteo), y `MetaData`. No bloquea nada actualmente — hacer cuando haya tiempo.
 
 - [ ] **Bloque D: Save/Load**
   Auditar `MetaData.cs`, añadir trigger de guardado al morir y al volver al menú, verificar que `LoadMeta()` restaura estado completo.
