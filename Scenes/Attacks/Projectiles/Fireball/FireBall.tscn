@@ -1,8 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://do7qyryvmcnir"]
+[gd_scene format=3 uid="uid://do7qyryvmcnir"]
 
 [ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="3_sprite"]
 [ext_resource type="Script" uid="uid://dmjy7sqfwj6nb" path="res://Core/Combat/Components/AttackHitboxComponent.cs" id="4_nvk5s"]
-[ext_resource type="Script" path="res://Scenes/Attacks/Projectiles/Fireball/Fireball.cs" id="5_fb"]
+[ext_resource type="Script" uid="uid://6s4s35oqc7m" path="res://Scenes/Attacks/Projectiles/Fireball/Fireball.cs" id="5_fb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6oscf"]
 radius = 7.071068
@@ -10,22 +10,22 @@ radius = 7.071068
 [sub_resource type="CircleShape2D" id="CircleShape2D_nvk5s"]
 radius = 8.0
 
-[node name="Fireball" type="Area2D" node_paths=PackedStringArray("HitboxComponent")]
+[node name="Fireball" type="Area2D" unique_id=1642103182 node_paths=PackedStringArray("HitboxComponent")]
 collision_layer = 512
 collision_mask = 0
 script = ExtResource("5_fb")
 HitboxComponent = NodePath("AttackHitboxComponent")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1395256083]
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_sprite")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=696040154]
 shape = SubResource("CircleShape2D_6oscf")
 
-[node name="AttackHitboxComponent" type="Area2D" parent="."]
+[node name="AttackHitboxComponent" type="Area2D" parent="." unique_id=2105731987]
 script = ExtResource("4_nvk5s")
 metadata/_custom_type_script = "uid://dmjy7sqfwj6nb"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitboxComponent" unique_id=1238493814]
 shape = SubResource("CircleShape2D_nvk5s")
