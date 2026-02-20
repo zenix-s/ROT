@@ -1,0 +1,91 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scenes/UI/ArtifactsMenu/ArtifactsMenu.cs" id="1_amscript"]
+
+[node name="ArtifactsMenu" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_amscript")
+
+[node name="Container" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Container"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -150.0
+offset_right = 210.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 12.0
+offset_right = -16.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="Container/Panel/VBoxContainer"]
+layout_mode = 2
+text = "Mesa de Artefactos"
+
+[node name="HSeparator" type="HSeparator" parent="Container/Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="TabsRow" type="HBoxContainer" parent="Container/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="EquipTabButton" type="Button" parent="Container/Panel/VBoxContainer/TabsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Equipar"
+
+[node name="CraftTabButton" type="Button" parent="Container/Panel/VBoxContainer/TabsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Craftear"
+
+[node name="HSeparator2" type="HSeparator" parent="Container/Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="EquipPanel" type="VBoxContainer" parent="Container/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="SlotsLabel" type="Label" parent="Container/Panel/VBoxContainer/EquipPanel"]
+layout_mode = 2
+text = "Slots: 0/1"
+
+[node name="ArtifactsListContainer" type="VBoxContainer" parent="Container/Panel/VBoxContainer/EquipPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="CraftPanel" type="VBoxContainer" parent="Container/Panel/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="CraftListContainer" type="VBoxContainer" parent="Container/Panel/VBoxContainer/CraftPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
