@@ -20,9 +20,9 @@ public partial class DebugOverlay : CanvasLayer
 
     public override void _Ready()
     {
-        _label = GetNode<Label>("Container/Panel/VBoxContainer/ScrollContainer/Label");
-        _amountInput = GetNode<LineEdit>("Container/Panel/VBoxContainer/IsotopeRow/AmountInput");
-        _addIsotopesButton = GetNode<Button>("Container/Panel/VBoxContainer/IsotopeRow/AddIsotopesButton");
+        _label = GetNode<Label>("Container/Panel/ScrollContainer/VBoxContainer/Label");
+        _amountInput = GetNode<LineEdit>("Container/Panel/ScrollContainer/VBoxContainer/IsotopeRow/AmountInput");
+        _addIsotopesButton = GetNode<Button>("Container/Panel/ScrollContainer/VBoxContainer/IsotopeRow/AddIsotopesButton");
         _addIsotopesButton.Pressed += OnAddIsotopesPressed;
         Visible = false;
     }

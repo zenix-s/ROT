@@ -23,8 +23,9 @@ offset_left = -288.0
 offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 378.0
+mouse_filter = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Container/Panel" unique_id=200000001]
+[node name="ScrollContainer" type="ScrollContainer" parent="Container/Panel" unique_id=862502876]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -35,24 +36,25 @@ offset_right = -4.0
 offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Container/Panel/VBoxContainer" unique_id=862502876]
-layout_mode = 2
-size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="Label" type="Label" parent="Container/Panel/VBoxContainer/ScrollContainer" unique_id=862502877]
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/Panel/ScrollContainer" unique_id=200000001]
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="IsotopeRow" type="HBoxContainer" parent="Container/Panel/VBoxContainer" unique_id=200000002]
+[node name="Label" type="Label" parent="Container/Panel/ScrollContainer/VBoxContainer" unique_id=862502877]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="IsotopeRow" type="HBoxContainer" parent="Container/Panel/ScrollContainer/VBoxContainer" unique_id=200000002]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="AmountInput" type="LineEdit" parent="Container/Panel/VBoxContainer/IsotopeRow" unique_id=200000003]
+[node name="AmountInput" type="LineEdit" parent="Container/Panel/ScrollContainer/VBoxContainer/IsotopeRow" unique_id=200000003]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Isótopos"
 
-[node name="AddIsotopesButton" type="Button" parent="Container/Panel/VBoxContainer/IsotopeRow" unique_id=200000004]
+[node name="AddIsotopesButton" type="Button" parent="Container/Panel/ScrollContainer/VBoxContainer/IsotopeRow" unique_id=200000004]
 layout_mode = 2
 text = "+ Isótopos"
