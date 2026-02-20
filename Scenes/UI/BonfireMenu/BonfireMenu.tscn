@@ -6,13 +6,29 @@
 layer = 10
 script = ExtResource("1_bfscript")
 
-[node name="Panel" type="Panel" parent="." unique_id=737755714]
-offset_left = 145.0
-offset_top = 25.0
-offset_right = 495.0
-offset_bottom = 375.0
+[node name="Container" type="Control" parent="." unique_id=368338164]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=712812631]
+[node name="Panel" type="Panel" parent="Container" unique_id=737755714]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -175.0
+offset_top = -175.0
+offset_right = 175.0
+offset_bottom = 175.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/Panel" unique_id=712812631]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,80 +41,37 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 12
 
-[node name="TitleLabel" type="Label" parent="Panel/VBoxContainer" unique_id=1647464935]
+[node name="TitleLabel" type="Label" parent="Container/Panel/VBoxContainer" unique_id=1647464935]
 layout_mode = 2
 text = "Bonfire"
 
-[node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer" unique_id=1836329255]
+[node name="HSeparator" type="HSeparator" parent="Container/Panel/VBoxContainer" unique_id=1836329255]
 layout_mode = 2
 
-[node name="ResonancesLabel" type="Label" parent="Panel/VBoxContainer" unique_id=763304780]
+[node name="ResonancesLabel" type="Label" parent="Container/Panel/VBoxContainer" unique_id=763304780]
 layout_mode = 2
 text = "Resonancias disponibles: 0"
 
-[node name="ActivateButton" type="Button" parent="Panel/VBoxContainer" unique_id=422939389]
+[node name="ActivateButton" type="Button" parent="Container/Panel/VBoxContainer" unique_id=422939389]
 layout_mode = 2
 text = "Activar Resonancia"
 
-[node name="HSeparator2" type="HSeparator" parent="Panel/VBoxContainer" unique_id=2006342943]
+[node name="HSeparator2" type="HSeparator" parent="Container/Panel/VBoxContainer" unique_id=2006342943]
 layout_mode = 2
 
-[node name="ElevationLabel" type="Label" parent="Panel/VBoxContainer" unique_id=887416461]
+[node name="ElevationLabel" type="Label" parent="Container/Panel/VBoxContainer" unique_id=887416461]
 visible = false
 layout_mode = 2
 text = "Item de Elevacion recogido"
 
-[node name="ElevationButton" type="Button" parent="Panel/VBoxContainer" unique_id=1032958695]
+[node name="ElevationButton" type="Button" parent="Container/Panel/VBoxContainer" unique_id=1032958695]
 visible = false
 layout_mode = 2
 text = "Ascender de Elevacion"
 
-[node name="HSeparator3" type="HSeparator" parent="Panel/VBoxContainer" unique_id=839149982]
+[node name="HSeparator3" type="HSeparator" parent="Container/Panel/VBoxContainer" unique_id=839149982]
 layout_mode = 2
 
-[node name="ArtifactsButton" type="Button" parent="Panel/VBoxContainer" unique_id=100000001]
-layout_mode = 2
-text = "Artefactos ▶"
-
-[node name="CloseButton" type="Button" parent="Panel/VBoxContainer" unique_id=198039417]
+[node name="CloseButton" type="Button" parent="Container/Panel/VBoxContainer" unique_id=198039417]
 layout_mode = 2
 text = "Cerrar"
-
-[node name="ArtifactsPanel" type="Panel" parent="." unique_id=100000002]
-visible = false
-offset_left = 145.0
-offset_top = 25.0
-offset_right = 495.0
-offset_bottom = 375.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ArtifactsPanel" unique_id=100000003]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = 20.0
-offset_right = -20.0
-offset_bottom = -20.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 12
-
-[node name="SlotsLabel" type="Label" parent="ArtifactsPanel/VBoxContainer" unique_id=100000004]
-layout_mode = 2
-text = "Artefactos — Slots: 0/1"
-
-[node name="HSeparator" type="HSeparator" parent="ArtifactsPanel/VBoxContainer" unique_id=100000005]
-layout_mode = 2
-
-[node name="ArtifactsListContainer" type="VBoxContainer" parent="ArtifactsPanel/VBoxContainer" unique_id=100000006]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="HSeparator2" type="HSeparator" parent="ArtifactsPanel/VBoxContainer" unique_id=100000007]
-layout_mode = 2
-
-[node name="BackButton" type="Button" parent="ArtifactsPanel/VBoxContainer" unique_id=100000008]
-layout_mode = 2
-text = "← Volver"
