@@ -13,9 +13,9 @@
 **Success Criteria:**
 - Player can complete Floors 1-3
 - Combat feels responsive and fun
-- 2 Elevations unlocked via boss fights
-- Resonance system functional (6 resonances grant stat boosts)
-- 3-5 artifacts craftable and equippable
+- 2 Elevations unlocked (3 Resonances + boss defeat)
+- Resonance system funcional (6 resonancias otorgan stat boosts)
+- 3-5 artifacts craftables con Isótopos (único recurso, sin Fragmentos de Elevación)
 - Save/load works
 
 ---
@@ -945,7 +945,7 @@ git commit -m "feat: add isotope drop system + EconomyManager autoload"
 - [ ] **E-1 (Task 10):** Crear Floor 1 — TileMap grey-box, 3-5 enemies, trigger de Resonancia
 - [ ] **E-2 (Task 10b):** Crear Floor 2 y Floor 3 (estructura similar)
 - [ ] **E-3 (Task 11):** Crear Boss 1 (Soul Fragment 1) con state machine de fases
-- [ ] **E-4 (Task 11b):** Arena del boss — puerta bloqueada + trigger de Elevation 2 al vencer
+- [ ] **E-4 (Task 11b):** Arena del boss — puerta bloqueada + trigger de Elevation 2 al vencer (requiere 3 Resonances previas, no items especiales)
 
 ---
 
@@ -1164,9 +1164,8 @@ git commit -m "feat: implement save/load for vertical slice data"
 - [ ] Enemies drop isotopes on death
 
 **Progression:**
-- [ ] Resonances unlock and grant stat boosts
-- [ ] 6 resonances available (3 per Elevation)
-- [ ] Boss fight unlocks Elevation 2
+- [ ] 3 Resonances completas + boss fight → unlocks Elevation 2
+- [ ] Resonances grant stat boosts (+20% HP, +10% DMG cada una)
 - [ ] Stats scale correctly (check with debug display)
 
 **Artifacts:**

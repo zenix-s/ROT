@@ -33,8 +33,7 @@
 
 **Requirements to Advance:**
 1. Complete 3 Resonances in current Elevation
-2. Defeat boss to absorb Soul Fragment of Ismael
-3. Unlock next Elevation
+2. Defeat boss to absorb Soul Fragment of Ismael → Unlock next Elevation
 
 ---
 
@@ -156,18 +155,12 @@
 ### 3.2 Crafting System
 
 **Recipe Structure:**
-```csharp
-Dictionary<ResourceType, int> Requirements;
-
-Examples:
-  Vial de Curación: { Isotopos: 50 }
-  Corazón Diamantino: { Isotopos: 200, FragmentoElevacion2: 1 }
-```
+- Todos los artefactos cuestan solo Isótopos
+- No hay recursos secundarios (Fragmentos de Elevación eliminados del diseño)
 
 **Design Philosophy:**
-- Simple base system (Isótopos only)
-- Scalable: Easy to add new resources later
-- No bloat: Requirements dictionary handles everything
+- Simple: un único recurso (Isótopos) para todo el crafteo
+- No bloat: no añadir recursos gating que compliquen sin mejorar la experiencia
 
 ---
 
@@ -187,7 +180,7 @@ Examples:
 | Artifact | Effect | Cost |
 |----------|--------|------|
 | Vial Superior | +2 potion charges | 150 Isótopos |
-| Corazón Diamantino | 1% HP/sec passive regen | 200 Isótopos + Fragment E2 |
+| Corazón Diamantino | 1% HP/sec passive regen | 200 Isótopos |
 | Púas de Carbono | Enemies take 20% reflected damage | 150 Isótopos |
 | Catalizador | -25% spell cooldowns | 180 Isótopos |
 
@@ -195,8 +188,8 @@ Examples:
 
 | Artifact | Effect | Cost |
 |----------|--------|------|
-| Forma Etérea | Dash grants 0.3s invulnerability | 300 Isótopos + Fragment E3 |
-| Anillo de Velocidad | +30% movement speed, -35% cooldowns | 350 Isótopos + Fragment E4 |
+| Forma Etérea | Dash grants 0.3s invulnerability | 300 Isótopos |
+| Anillo de Velocidad | +30% movement speed, -35% cooldowns | 350 Isótopos |
 
 **Total Artifacts in Game:** 10-15
 
@@ -223,21 +216,18 @@ Examples:
 
 ---
 
-### 4.2 Special Resources (Optional)
+### 4.2 Special Resources (Cortados del diseño final)
 
-**Fragmento de Elevación X:**
-- Drops from boss of that Elevation
-- 1 per boss (5 total in game)
-- Required for some Tier 2-3 artifacts
+> **Decisión de diseño (2026-02-20):** Los Fragmentos de Elevación han sido eliminados del juego.
+> El crafteo de todos los artefactos usa únicamente Isótopos. No se añadirán recursos especiales
+> ligados a Elevaciones — añaden complejidad sin mejorar la experiencia.
 
-**Cristales Raros:**
+**Cristales Raros:** *(Candidato Appendix A)*
 - Optional drop from secret rooms
-- Add only if more artifact gating needed
+- Posible si se necesita más gating en post-launch, pero no está planificado
 
-**Materiales de Exploración:**
-- Encontrados en zonas de dificultad elevada o acceso limitado
-- Tercera categoría de recurso (junto a Isótopos y Fragmentos de Elevación)
-- Planificados para después del vertical slice
+**Materiales de Exploración:** *(Candidato Appendix A)*
+- Planificados inicialmente, eliminados por complejidad innecesaria
 
 > **Nota de diseño (2026-02-20):** El crafteo tiene base narrativa sólida — el protagonista proviene de una familia de herreros/alquimistas especializados en crear artefactos. No es una mecánica añadida arbitrariamente; es parte de la identidad del personaje. En el vertical slice el crafteo funciona como tienda simple (solo Isótopos), pero el sistema está diseñado para escalar con Fragmentos de boss y Materiales de Exploración conforme avance el juego.
 
