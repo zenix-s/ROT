@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ProjectileData" format=3]
+
+[ext_resource type="Script" uid="uid://bi7dj6vs1ad3f" path="res://Core/Combat/Attacks/ProjectileData.cs" id="1_projdata"]
+
+[resource]
+script = ExtResource("1_projdata")
+InitialSpeed = 150
+TargetSpeed = 150
+Lifetime = 4
+MovementType = 0
+Name = "Enemy Bolt"
+DamageCoefficient = 0.8
+CooldownDuration = 1.5
+metadata/_custom_type_script = "uid://bi7dj6vs1ad3f"

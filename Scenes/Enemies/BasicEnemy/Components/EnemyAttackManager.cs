@@ -6,11 +6,11 @@ namespace RotOfTime.Scenes.Enemies.BasicEnemy.Components;
 [GlobalClass]
 public partial class EnemyAttackManager : AttackManagerComponent<EnemyAttackSlot>
 {
-    [Export] public PackedScene BodyAttackSkill { get; set; }
+    [Export] public PackedScene RangedAttackSkill { get; set; }
 
     public override void _Ready()
     {
-        if (BodyAttackSkill != null)
-            RegisterSkill(EnemyAttackSlot.BodyAttack, BodyAttackSkill);
+        if (RangedAttackSkill != null)
+            RegisterSkill(EnemyAttackSlot.RangedAttack, RangedAttackSkill);
     }
 }

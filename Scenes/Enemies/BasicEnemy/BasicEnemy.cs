@@ -14,7 +14,7 @@ public partial class BasicEnemy : CharacterBody2D
     [Export] public HurtboxComponent HurtboxComponent;
     [Export] public EnemyAttackManager AttackManager;
     [Export] public float Speed { get; set; } = 50f;
-    [Export] public float AttackRange { get; set; } = 40f;
+    [Export] public float AttackRange { get; set; } = 150f;
     [Export] public int IsotopeDropAmount { get; set; } = 10;
     [Export] public Area2D DetectionArea { get; set; }
 
@@ -38,14 +38,14 @@ public partial class BasicEnemy : CharacterBody2D
     }
 
     /// <summary>
-    ///     Called by AttackingState to fire the body attack toward the player.
+    ///     Called by AttackingState to fire a ranged attack toward the player.
     /// </summary>
-    public void TryBodyAttack(Vector2 direction)
+    public void TryAttack(Vector2 direction)
     {
         if (AttackManager == null) return;
 
         AttackManager.TryFire(
-            EnemyAttackSlot.BodyAttack,
+            EnemyAttackSlot.RangedAttack,
             direction,
             GlobalPosition,
             EntityStatsComponent.EntityStats,

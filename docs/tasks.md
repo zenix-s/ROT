@@ -9,14 +9,9 @@
 
 ### Código
 
-- [ ] **Test manual: resonancias** *(pendiente — developer)*
-  Colocar un `ResonanceTrigger` en el nivel, recogerlo, abrir Bonfire, activar resonancia y verificar que los stats del player suben (HP y daño). Completar antes de pasar a Level Design.
 
-- [ ] **Bug: RockBody se queda fijo en escena** *(deferred — resolver antes de release)*
-  El ataque cuerpo a cuerpo del enemigo (`RockBody`) no se destruye tras impactar: queda flotando en su posición de spawn permanentemente. Causa probable: no hay `QueueFree()` al conectar, ni lifetime timer. Ver `Core/Combat/Attacks/RockBody.tscn` y `RockBodyAttackData.tres`.
-
-- [ ] **Sistema de ataques cuerpo a cuerpo mejorado** *(a futuro — post-vertical-slice)*
-  El `RockBody` actual es un placeholder. Un ataque melee real debería: aparecer brevemente en la dirección del enemigo, tener hitbox activa solo durante el swing, y desaparecer. Diseñar como `MeleeAttackData` (subclase de `AttackData`) con duración configurable y offset desde el owner. No hacer hasta tener Level Design + Boss funcionando.
+- [ ] **Sistema de ataques cuerpo a cuerpo** *(a futuro — post-vertical-slice)*
+  El `RockBody` fue reemplazado por proyectiles (`EnemyBolt`). Un ataque melee real (para un tipo de enemigo diferente) debería: aparecer brevemente en la dirección del enemigo, tener hitbox activa solo durante el swing, y desaparecer. No hacer hasta tener Level Design + Boss funcionando.
 
 - [ ] **Bloque C-1: Panel Artefactos en Bonfire**
   Panel equip/unequip dentro de `BonfireMenu`. Lista de artifacts poseídos, contador de slots, botones Equipar/Desequipar. Llama `Player.ApplyAllMultipliers()` y `SaveMeta()` al cambiar.
@@ -56,3 +51,4 @@
 - [x] Bloque B: HUD (HP bar, contador isótopos, 3 cooldown indicators)
 - [x] Pipeline de resonancias y elevación (2026-02-19) — InventoryManager, ProgressionManager simplificado, ResonanceTrigger, ElevationItem, BonfireMenu, Bonfire
 - [x] **Validado (2026-02-19):** input action `interact` (tecla E), enemigo persigue + ataca + dropea isótopos visibles + HUD actualiza moneda, colisión y apertura de BonfireMenu
+- [x] **Validado (2026-02-20):** ResonanceTrigger → BonfireMenu → activar resonancia → stats suben correctamente
