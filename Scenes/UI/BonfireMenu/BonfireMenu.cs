@@ -56,12 +56,18 @@ public partial class BonfireMenu : CanvasLayer
         _resonancesLabel.Text = $"Resonancias disponibles: {resonances}";
         _activateButton.Disabled = resonances <= 0;
 
-        string elevKey = $"elevation_{prog.CurrentElevation}";
-        bool hasElevItem = inv.HasItem(elevKey);
+        bool hasElevItem = inv.HasItem("elevation");
+        bool canAdvance = hasElevItem && prog.CanAdvanceElevation();
         _elevationLabel.Visible = hasElevItem;
         _elevationButton.Visible = hasElevItem;
+        _elevationButton.Disabled = !canAdvance;
         if (hasElevItem)
-            _elevationLabel.Text = $"Item de Elevación {prog.CurrentElevation} recogido";
+        {
+            string resonanceStatus = prog.CanAdvanceElevation()
+                ? "listo para ascender"
+                : $"resonancias: {prog.ActivatedResonances % 3}/3";
+            _elevationLabel.Text = $"Item de Elevación recogido ({resonanceStatus})";
+        }
     }
 
     private void OnActivatePressed()
@@ -81,8 +87,8 @@ public partial class BonfireMenu : CanvasLayer
         var inv = GameManager.Instance.InventoryManager;
         var prog = GameManager.Instance.ProgressionManager;
 
-        string elevKey = $"elevation_{prog.CurrentElevation}";
-        if (!inv.RemoveItem(elevKey)) return;
+        if (!inv.HasItem("elevation") || !prog.CanAdvanceElevation()) return;
+        inv.RemoveItem("elevation");
         prog.AdvanceElevation();
         _player?.ApplyAllMultipliers();
         GameManager.Instance.SaveMeta();

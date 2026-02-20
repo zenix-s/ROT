@@ -4,14 +4,12 @@ using RotOfTime.Autoload;
 namespace RotOfTime.Core.Progression;
 
 /// <summary>
-///     Area2D pickup dropped by a boss. Allows advancing elevation at the bonfire.
-///     Export: set Elevation to match the boss's elevation number (1, 2, 3...).
+///     Area2D pickup dropped by a boss. Adds a generic "elevation" item to inventory.
+///     At the bonfire, the player can spend it (+ 3 activated resonances) to advance elevation.
 /// </summary>
 [GlobalClass]
 public partial class ElevationItem : Area2D
 {
-    [Export] public int Elevation { get; set; } = 1;
-
     public override void _Ready()
     {
         BodyEntered += OnBodyEntered;
@@ -20,8 +18,7 @@ public partial class ElevationItem : Area2D
     private void OnBodyEntered(Node2D body)
     {
         if (body is not Scenes.Player.Player) return;
-        string itemId = $"elevation_{Elevation}";
-        GameManager.Instance.InventoryManager.AddItem(itemId);
+        GameManager.Instance.InventoryManager.AddItem("elevation");
         GameManager.Instance.SaveMeta();
         QueueFree();
     }

@@ -16,6 +16,9 @@ public class ProgressionManager
         ActivatedResonances++;
     }
 
+    /// <summary>True when the player has activated 3 resonances in the current elevation.</summary>
+    public bool CanAdvanceElevation() => ActivatedResonances >= CurrentElevation * 3;
+
     public void AdvanceElevation()
     {
         CurrentElevation++;

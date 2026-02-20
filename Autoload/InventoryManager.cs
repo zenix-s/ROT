@@ -8,8 +8,8 @@ namespace RotOfTime.Autoload;
 ///     Plain C# class owned by GameManager (not a Godot Node).
 ///
 ///     Known item IDs:
-///       "resonance"   — collected resonance (fungible, activatable at bonfire)
-///       "elevation_N" — elevation item dropped by boss N
+///       "resonance" — collected resonance (fungible, activatable at bonfire)
+///       "elevation" — elevation item dropped by any boss (genérico, no por elevación específica)
 /// </summary>
 public class InventoryManager
 {
