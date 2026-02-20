@@ -7,10 +7,10 @@ layer = 10
 script = ExtResource("1_bfscript")
 
 [node name="Panel" type="Panel" parent="." unique_id=737755714]
-offset_left = 160.0
-offset_top = 55.0
-offset_right = 480.0
-offset_bottom = 305.0
+offset_left = 145.0
+offset_top = 25.0
+offset_right = 495.0
+offset_bottom = 375.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=712812631]
 layout_mode = 1
@@ -56,6 +56,49 @@ text = "Ascender de Elevacion"
 [node name="HSeparator3" type="HSeparator" parent="Panel/VBoxContainer" unique_id=839149982]
 layout_mode = 2
 
+[node name="ArtifactsButton" type="Button" parent="Panel/VBoxContainer" unique_id=100000001]
+layout_mode = 2
+text = "Artefactos ▶"
+
 [node name="CloseButton" type="Button" parent="Panel/VBoxContainer" unique_id=198039417]
 layout_mode = 2
 text = "Cerrar"
+
+[node name="ArtifactsPanel" type="Panel" parent="." unique_id=100000002]
+visible = false
+offset_left = 145.0
+offset_top = 25.0
+offset_right = 495.0
+offset_bottom = 375.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ArtifactsPanel" unique_id=100000003]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="SlotsLabel" type="Label" parent="ArtifactsPanel/VBoxContainer" unique_id=100000004]
+layout_mode = 2
+text = "Artefactos — Slots: 0/1"
+
+[node name="HSeparator" type="HSeparator" parent="ArtifactsPanel/VBoxContainer" unique_id=100000005]
+layout_mode = 2
+
+[node name="ArtifactsListContainer" type="VBoxContainer" parent="ArtifactsPanel/VBoxContainer" unique_id=100000006]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="HSeparator2" type="HSeparator" parent="ArtifactsPanel/VBoxContainer" unique_id=100000007]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="ArtifactsPanel/VBoxContainer" unique_id=100000008]
+layout_mode = 2
+text = "← Volver"

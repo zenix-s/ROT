@@ -13,8 +13,12 @@
 - [ ] **Sistema de ataques cuerpo a cuerpo** *(a futuro — post-vertical-slice)*
   El `RockBody` fue reemplazado por proyectiles (`EnemyBolt`). Un ataque melee real (para un tipo de enemigo diferente) debería: aparecer brevemente en la dirección del enemigo, tener hitbox activa solo durante el swing, y desaparecer. No hacer hasta tener Level Design + Boss funcionando.
 
-- [ ] **Bloque C-1: Panel Artefactos en Bonfire**
-  Panel equip/unequip dentro de `BonfireMenu`. Lista de artifacts poseídos, contador de slots, botones Equipar/Desequipar. Llama `Player.ApplyAllMultipliers()` y `SaveMeta()` al cambiar.
+- [~] **Bloque C-1: Panel Artefactos en Bonfire** *(implementado, pendiente testeo manual)*
+  - [ ] F5 → colisionar con bonfire → click "Artefactos ▶" → aparece panel con 3 artefactos, "Slots: 0/1"
+  - [ ] Equipar Escudo de Grafito → "Slots: 1/1", Nucleo Denso (2 slots) queda disabled
+  - [ ] Desequipar → slots liberados, botones reactivan
+  - [ ] Cerrar menú, reabrir → estado persistido (artefacto equipado sigue equipado)
+  - [ ] Verificar que HP del player subió tras equipar (debug label o DebugOverlay)
 
 - [ ] **Bloque C-2: Panel Crafteo en Bonfire**
   Panel de crafteo dentro de `BonfireMenu`. Lista de artifacts crafteables (hardcoded, los `.tres` existentes) con coste en isótopos. Requiere `[Export] int IsotopeCost` en `ArtifactData` y `ArtifactManager.AddOwned()`. Llama `EconomyManager.TrySpend()` y `SaveMeta()` al craftear.
