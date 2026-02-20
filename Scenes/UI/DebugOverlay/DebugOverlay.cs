@@ -15,10 +15,15 @@ namespace RotOfTime.Scenes.UI.DebugOverlay;
 public partial class DebugOverlay : CanvasLayer
 {
     private Label _label;
+    private LineEdit _amountInput;
+    private Button _addIsotopesButton;
 
     public override void _Ready()
     {
-        _label = GetNode<Label>("Container/Panel/ScrollContainer/Label");
+        _label = GetNode<Label>("Container/Panel/VBoxContainer/ScrollContainer/Label");
+        _amountInput = GetNode<LineEdit>("Container/Panel/VBoxContainer/IsotopeRow/AmountInput");
+        _addIsotopesButton = GetNode<Button>("Container/Panel/VBoxContainer/IsotopeRow/AddIsotopesButton");
+        _addIsotopesButton.Pressed += OnAddIsotopesPressed;
         Visible = false;
     }
 
@@ -104,5 +109,14 @@ public partial class DebugOverlay : CanvasLayer
                     sb.AppendLine($"  [ ] {a.ArtifactName}");
 
         return sb.ToString();
+    }
+
+    private void OnAddIsotopesPressed()
+    {
+        if (int.TryParse(_amountInput.Text, out int amount) && amount > 0)
+        {
+            GameManager.Instance.EconomyManager.AddIsotopes(amount);
+            _amountInput.Text = "";
+        }
     }
 }
