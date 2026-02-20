@@ -52,15 +52,6 @@ public partial class GameManager : Node
         ProgressionManager.Load(Meta.ActivatedResonances, Meta.CurrentElevation);
         ArtifactManager.MaxSlots = Meta.ArtifactMaxSlots;
         ArtifactManager.LoadFromPaths(Meta.OwnedArtifacts, Meta.EquippedArtifacts);
-
-        // TEMPORAL: seed artifacts for vertical slice testing. Remove when C-2 (crafting) is implemented.
-        if (ArtifactManager.Owned.Count == 0)
-        {
-            ArtifactManager.AddOwned(GD.Load<ArtifactData>("res://Resources/Artifacts/EscudoDeGrafito.tres"));
-            ArtifactManager.AddOwned(GD.Load<ArtifactData>("res://Resources/Artifacts/LenteDeFoco.tres"));
-            ArtifactManager.AddOwned(GD.Load<ArtifactData>("res://Resources/Artifacts/NucleoDenso.tres"));
-        }
-
         EconomyManager.Load(Meta.Isotopes);
         InventoryManager.Load(Meta.Inventory);
     }
