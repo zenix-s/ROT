@@ -6,3 +6,4 @@ Description = "Un nucleo de carbono ultra-comprimido. +25% vida, +15% da\u00f1o.
 SlotCost = 2
 HealthBonus = 0.25
 DamageBonus = 0.15
+IsotopeCost = 60

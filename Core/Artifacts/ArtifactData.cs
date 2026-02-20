@@ -14,4 +14,5 @@ public partial class ArtifactData : Resource
     [Export(PropertyHint.Range, "1,3")] public int SlotCost { get; set; } = 1;
     [Export] public float HealthBonus { get; set; }
     [Export] public float DamageBonus { get; set; }
+    [Export] public int IsotopeCost { get; set; } = 0;
 }

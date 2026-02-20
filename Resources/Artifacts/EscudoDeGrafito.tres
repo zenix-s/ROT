@@ -6,3 +6,4 @@ Description = "Refuerza la estructura molecular del portador. +20% vida."
 SlotCost = 1
 HealthBonus = 0.2
 DamageBonus = 0.0
+IsotopeCost = 30
