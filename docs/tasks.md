@@ -22,8 +22,8 @@
 - [ ] **Refactor: isótopos a InventoryManager**
   Mover isótopos de `EconomyManager` a `InventoryManager` para unificar todos los coleccionables en un solo lugar. Actualizar HUD, BonfireMenu (crafteo), y `MetaData`. No bloquea nada actualmente — hacer cuando haya tiempo.
 
-- [ ] **Bloque D: Save/Load**
-  Auditar `MetaData.cs`, añadir trigger de guardado al morir y al volver al menú, verificar que `LoadMeta()` restaura estado completo.
+- [ ] **Bloque D-3: Verificar Save/Load manual**
+  Probar: equipar artefacto + activar resonancia → cerrar juego → reabrir → estado persistido. Y morir → volver al menú → reentrar → estado restaurado.
 
 ### Manual en Godot (developer)
 
@@ -47,3 +47,9 @@
 - [x] **Validado (2026-02-19):** input action `interact` (tecla E), enemigo persigue + ataca + dropea isótopos visibles + HUD actualiza moneda, colisión y apertura de BonfireMenu
 - [x] **Validado (2026-02-20):** ResonanceTrigger → BonfireMenu → activar resonancia → stats suben correctamente
 - [x] Bloque C-1 + C-2: ArtifactsMenu (Mesa de Artefactos) — equip/unequip + crafteo con isótopos. Accesible con K desde cualquier punto del juego.
+- [x] Bloque D-1: Auditoría MetaData — cubre todo el estado necesario.
+- [x] Bloque D-2: Save triggers — SaveMeta() al morir y al cerrar el juego.
+- [x] Fix: SaveManager reescrito con System.IO (UTF-8 correcto, sin errores de encoding).
+- [x] Fix: BasicEnemy.SpawnIsotopeDrop usa CallDeferred para AddChild (evita crash en physics callback).
+- [x] Simplificación elevación: ElevationItem genérico (`elevation`), gate por 3 resonancias + item en Bonfire.
+- [x] DebugOverlay: botones "+ Resonancia" y "+ Elevation item" para testing.
