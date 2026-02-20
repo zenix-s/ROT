@@ -71,6 +71,13 @@ public partial class GameManager : Node
 
     public void PlayerDied()
     {
-SceneManager.Instance.RequestMenuChange(SceneExtensionManager.MenuScene.Start);
+        SaveMeta();
+        SceneManager.Instance.RequestMenuChange(SceneExtensionManager.MenuScene.Start);
+    }
+
+    public override void _Notification(int what)
+    {
+        if (what == NotificationWMCloseRequest || what == NotificationCrash)
+            SaveMeta();
     }
 }
