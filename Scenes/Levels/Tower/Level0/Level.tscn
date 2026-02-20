@@ -422,3 +422,12 @@ position = Vector2(195, 348)
 
 [node name="ElevationItem" parent="." unique_id=1429810713 instance=ExtResource("6_d51ie")]
 position = Vector2(263, 344)
+
+[node name="BasicEnemy2" parent="." unique_id=2048012557 instance=ExtResource("2_x2kx1")]
+position = Vector2(150, 722)
+
+[node name="BasicEnemy3" parent="." unique_id=125108348 instance=ExtResource("2_x2kx1")]
+position = Vector2(326, 794)
+
+[node name="BasicEnemy4" parent="." unique_id=935544722 instance=ExtResource("2_x2kx1")]
+position = Vector2(262, 656)

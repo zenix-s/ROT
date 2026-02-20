@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Text;
 using System.Text.Json;
 using Godot;
 using RotOfTime.Core.GameData;
@@ -11,24 +13,12 @@ namespace RotOfTime.Autoload;
 /// </summary>
 public class SaveManager
 {
-    private const string SaveDirectory = "user://saves/";
-    private const string MetaFileName = "meta.json";
+    private string GetSaveDirectory() => ProjectSettings.GlobalizePath("user://saves/");
+    private string GetMetaPath() => Path.Combine(GetSaveDirectory(), "meta.json");
 
     public SaveManager()
     {
-        EnsureSaveDirectoryExists();
-    }
-
-    private void EnsureSaveDirectoryExists()
-    {
-        using DirAccess dir = DirAccess.Open("user://");
-        if (dir != null && !dir.DirExists("saves"))
-            dir.MakeDir("saves");
-    }
-
-    private string GetMetaPath()
-    {
-        return $"{SaveDirectory}{MetaFileName}";
+        Directory.CreateDirectory(GetSaveDirectory());
     }
 
     public bool SaveMeta(MetaData data)
@@ -41,14 +31,8 @@ public class SaveManager
 
         try
         {
-            string json = JsonSerializer.Serialize(data, new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
-
-            using FileAccess file = FileAccess.Open(GetMetaPath(), FileAccess.ModeFlags.Write);
-            file.StoreString(json);
-
+            string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(GetMetaPath(), json, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
             GD.Print("SaveManager: Meta saved");
             return true;
         }
@@ -62,15 +46,13 @@ public class SaveManager
     public MetaData LoadMeta()
     {
         string path = GetMetaPath();
-        if (!FileAccess.FileExists(path))
+        if (!File.Exists(path))
             return null;
 
         try
         {
-            using FileAccess file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
-            string json = file.GetAsText();
+            string json = File.ReadAllText(path, Encoding.UTF8);
             MetaData data = JsonSerializer.Deserialize<MetaData>(json);
-
             GD.Print("SaveManager: Meta loaded");
             return data;
         }

@@ -1,12 +1,12 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bmv5iirfmqf13"]
 
-[ext_resource type="Script" path="res://Scenes/UI/ArtifactsMenu/ArtifactsMenu.cs" id="1_amscript"]
+[ext_resource type="Script" uid="uid://d0vwymid0qofe" path="res://Scenes/UI/ArtifactsMenu/ArtifactsMenu.cs" id="1_amscript"]
 
-[node name="ArtifactsMenu" type="CanvasLayer"]
+[node name="ArtifactsMenu" type="CanvasLayer" unique_id=1037173599]
 layer = 10
 script = ExtResource("1_amscript")
 
-[node name="Container" type="Control" parent="."]
+[node name="Container" type="Control" parent="." unique_id=144902462]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,7 +14,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="Panel" parent="Container"]
+[node name="Panel" type="Panel" parent="Container" unique_id=1431324188]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -28,7 +28,7 @@ offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Container/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/Panel" unique_id=1671498923]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -41,51 +41,51 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 8
 
-[node name="TitleLabel" type="Label" parent="Container/Panel/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="Container/Panel/VBoxContainer" unique_id=754974104]
 layout_mode = 2
 text = "Mesa de Artefactos"
 
-[node name="HSeparator" type="HSeparator" parent="Container/Panel/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Container/Panel/VBoxContainer" unique_id=18952037]
 layout_mode = 2
 
-[node name="TabsRow" type="HBoxContainer" parent="Container/Panel/VBoxContainer"]
+[node name="TabsRow" type="HBoxContainer" parent="Container/Panel/VBoxContainer" unique_id=1581137625]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="EquipTabButton" type="Button" parent="Container/Panel/VBoxContainer/TabsRow"]
+[node name="EquipTabButton" type="Button" parent="Container/Panel/VBoxContainer/TabsRow" unique_id=1079163642]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Equipar"
 
-[node name="CraftTabButton" type="Button" parent="Container/Panel/VBoxContainer/TabsRow"]
+[node name="CraftTabButton" type="Button" parent="Container/Panel/VBoxContainer/TabsRow" unique_id=860768792]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Craftear"
 
-[node name="HSeparator2" type="HSeparator" parent="Container/Panel/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="Container/Panel/VBoxContainer" unique_id=819321457]
 layout_mode = 2
 
-[node name="EquipPanel" type="VBoxContainer" parent="Container/Panel/VBoxContainer"]
+[node name="EquipPanel" type="VBoxContainer" parent="Container/Panel/VBoxContainer" unique_id=914305742]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="SlotsLabel" type="Label" parent="Container/Panel/VBoxContainer/EquipPanel"]
+[node name="SlotsLabel" type="Label" parent="Container/Panel/VBoxContainer/EquipPanel" unique_id=382882216]
 layout_mode = 2
 text = "Slots: 0/1"
 
-[node name="ArtifactsListContainer" type="VBoxContainer" parent="Container/Panel/VBoxContainer/EquipPanel"]
+[node name="ArtifactsListContainer" type="VBoxContainer" parent="Container/Panel/VBoxContainer/EquipPanel" unique_id=1842558040]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="CraftPanel" type="VBoxContainer" parent="Container/Panel/VBoxContainer"]
+[node name="CraftPanel" type="VBoxContainer" parent="Container/Panel/VBoxContainer" unique_id=1554626941]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="CraftListContainer" type="VBoxContainer" parent="Container/Panel/VBoxContainer/CraftPanel"]
+[node name="CraftListContainer" type="VBoxContainer" parent="Container/Panel/VBoxContainer/CraftPanel" unique_id=209256441]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 6

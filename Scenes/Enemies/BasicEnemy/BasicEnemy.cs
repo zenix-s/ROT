@@ -114,7 +114,7 @@ public partial class BasicEnemy : CharacterBody2D
         var pickup = pickupScene.Instantiate<IsotopePickup>();
         pickup.Amount = IsotopeDropAmount;
         pickup.GlobalPosition = GlobalPosition;
-        GetParent().AddChild(pickup);
+        GetParent().CallDeferred(Node.MethodName.AddChild, pickup);
     }
 
     #endregion
