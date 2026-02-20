@@ -234,6 +234,13 @@ Examples:
 - Optional drop from secret rooms
 - Add only if more artifact gating needed
 
+**Materiales de Exploración:**
+- Encontrados en zonas de dificultad elevada o acceso limitado
+- Tercera categoría de recurso (junto a Isótopos y Fragmentos de Elevación)
+- Planificados para después del vertical slice
+
+> **Nota de diseño (2026-02-20):** El crafteo tiene base narrativa sólida — el protagonista proviene de una familia de herreros/alquimistas especializados en crear artefactos. No es una mecánica añadida arbitrariamente; es parte de la identidad del personaje. En el vertical slice el crafteo funciona como tienda simple (solo Isótopos), pero el sistema está diseñado para escalar con Fragmentos de boss y Materiales de Exploración conforme avance el juego.
+
 ---
 
 ## 5. Healing System

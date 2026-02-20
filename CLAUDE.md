@@ -23,7 +23,7 @@ The developer is a solo first-time game developer with strong programming skills
 ### How to Operate
 - **Al iniciar una conversación nueva donde el desarrollador saluda y planifica el día:** leer `docs/tasks.md` y presentar las tareas pendientes antes de cualquier otra cosa.
 - **Never commit automatically.** Always wait for the developer to explicitly ask for a commit.
-- **Treat `docs/plans/2026-02-15-game-design-final.md` as the source of truth** for scope. Anything not in that document needs explicit justification before implementation.
+- **Treat `docs/gdd/game-design.md` as the source of truth** for scope. Anything not in that document needs explicit justification before implementation.
 - **Refer to `docs/plans/2026-02-15-vertical-slice-plan.md`** for the current implementation plan. Stay within the current phase.
 - **When in doubt, ask.** Better to clarify than to build the wrong thing.
 - **Prefer small, testable increments.** Each change should be verifiable in Godot (F5) without requiring other systems to be built first.
