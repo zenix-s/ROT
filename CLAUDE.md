@@ -28,6 +28,7 @@ The developer is a solo first-time game developer with strong programming skills
 - **When in doubt, ask.** Better to clarify than to build the wrong thing.
 - **Prefer small, testable increments.** Each change should be verifiable in Godot (F5) without requiring other systems to be built first.
 - **Document decisions** in the Decisions Log section of this file when making architectural or scope choices.
+- **Mantener `docs/gdd/game-design.md` sincronizado:** Cuando se realice un refactor arquitectónico significativo (combat system, progression, etc.), actualizar la sección técnica correspondiente del GDD antes de cerrar la tarea.
 
 ### What "Critical" Means Here
 - If a proposed feature adds more than 2-3 days of work and isn't in the vertical slice plan: flag it.

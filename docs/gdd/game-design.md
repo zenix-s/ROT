@@ -324,39 +324,45 @@ Examples:
 
 ## 7. Technical Architecture
 
-### 7.1 Combat System Simplification
+### 7.1 Combat System Architecture
 
-**REMOVED (Overengineering):**
-- ❌ AttackSlot with spawner children
-- ❌ SpawnerComponent abstraction layer
-- ❌ Projectile + spawn pattern configuration system
-- ❌ PlayerAttackSlot enum with 4 slots
+**Capa de datos (Resources):**
+- `AttackData` — Resource base: Name, DamageCoefficient, CooldownDuration
+- `ProjectileData` — Extiende AttackData: speed, acceleration, lifetime, movementType
+- `AttackContext` — Record C# que empaqueta contexto de spawn: direction, position, owner, stats, container
 
-**KEPT (Essential):**
-- ✅ AttackManagerComponent<TSlot> (generic manager)
-- ✅ IAttack interface (spell scenes implement this)
-- ✅ AttackData resources (spell definitions)
-- ✅ Hitbox/Hurtbox component system
-- ✅ DamageCalculator (pure C# damage logic)
+**Capa de comportamiento (Scenes/Components):**
+- `AttackSpawnComponent` — Node abstract: `Execute(AttackContext)` orquesta el spawn
+  - `SingleSpawnComponent` — Lanza 1 proyectil
+  - `BurstSpawnComponent` — Lanza ráfagas (ej: Ice Shard × 3)
+- `Projectile` (Area2D) — `Initialize(ctx, data)`: conecta hitbox + movimiento
+- `AttackMovementComponent` — Node abstract: actualiza `GlobalPosition` en `_PhysicsProcess`
+  - `LinearMovementComponent` — Movimiento recto con aceleración
+
+**Manager:**
+- `AttackManagerComponent<TSlot>` — Abstract genérica. Gestiona cooldowns y llama `spawnComponent.Execute(ctx)`
+- `PlayerAttackManager` — Concreto. Exporta `PackedScene` por slot (Skills), las registra por `PlayerAttackSlot` enum
+
+**Estructura de un Skill:**
+- Cada spell es una scene (ej: `CarbonBoltSkill.tscn`) con un `AttackSpawnComponent` como hijo
+- El SpawnComponent tiene referencias a la `ProjectileScene` visual y al `AttackData` Resource
 
 ---
 
-### 7.2 Simplified Attack Flow
+### 7.2 Attack Flow
 
 ```
-Player Input → AttackManager checks slot/cooldown →
-Instantiate spell scene (AttackData.AttackScene) →
-Scene implements IAttack.Execute(direction, stats, attackData) →
-Spell handles its own movement/behavior →
+Estado del Player → input detectado → PlayerAttackManager.TryFire(slot, dir, pos, stats, owner)
+  → AttackManagerComponent verifica cooldown
+  → Crea AttackContext (direction, position, owner, stats, container)
+  → AttackSpawnComponent.Execute(ctx)
+    → Instancia ProjectileScene
+    → AddChild a "Main/Attacks"
+    → Projectile.Initialize(ctx, data) → hitbox + MovementComponent
 AttackHitboxComponent overlaps HurtboxComponent →
-DamageCalculator.Calculate() → 
+DamageCalculator.Calculate() →
 StatsComponent.TakeDamage()
 ```
-
-**Key Change:**
-- Each spell is a **self-contained scene** with its own spawn logic
-- No separate spawner abstraction layer
-- Simpler to implement, easier to prototype new spells
 
 ---
 
@@ -365,12 +371,10 @@ StatsComponent.TakeDamage()
 ```csharp
 PlayerAttackManager : AttackManagerComponent<PlayerAttackSlot>
 {
-    enum PlayerAttackSlot { BasicAttack, Spell1, Spell2 }
-    
-    // Each slot references an AttackData resource (the equipped spell)
-    [Export] AttackData BasicAttackData;
-    [Export] AttackData Spell1Data;
-    [Export] AttackData Spell2Data;
+    // Cada slot es una PackedScene que contiene un AttackSpawnComponent
+    [Export] PackedScene BasicAttackSkill;  // CarbonBoltSkill.tscn
+    [Export] PackedScene Spell1Skill;       // FireballSkill.tscn
+    [Export] PackedScene Spell2Skill;       // IceShardSkill.tscn
 }
 ```
 
