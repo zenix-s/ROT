@@ -1,6 +1,9 @@
 [gd_resource type="Resource" script_class="ArtifactData" format=3]
 
+[ext_resource type="Script" uid="uid://3lviohynyf5x" path="res://Core/Artifacts/ArtifactData.cs" id="1_artdata"]
+
 [resource]
+script = ExtResource("1_artdata")
 ArtifactName = "Escudo de Grafito"
 Description = "Refuerza la estructura molecular del portador. +20% vida."
 SlotCost = 1
