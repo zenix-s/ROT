@@ -945,7 +945,7 @@ git commit -m "feat: add isotope drop system + EconomyManager autoload"
 - [ ] **E-1 (Task 10):** Crear Floor 1 — TileMap grey-box, 3-5 enemies, trigger de Resonancia
 - [ ] **E-2 (Task 10b):** Crear Floor 2 y Floor 3 (estructura similar)
 - [ ] **E-3 (Task 11):** Crear Boss 1 (Soul Fragment 1) con state machine de fases
-- [ ] **E-4 (Task 11b):** Arena del boss — puerta bloqueada + trigger de Elevation 2 al vencer (requiere 3 Resonances previas, no items especiales)
+- [ ] **E-4 (Task 11b):** Arena del boss — puerta bloqueada + ElevationItem drop al vencer (item genérico `elevation`). En Bonfire: consume `elevation` + requiere 3 resonancias activadas → avanza Elevación
 
 ---
 
@@ -1164,7 +1164,8 @@ git commit -m "feat: implement save/load for vertical slice data"
 - [ ] Enemies drop isotopes on death
 
 **Progression:**
-- [ ] 3 Resonances completas + boss fight → unlocks Elevation 2
+- [ ] Boss dropea item `elevation` al morir
+- [ ] Bonfire: consumir `elevation` + 3 resonancias activadas → Elevation 2 desbloqueada
 - [ ] Resonances grant stat boosts (+20% HP, +10% DMG cada una)
 - [ ] Stats scale correctly (check with debug display)
 

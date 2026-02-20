@@ -31,9 +31,14 @@
   - Access to new tower areas
   - +1 Artifact slot (at Elevations 3 and 5)
 
-**Requirements to Advance:**
-1. Complete 3 Resonances in current Elevation
-2. Defeat boss to absorb Soul Fragment of Ismael → Unlock next Elevation
+**Requirements to Advance (at Bonfire):**
+1. Tener el item `elevation` en inventario (drop genérico del boss de la Elevación actual)
+2. Tener 3 resonancias activadas en la Elevación actual
+3. En el Bonfire: consumir el item `elevation` → avanza a la siguiente Elevación
+
+**Item drops:**
+- **Resonance trigger** → item `resonance` al inventario (fungible, se activa en Bonfire)
+- **Boss defeat** → item `elevation` al inventario (genérico, no específico por elevación)
 
 ---
 
@@ -216,18 +221,20 @@
 
 ---
 
-### 4.2 Special Resources (Cortados del diseño final)
+### 4.2 Inventory Items
 
-> **Decisión de diseño (2026-02-20):** Los Fragmentos de Elevación han sido eliminados del juego.
-> El crafteo de todos los artefactos usa únicamente Isótopos. No se añadirán recursos especiales
-> ligados a Elevaciones — añaden complejidad sin mejorar la experiencia.
+**`resonance`**
+- Fuente: Resonance triggers repartidos por los floors
+- Uso: Consumido en Bonfire para activar una Resonancia (+20% HP, +10% DMG)
+- Fungible (acumulable)
 
-**Cristales Raros:** *(Candidato Appendix A)*
-- Optional drop from secret rooms
-- Posible si se necesita más gating en post-launch, pero no está planificado
+**`elevation`**
+- Fuente: Drop genérico al derrotar a un boss (no específico por Elevación)
+- Uso: Consumido en Bonfire junto a 3 resonancias activadas para avanzar de Elevación
+- No acumulable en la práctica (1 boss por Elevación)
 
-**Materiales de Exploración:** *(Candidato Appendix A)*
-- Planificados inicialmente, eliminados por complejidad innecesaria
+> **Decisión de diseño (2026-02-20):** Los items de elevación son genéricos (`elevation`, no `elevation_1/2/3`).
+> El crafteo de artefactos usa únicamente Isótopos — no hay recursos especiales de crafteo ligados a Elevaciones.
 
 > **Nota de diseño (2026-02-20):** El crafteo tiene base narrativa sólida — el protagonista proviene de una familia de herreros/alquimistas especializados en crear artefactos. No es una mecánica añadida arbitrariamente; es parte de la identidad del personaje. En el vertical slice el crafteo funciona como tienda simple (solo Isótopos), pero el sistema está diseñado para escalar con Fragmentos de boss y Materiales de Exploración conforme avance el juego.
 
