@@ -17,13 +17,19 @@ public partial class DebugOverlay : CanvasLayer
     private Label _label;
     private LineEdit _amountInput;
     private Button _addIsotopesButton;
+    private Button _addResonanceButton;
+    private Button _addElevationButton;
 
     public override void _Ready()
     {
         _label = GetNode<Label>("Container/Panel/ScrollContainer/VBoxContainer/Label");
         _amountInput = GetNode<LineEdit>("Container/Panel/ScrollContainer/VBoxContainer/IsotopeRow/AmountInput");
         _addIsotopesButton = GetNode<Button>("Container/Panel/ScrollContainer/VBoxContainer/IsotopeRow/AddIsotopesButton");
+        _addResonanceButton = GetNode<Button>("Container/Panel/ScrollContainer/VBoxContainer/AddResonanceButton");
+        _addElevationButton = GetNode<Button>("Container/Panel/ScrollContainer/VBoxContainer/AddElevationButton");
         _addIsotopesButton.Pressed += OnAddIsotopesPressed;
+        _addResonanceButton.Pressed += () => GameManager.Instance.InventoryManager.AddItem("resonance");
+        _addElevationButton.Pressed += () => GameManager.Instance.InventoryManager.AddItem("elevation");
         Visible = false;
     }
 

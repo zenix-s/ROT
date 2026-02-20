@@ -62,3 +62,11 @@ placeholder_text = "Isótopos"
 [node name="AddIsotopesButton" type="Button" parent="Container/Panel/ScrollContainer/VBoxContainer/IsotopeRow" unique_id=200000004]
 layout_mode = 2
 text = "+ Isótopos"
+
+[node name="AddResonanceButton" type="Button" parent="Container/Panel/ScrollContainer/VBoxContainer" unique_id=200000005]
+layout_mode = 2
+text = "+ Resonancia (inventario)"
+
+[node name="AddElevationButton" type="Button" parent="Container/Panel/ScrollContainer/VBoxContainer" unique_id=200000006]
+layout_mode = 2
+text = "+ Elevation item (inventario)"
