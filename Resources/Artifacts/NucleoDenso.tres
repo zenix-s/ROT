@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ArtifactData" format=3]
+
+[ext_resource type="Script" uid="uid://3lviohynyf5x" path="res://Core/Artifacts/ArtifactData.cs" id="1_artdata"]
+
+[resource]
+script = ExtResource("1_artdata")
+ArtifactName = "Nucleo Denso"
+Description = "Un nucleo de carbono ultra-comprimido. +25% vida, +15% da\u00f1o."
+SlotCost = 2
+HealthBonus = 0.25
+DamageBonus = 0.15
+IsotopeCost = 60

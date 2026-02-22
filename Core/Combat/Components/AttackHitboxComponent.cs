@@ -28,6 +28,9 @@ public partial class AttackHitboxComponent : Area2D
 
     [Signal]
     public delegate void AttackConnectedEventHandler();
+    
+    [Signal]
+    public delegate void WallHitEventHandler();
 
     [Export] public GameConstants.Faction Faction { get; set; }
 
@@ -36,9 +39,11 @@ public partial class AttackHitboxComponent : Area2D
     public override void _Ready()
     {
         AreaEntered += OnAreaEntered;
+        BodyEntered += OnTileMapCollision;
 
         if (!_factionInitialized)
             ApplyFaction(Faction);
+            
     }
 
     public void Initialize(EntityStats ownerStats, AttackData attackData, float damageMultiplier = 1.0f)
@@ -65,8 +70,15 @@ public partial class AttackHitboxComponent : Area2D
     {
         Faction = faction;
         CollisionLayer = (uint)AttackLayerMap[faction];
-        CollisionMask = (uint)TargetMaskMap[faction];
+        CollisionMask = (uint)TargetMaskMap[faction] | (uint)GameConstants.GameLayers.World;
         _factionInitialized = true;
+    }
+
+    private void OnTileMapCollision(Node2D node)
+    {
+        if (!node.IsInGroup(Groups.Walls)) return;
+
+        EmitSignal(SignalName.WallHit);
     }
 
     private void OnAreaEntered(Area2D area)

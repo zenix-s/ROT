@@ -3,6 +3,7 @@ using Godot;
 using RotOfTime.Autoload;
 using RotOfTime.Core.Animation.Components;
 using RotOfTime.Core.Combat.Results;
+using RotOfTime.Core.Entities;
 using RotOfTime.Core.Entities.Components;
 using RotOfTime.Scenes.Player.Components;
 using HurtboxComponent = RotOfTime.Core.Combat.Components.HurtboxComponent;
@@ -26,7 +27,6 @@ public partial class Player : CharacterBody2D
     public const float Speed = 200.0f;
 
     [Export] public AnimationComponent AnimationComponent;
-    [Export] public Label DebugLabel;
     [Export] public EntityStatsComponent EntityStatsComponent;
     [Export] public EntityInputComponent EntityInputComponent;
     [Export] public EntityMovementComponent EntityMovementComponent;
@@ -37,8 +37,10 @@ public partial class Player : CharacterBody2D
 
     public override void _Ready()
     {
+        AddToGroup(Groups.Player);
         SetupStatsComponent();
         SetupHurtboxComponent();
+        ApplyAllMultipliers();
     }
 
     public AttackFireResult TryFireAttack()
@@ -75,12 +77,6 @@ public partial class Player : CharacterBody2D
         return null;
     }
 
-    public override void _Process(double delta)
-    {
-        DebugLabel.Text =
-            $"Health: {EntityStatsComponent.CurrentHealth}/{EntityStatsComponent.EntityStats.VitalityStat}\n";
-    }
-
     private void SetupHurtboxComponent()
     {
         if (HurtboxComponent == null)
@@ -102,6 +98,26 @@ public partial class Player : CharacterBody2D
             throw new InvalidOperationException("StatsComponent is not set");
         EntityStatsComponent.EntityDied += OnPlayerDied;
         EntityStatsComponent.HealthChanged += OnPlayerHealthChanged;
+    }
+
+    /// <summary>
+    ///     Applies stat multipliers from Progression and Artifacts to EntityStatsComponent.
+    ///     Call on _Ready and whenever equipment or progression changes.
+    /// </summary>
+    public void ApplyAllMultipliers()
+    {
+        var prog = GameManager.Instance?.ProgressionManager;
+        var arts = GameManager.Instance?.ArtifactManager;
+
+        float hpMult = prog?.GetHealthMultiplier() ?? 1.0f;
+        float dmgMult = prog?.GetDamageMultiplier() ?? 1.0f;
+
+        hpMult += arts?.GetTotalHealthBonus() ?? 0f;
+        dmgMult += arts?.GetTotalDamageBonus() ?? 0f;
+
+        EntityStatsComponent.HealthMultiplier = hpMult;
+        EntityStatsComponent.DamageMultiplier = dmgMult;
+        EntityStatsComponent.RecalculateStats();
     }
 
     #region Event Handlers

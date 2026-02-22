@@ -13,6 +13,15 @@ public partial class ChasingState : State<BasicEnemy>
             return;
         }
 
+        float distance = TargetEntity.GlobalPosition.DistanceTo(TargetEntity.Target.GlobalPosition);
+
+        // Close enough to attack — transition to AttackingState
+        if (distance <= TargetEntity.AttackRange)
+        {
+            StateMachine.ChangeState<AttackingState>();
+            return;
+        }
+
         Vector2 direction = (TargetEntity.Target.GlobalPosition - TargetEntity.GlobalPosition).Normalized();
         TargetEntity.Velocity = direction * TargetEntity.Speed;
         TargetEntity.MoveAndSlide();

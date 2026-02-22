@@ -1,0 +1,73 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scenes/UI/HUD/HUD.cs" id="1_hud"]
+
+[node name="HUD" type="Control" node_paths=PackedStringArray("_hpBar", "_isotopeLabel", "_basicIndicator", "_spell1Indicator", "_spell2Indicator")]
+script = ExtResource("1_hud")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+visible = false
+_hpBar = NodePath("HPBar")
+_isotopeLabel = NodePath("IsotopeLabel")
+_basicIndicator = NodePath("AttackSlots/BasicAttackIndicator")
+_spell1Indicator = NodePath("AttackSlots/Spell1Indicator")
+_spell2Indicator = NodePath("AttackSlots/Spell2Indicator")
+
+[node name="HPBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.3
+anchor_bottom = 0.0
+offset_top = 10.0
+offset_bottom = 30.0
+min_value = 0.0
+max_value = 1.0
+value = 1.0
+
+[node name="IsotopeLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.35
+anchor_top = 0.0
+anchor_right = 0.65
+anchor_bottom = 0.0
+offset_top = 10.0
+offset_bottom = 30.0
+text = "0 isótopos"
+
+[node name="AttackSlots" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_bottom = -10.0
+theme_override_constants/separation = 8
+
+[node name="BasicAttackIndicator" type="ProgressBar" parent="AttackSlots"]
+layout_mode = 2
+custom_minimum_size = Vector2(60, 20)
+min_value = 0.0
+max_value = 1.0
+value = 1.0
+
+[node name="Spell1Indicator" type="ProgressBar" parent="AttackSlots"]
+layout_mode = 2
+custom_minimum_size = Vector2(60, 20)
+min_value = 0.0
+max_value = 1.0
+value = 1.0
+
+[node name="Spell2Indicator" type="ProgressBar" parent="AttackSlots"]
+layout_mode = 2
+custom_minimum_size = Vector2(60, 20)
+min_value = 0.0
+max_value = 1.0
+value = 1.0

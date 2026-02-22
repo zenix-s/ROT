@@ -13,9 +13,9 @@
 **Success Criteria:**
 - Player can complete Floors 1-3
 - Combat feels responsive and fun
-- 2 Elevations unlocked via boss fights
-- Resonance system functional (6 resonances grant stat boosts)
-- 3-5 artifacts craftable and equippable
+- 2 Elevations unlocked (3 Resonances + boss defeat)
+- Resonance system funcional (6 resonancias otorgan stat boosts)
+- 3-5 artifacts craftables con Isótopos (único recurso, sin Fragmentos de Elevación)
 - Save/load works
 
 ---
@@ -39,16 +39,21 @@ See `docs/plans/2026-02-15-attack-system-refactor.md` for full details.
 - Make spells self-contained (IAttack per scene)
 
 **Validation:**
-- [ ] Basic attack fires correctly
-- [ ] 2 spell slots functional
-- [ ] Cooldowns work via Timers
-- [ ] No console errors
+- [x] Basic attack fires correctly
+- [x] 2 spell slots functional
+- [x] Cooldowns work via Timers
+- [x] No console errors
 
 ---
 
 ## Phase 2: Core Systems Foundation (Week 3-4)
 
-### Task 1: Resonance System - Data Layer
+### Task 1: Resonance System - Data Layer ---- COMPLETADO
+
+> **NOTA:** La implementacion difiere del plan original. Ver `CLAUDE.md` Decisions Log 2026-02-16.
+> - `ProgressionManager` (clase C# plana en GameManager) en vez de `ProgressionComponent` (Node)
+> - Sin `ResonanceData`/`ElevationData` Resources (YAGNI: todas las resonancias son identicas)
+> - `EntityStatsComponent` usa `HealthMultiplier`/`DamageMultiplier` simples, Player.cs como coordinador
 
 **Files:**
 - Create: `Core/Progression/ResonanceData.cs`
@@ -186,7 +191,11 @@ git commit -m "feat: add Resonance and Elevation data structures + ProgressionCo
 
 ---
 
-### Task 2: Integrate Progression with EntityStatsComponent
+### Task 2: Integrate Progression with EntityStatsComponent ---- COMPLETADO
+
+> **NOTA:** Integrado via `Player.ApplyProgressionMultipliers()` que lee de `ProgressionManager`
+> y setea multiplicadores en `EntityStatsComponent`. Sin Export de ProgressionComponent.
+> Save/load integrado via `MetaData.CurrentElevation` y `MetaData.UnlockedResonances`.
 
 **Files:**
 - Modify: `Core/Entities/Components/EntityStatsComponent.cs`
@@ -254,7 +263,14 @@ git commit -m "feat: integrate ProgressionComponent with EntityStatsComponent fo
 
 ---
 
-### Task 3: Artifact System - Data Layer
+### Task 3: Artifact System - Data Layer ---- COMPLETADO
+
+> **NOTA:** La implementacion difiere del plan original. Ver `CLAUDE.md` Decisions Log 2026-02-16.
+> - `ArtifactManager` (clase C# plana en GameManager) en vez de `ArtifactManagerComponent` (Node)
+> - Sin `ArtifactSlot` struct ni enum `ArtifactEffect` — YAGNI
+> - `ArtifactData` Resource con `HealthBonus`/`DamageBonus` floats directos
+> - Persistencia via resource paths en MetaData
+> - `Player.ApplyAllMultipliers()` combina progresion + artefactos
 
 **Files:**
 - Create: `Core/Artifacts/ArtifactData.cs`
@@ -398,7 +414,12 @@ git commit -m "feat: add Artifact data structures and ArtifactManagerComponent"
 
 ---
 
-### Task 4: Create Test Artifact Resources
+### Task 4: Create Test Artifact Resources ---- COMPLETADO
+
+> **NOTA:** Se crearon 3 artefactos (no los del plan original).
+> - Escudo de Grafito (+20% HP, 1 slot) en vez de Vial de Curacion
+> - Lente de Foco (+15% DMG, 1 slot)
+> - Nucleo Denso (+25% HP +15% DMG, 2 slots) en vez de Escudo de Grafito
 
 **Files:**
 - Create: `Resources/Artifacts/VialDeCuracion.tres`
@@ -461,7 +482,11 @@ git commit -m "feat: add 3 base artifact resources (Vial, Lente, Escudo)"
 
 ## Phase 3: Spells Implementation (Week 5-6)
 
-### Task 5: Create Basic Attack (Carbon Bolt)
+### Task 5: Create Basic Attack (Carbon Bolt) ---- COMPLETADO
+
+> **NOTA:** Carbon Bolt ya existía como `Projectile.tscn` + `CarbonBolt.tres` (ProjectileData).
+> No se creó una escena nueva — usa la base `Projectile` directamente.
+> Ya estaba wired en `Player.tscn` como `BasicAttackData`. Speed 300, cooldown 0.4s, lifetime 3s.
 
 **Files:**
 - Create: `Scenes/Attacks/Spells/CarbonBolt/CarbonBolt.tscn`
@@ -559,7 +584,11 @@ git commit -m "feat: implement Carbon Bolt (basic attack)"
 
 ---
 
-### Task 6: Create Spell 1 (Fireball)
+### Task 6: Create Spell 1 (Fireball) ---- COMPLETADO
+
+> **NOTA:** `Fireball.cs` y `FireBall.tscn` ya existían de antes del refactor.
+> Se creó `Resources/Attacks/Fireball.tres` (ProjectileData) con speed 200, cooldown 2.0s,
+> lifetime 4s, DamageCoefficient 1.5. Wired como `Spell1Data` en `Player.tscn`.
 
 **Files:**
 - Create: `Scenes/Attacks/Spells/Fireball/Fireball.tscn`
@@ -579,7 +608,16 @@ git commit -m "feat: implement Fireball spell (Spell1 slot)"
 
 ---
 
-### Task 7: Create Spell 2 (Ice Shard)
+### Task 7: Create Spell 2 (Ice Shard) ---- COMPLETADO
+
+> **NOTA:** La implementacion difiere del plan original.
+> - Sin status effect (slow) — YAGNI, no hay sistema de status effects
+> - En vez de un projectil simple, Ice Shard es un **burst de 3 proyectiles** disparados en secuencia rápida (0.1s delay)
+> - `IceShard.cs` implementa `IAttack` como `Node2D` spawner, no como `Projectile`
+> - Spawna 3 instancias de `Projectile.tscn` con `IceShardProjectile.tres` (speed 350, lifetime 3s, dmg 0.5 per projectile)
+> - `IceShard.tres` (AttackData) tiene cooldown 1.2s, wired como `Spell2Data` en `Player.tscn`
+> - La lógica de burst está contenida en `IceShard.Execute()` — si se necesita reutilizar el patrón,
+>   se extraerá a un componente de estrategia de spawning (como AttackMovementComponent para movimiento)
 
 **Files:**
 - Create: `Scenes/Attacks/Spells/IceShard/IceShard.tscn`
@@ -602,6 +640,14 @@ git commit -m "feat: implement Ice Shard spell (Spell2 slot)"
 ## Phase 4: Enemy AI and Combat (Week 7-8)
 
 ### Task 8: Create Basic Enemy (Security Robot)
+
+> **NOTA:** La implementacion difiere del plan original. Ver `CLAUDE.md` Decisions Log 2026-02-17.
+> - Evolucionamos el `BasicEnemy` existente en vez de crear SecurityRobot desde cero
+> - Agregamos `EnemyAttackManager` (concrete `AttackManagerComponent<EnemyAttackSlot>`) en `Components/`
+> - Agregamos `AttackingState` al state machine: ataca con RockBody cuando Target esta en `AttackRange` (40px)
+> - State flow: Idle → Chasing → Attacking → Chasing/Idle
+> - Arreglamos `RockBodyAttackData.tres` (faltaban DamageCoefficient, CooldownDuration, AttackScene)
+> - Sin NavigationAgent2D — direct chase es suficiente para vertical slice
 
 **Files:**
 - Create: `Scenes/Enemies/SecurityRobot/SecurityRobot.tscn`
@@ -698,6 +744,14 @@ git commit -m "feat: implement basic enemy (SecurityRobot) with chase AI"
 ---
 
 ### Task 9: Isotope Drop System
+
+> **NOTA:** La implementacion difiere del plan original. Ver `CLAUDE.md` Decisions Log 2026-02-17.
+> - `EconomyManager` como clase C# plana en GameManager (no Autoload)
+> - Acceso via `GameManager.Instance.EconomyManager`
+> - Persistencia via `MetaData.Isotopes`, load/save integrado
+> - `IsotopePickup` scene en `Core/Economy/`, spawneada por `BasicEnemy.OnEnemyDied()`
+> - Usa C# event (`IsotopesChanged`) en vez de Godot signal
+> - Debug display del Player actualizado para mostrar isotopes
 
 **Files:**
 - Create: `Core/Economy/IsotopePickup.tscn`
@@ -815,6 +869,83 @@ private void OnDied()
 git add Core/Economy/ Autoload/EconomyManager.cs Scenes/Enemies/SecurityRobot/SecurityRobot.cs
 git commit -m "feat: add isotope drop system + EconomyManager autoload"
 ```
+
+---
+
+---
+
+## Prioridades Actuales (Reordenadas 2026-02-18)
+
+> El orden original del plan asumía que UI vendría después del level design. Ajustado:
+> la UI y los sistemas de código se hacen primero (se puede trabajar juntos), el level design
+> y boss los hace el desarrollador en Godot de forma independiente.
+
+### Bloque A: Testeo Phase 4 (manual, en Godot)
+
+- [ ] **A-1:** Verificar que BasicEnemy persigue al player y ataca con RockBody al acercarse
+- [ ] **A-2:** Verificar que BasicEnemy muere al recibir daño de spells y dropea IsotopePickup
+- [ ] **A-3:** Verificar que IsotopePickup se recoge al pasar por encima y actualiza el debug label
+
+---
+
+### Bloque B: HUD
+
+> Backend listo: `EntityStatsComponent.HealthChanged`, `EconomyManager.IsotopesChanged`,
+> `AttackManager.GetCooldownProgress(slot)`. Solo falta la capa de UI.
+
+- [ ] **B-1:** Crear `Scenes/UI/HUD/HUD.tscn` — estructura base (CanvasLayer + contenedor,
+  añadir como hijo de Main.tscn)
+- [ ] **B-2:** Barra de HP — `ProgressBar` que se actualiza con la señal
+  `EntityStatsComponent.HealthChanged`
+- [ ] **B-3:** Contador de isótopos — `Label` que se actualiza con el evento C#
+  `EconomyManager.IsotopesChanged`
+- [ ] **B-4:** Indicador de cooldown del ataque básico — `ProgressBar` que lee
+  `AttackManager.GetCooldownProgress(PlayerAttackSlot.BasicAttack)` en `_Process`
+- [ ] **B-5:** Indicadores de cooldown Spell1 y Spell2 (misma mecánica que B-4,
+  ocultar si el slot no está registrado)
+
+---
+
+### Bloque C: Artifact Menu
+
+> `ArtifactManager` (equip/unequip/owned) está completo. Falta método de crafteo y la UI.
+
+- [ ] **C-1:** Añadir método `Craft(ArtifactData artifact)` a `ArtifactManager` —
+  valida que el jugador tiene isótopos suficientes (`EconomyManager.SpendIsotopes`),
+  añade a owned si no lo tiene ya
+- [ ] **C-2:** Crear `Scenes/UI/Menus/ArtifactMenu/ArtifactMenu.tscn` — estructura base
+  (CanvasLayer, toggle con tecla I o Tab, pausa el juego mientras está abierto)
+- [ ] **C-3:** Panel de inventario — lista los artefactos owned con nombre, coste de slots,
+  y estado (equipado / no equipado)
+- [ ] **C-4:** Botones Equipar / Desequipar — llaman a `ArtifactManager.Equip/Unequip`,
+  muestran slots usados / máximos y llaman a `Player.ApplyAllMultipliers()` al cambiar
+- [ ] **C-5:** Panel de crafteo — lista artefactos craftables con su coste en isótopos,
+  botón llama a `ArtifactManager.Craft()`, se desactiva si no hay isótopos suficientes
+
+---
+
+### Bloque D: Save / Load
+
+> `SaveManager`, `MetaData` y la lógica en `GameManager.SaveMeta/LoadMeta` existen.
+> Hay que verificar cobertura y añadir los puntos de guardado.
+
+- [ ] **D-1:** Auditar `MetaData.cs` — confirmar que cubre CurrentElevation, UnlockedResonances,
+  Isotopes, OwnedArtifacts, EquippedArtifacts y CurrentHealth
+- [ ] **D-2:** Añadir trigger de guardado al morir (`GameManager.PlayerDied()`) y al volver
+  al menú principal
+- [ ] **D-3:** Verificar que `GameManager.LoadMeta()` en `_Ready()` restaura el estado completo
+  (probar: equipar artefacto → cerrar juego → reabrir → sigue equipado)
+
+---
+
+### Bloque E: Level Design + Boss (trabajo manual en Godot — developer)
+
+> Estas tareas requieren diseñar en el editor. Se hacen en paralelo o después de los bloques anteriores.
+
+- [ ] **E-1 (Task 10):** Crear Floor 1 — TileMap grey-box, 3-5 enemies, trigger de Resonancia
+- [ ] **E-2 (Task 10b):** Crear Floor 2 y Floor 3 (estructura similar)
+- [ ] **E-3 (Task 11):** Crear Boss 1 (Soul Fragment 1) con state machine de fases
+- [ ] **E-4 (Task 11b):** Arena del boss — puerta bloqueada + ElevationItem drop al vencer (item genérico `elevation`). En Bonfire: consume `elevation` + requiere 3 resonancias activadas → avanza Elevación
 
 ---
 
@@ -1033,9 +1164,9 @@ git commit -m "feat: implement save/load for vertical slice data"
 - [ ] Enemies drop isotopes on death
 
 **Progression:**
-- [ ] Resonances unlock and grant stat boosts
-- [ ] 6 resonances available (3 per Elevation)
-- [ ] Boss fight unlocks Elevation 2
+- [ ] Boss dropea item `elevation` al morir
+- [ ] Bonfire: consumir `elevation` + 3 resonancias activadas → Elevation 2 desbloqueada
+- [ ] Resonances grant stat boosts (+20% HP, +10% DMG cada una)
 - [ ] Stats scale correctly (check with debug display)
 
 **Artifacts:**

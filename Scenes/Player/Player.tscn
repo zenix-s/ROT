@@ -13,7 +13,9 @@
 [ext_resource type="Script" uid="uid://b5mw2kp7rn4xj" path="res://Scenes/Player/StateMachine/States/MoveState.cs" id="12_mv5st"]
 [ext_resource type="Script" uid="uid://cp5drchfh5b2y" path="res://Scenes/Player/Components/PlayerAttackManager.cs" id="14_0u84n"]
 [ext_resource type="Script" uid="uid://dh7ds4tfap2xr" path="res://Scenes/Player/StateMachine/States/DashState.cs" id="14_ds5st"]
-[ext_resource type="Resource" uid="uid://dbbdpgopbl6w5" path="res://Resources/Attacks/CarbonBolt.tres" id="15_esmjy"]
+[ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/CarbonBoltSkill.tscn" id="15_esmjy"]
+[ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/CarbonShellSkill.tscn" id="16_fireball"]
+[ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/CarbonSplinterSkill.tscn" id="17_iceshard"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ft8w5"]
 atlas = ExtResource("1_s0eop")
@@ -55,23 +57,23 @@ animations = [{
 radius = 5.0
 height = 16.0
 
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ji083"]
 radius = 4.0
 height = 16.0
 
 [sub_resource type="Resource" id="Resource_i5acl"]
 script = ExtResource("5_fk5o5")
-VitalityStat = 10
-AttackStat = 10
-DefenseStat = 10
+VitalityStat = 100
+AttackStat = 20
+DefenseStat = 0
 metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
-[node name="Player" type="CharacterBody2D" unique_id=1512431336 node_paths=PackedStringArray("AnimationComponent", "DebugLabel", "EntityStatsComponent", "EntityInputComponent", "EntityMovementComponent", "HurtboxComponent", "AttackManager") groups=["Player"]]
+[node name="Player" type="CharacterBody2D" unique_id=1512431336 node_paths=PackedStringArray("AnimationComponent", "EntityStatsComponent", "EntityInputComponent", "EntityMovementComponent", "HurtboxComponent", "AttackManager") groups=["Player"]]
 collision_layer = 2
 motion_mode = 1
 script = ExtResource("1_ft8w5")
 AnimationComponent = NodePath("AnimationComponent")
-DebugLabel = NodePath("DebugLabel")
 EntityStatsComponent = NodePath("EntityStatsComponent")
 EntityInputComponent = NodePath("EntityInputComponent")
 EntityMovementComponent = NodePath("EntityMovementComponent")
@@ -86,12 +88,6 @@ autoplay = "idle"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1549428637]
 position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_l3ax4")
-
-[node name="DebugLabel" type="Label" parent="." unique_id=1977987461]
-offset_left = -19.0
-offset_top = -32.0
-offset_right = 21.0
-offset_bottom = -9.0
 
 [node name="HurtboxComponent" type="Area2D" parent="." unique_id=2090109509]
 collision_layer = 32
@@ -135,5 +131,7 @@ script = ExtResource("14_ds5st")
 
 [node name="PlayerAttackManager" type="Node" parent="." unique_id=81337677]
 script = ExtResource("14_0u84n")
-BasicAttackData = ExtResource("15_esmjy")
+BasicAttackSkill = ExtResource("15_esmjy")
+Spell1Skill = ExtResource("16_fireball")
+Spell2Skill = ExtResource("17_iceshard")
 metadata/_custom_type_script = "uid://cp5drchfh5b2y"

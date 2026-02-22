@@ -1,13 +1,15 @@
 using System.Linq;
 using Godot;
 using RotOfTime.Core;
+using RotOfTime.Core.Artifacts;
+using RotOfTime.Core.Economy;
 using RotOfTime.Core.GameData;
 
 namespace RotOfTime.Autoload;
 
 /// <summary>
-///     Runtime manager for meta-progression.
-///     Holds MetaData and provides money operations.
+///     Runtime manager for meta-progression state.
+///     Holds MetaData and coordinates all manager instances.
 ///     Owns SaveManager and MilestoneManager instances.
 /// </summary>
 public partial class GameManager : Node
@@ -22,6 +24,13 @@ public partial class GameManager : Node
     public SaveManager SaveManager { get; private set; }
     public GameStateManager GameStateManager { get; private set; }
     public AbilityManager AbilityManager { get; private set; }
+    public ProgressionManager ProgressionManager { get; private set; }
+    public ArtifactManager ArtifactManager { get; private set; }
+    public EconomyManager EconomyManager { get; private set; }
+    public InventoryManager InventoryManager { get; private set; }
+
+    /// <summary>True while any game menu (bonfire, etc.) is open. Blocks player input.</summary>
+    public bool IsMenuOpen { get; set; }
 
     public override void _Ready()
     {
@@ -29,6 +38,10 @@ public partial class GameManager : Node
         SaveManager = new SaveManager();
         GameStateManager = new GameStateManager();
         AbilityManager = new AbilityManager();
+        ProgressionManager = new ProgressionManager();
+        ArtifactManager = new ArtifactManager();
+        EconomyManager = new EconomyManager();
+        InventoryManager = new InventoryManager();
         LoadMeta();
     }
 
@@ -36,19 +49,35 @@ public partial class GameManager : Node
     {
         Meta = SaveManager.LoadMeta() ?? new MetaData();
         GameStateManager.LoadMilestones(Meta.CompletedMilestones);
-        GD.Print("GameManager: Meta loaded");
-        GD.Print("Milestones: " + string.Join(", ", Meta.CompletedMilestones));
+        ProgressionManager.Load(Meta.ActivatedResonances, Meta.CurrentElevation);
+        ArtifactManager.MaxSlots = Meta.ArtifactMaxSlots;
+        ArtifactManager.LoadFromPaths(Meta.OwnedArtifacts, Meta.EquippedArtifacts);
+        EconomyManager.Load(Meta.Isotopes);
+        InventoryManager.Load(Meta.Inventory);
     }
 
     public void SaveMeta()
     {
         Meta.CompletedMilestones = [.. GameStateManager.CompletedMilestones];
+        Meta.CurrentElevation = ProgressionManager.CurrentElevation;
+        Meta.ActivatedResonances = ProgressionManager.ActivatedResonances;
+        Meta.ArtifactMaxSlots = ArtifactManager.MaxSlots;
+        Meta.OwnedArtifacts = ArtifactManager.GetOwnedPaths();
+        Meta.EquippedArtifacts = ArtifactManager.GetEquippedPaths();
+        Meta.Isotopes = EconomyManager.Isotopes;
+        Meta.Inventory = InventoryManager.GetAllItems();
         SaveManager.SaveMeta(Meta);
     }
 
     public void PlayerDied()
     {
-        GD.Print("GameManager: Player died. Resetting money to 0.");
+        SaveMeta();
         SceneManager.Instance.RequestMenuChange(SceneExtensionManager.MenuScene.Start);
+    }
+
+    public override void _Notification(int what)
+    {
+        if (what == NotificationWMCloseRequest || what == NotificationCrash)
+            SaveMeta();
     }
 }

@@ -6,5 +6,5 @@ namespace RotOfTime.Scenes.Enemies.BasicEnemy;
 /// </summary>
 public enum EnemyAttackSlot
 {
-    BodyAttack
+    RangedAttack
 }

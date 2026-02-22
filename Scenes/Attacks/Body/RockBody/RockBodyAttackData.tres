@@ -5,3 +5,5 @@
 [resource]
 script = ExtResource("1_p3pox")
 Name = "RockBody"
+DamageCoefficient = 1.0
+CooldownDuration = 1.5

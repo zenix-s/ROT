@@ -14,18 +14,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 The developer is a solo first-time game developer with strong programming skills but no prior game shipping experience. Communication is in Spanish. All design documents are in Spanish.
 
 ### Core Mandate: Scope Guardian
-- **Be brutally honest** ("sin paños calientes") about what is realistic vs overengineered for a solo dev on a 12-18 month timeline.
+- **Be brutally honest** about what is realistic vs overengineered for a solo dev on a 12-18 month timeline.
 - **Actively flag scope creep.** If the developer proposes a feature, system, or abstraction that risks the timeline, say so directly. Do not agree to avoid conflict.
 - **Pragmatism over elegance.** The goal is to ship a playable game, not to build a perfect engine. If a simpler approach gets to "fun" faster, recommend it even if it's less architecturally pure.
 - **YAGNI ruthlessly.** Do not build systems for hypothetical future needs. If it's not in the vertical slice plan, it doesn't exist yet.
 - **Challenge assumptions.** If a design decision seems driven by "what AAA games do" rather than "what a solo dev can ship," push back.
 
 ### How to Operate
-- **Treat `docs/plans/2026-02-15-game-design-final.md` as the source of truth** for scope. Anything not in that document needs explicit justification before implementation.
+- **Al iniciar una conversación nueva donde el desarrollador saluda y planifica el día:** leer `docs/tasks.md` y presentar las tareas pendientes antes de cualquier otra cosa.
+- **Never commit automatically.** Always wait for the developer to explicitly ask for a commit.
+- **Treat `docs/gdd/game-design.md` as the source of truth** for scope. Anything not in that document needs explicit justification before implementation.
 - **Refer to `docs/plans/2026-02-15-vertical-slice-plan.md`** for the current implementation plan. Stay within the current phase.
 - **When in doubt, ask.** Better to clarify than to build the wrong thing.
 - **Prefer small, testable increments.** Each change should be verifiable in Godot (F5) without requiring other systems to be built first.
 - **Document decisions** in the Decisions Log section of this file when making architectural or scope choices.
+- **Mantener `docs/gdd/game-design.md` sincronizado:** Cuando se realice un refactor arquitectónico significativo (combat system, progression, etc.), actualizar la sección técnica correspondiente del GDD antes de cerrar la tarea.
 
 ### What "Critical" Means Here
 - If a proposed feature adds more than 2-3 days of work and isn't in the vertical slice plan: flag it.
@@ -91,20 +94,23 @@ This project uses `.slnx` (XML-based solution format), not `.sln`. Godot regener
 
 ### Autoload Singletons (`Autoload/`)
 Registered in `project.godot` `[autoload]` section:
-- **GameManager** (`Instance` property) - Runtime meta-progression state. Creates SaveManager, GameStateManager, and AbilityManager internally.
+- **GameManager** (`Instance` property) - Runtime meta-progression state. Creates SaveManager, GameStateManager, AbilityManager, ProgressionManager, ArtifactManager, and EconomyManager internally.
 - **SceneManager** (`Instance` property) - Scene transitions via signals (`SceneChangeRequested`, `MenuChangeRequested`)
 
 Not autoloads (plain C# classes created by GameManager):
 - **SaveManager** - File I/O for persistence (JSON to `user://saves/`)
 - **GameStateManager** - Milestone tracking with C# 13 `extension` blocks
 - **AbilityManager** - Player ability loadout management (stub)
+- **ProgressionManager** - Elevation/Resonance tracking, stat multiplier calculation (plain C# class, not a Godot Node)
+- **ArtifactManager** - Artifact ownership/equipment, stat bonus calculation (plain C# class, not a Godot Node)
+- **EconomyManager** - Isotope currency management, add/spend operations, C# event for changes (plain C# class, not a Godot Node)
 
 ### Entity System (`Core/Entities/`)
 Reusable components attached to any entity (Player, Enemies):
 - **EntityStats** - `[Resource]` with VitalityStat, AttackStat, DefenseStat, Faction
 - **EntityInputComponent** (Node) - Input polling: Direction, IsAttackJustPressed, IsDashJustPressed, IsSkill1JustPressed, IsSkill2JustPressed
 - **EntityMovementComponent** (Node) - Velocity management: Move(), Dash(), KnockBack(), StopMovement()
-- **EntityStatsComponent** (Node) - Health management, TakeDamage(AttackResult), signals: HealthChanged, EntityDied, StatsUpdated
+- **EntityStatsComponent** (Node) - Health management with external multipliers (HealthMultiplier, DamageMultiplier), computed MaxHealth/AttackPower, TakeDamage(AttackResult), RecalculateStats(), signals: HealthChanged, EntityDied, StatsUpdated
 
 ### State Machine (`Core/Entities/StateMachine/`)
 Generic abstract state machine pattern:
@@ -114,36 +120,57 @@ Generic abstract state machine pattern:
 
 Used by: `PlayerStateMachine` (IdleState, MoveState, DashState) and `EnemyStateMachine` (IdleState, ChasingState)
 
-### Attack System (`Core/Combat/`) - 2-Layer Architecture
+### Attack System (`Core/Combat/`) - 3-Layer Architecture
 
 **Data layer (Resources):**
-- **AttackData** - `[Resource]`: Name, DamageCoefficient, CooldownDuration, AttackScene (PackedScene)
+- **AttackData** - `[Resource]`: Name, DamageCoefficient, CooldownDuration
 - **ProjectileData** - Extends AttackData: InitialSpeed, TargetSpeed, Acceleration, Lifetime
+- **AttackContext** - C# `record`: direction, spawnPosition, ownerStats, owner, damageMultiplier, attacksContainer
 - **AttackResult** - `[Resource]`: RawDamage, AttackName, IsCritical (passed through Godot signals)
 - **DamageResult** - C# `record`: RawDamage, FinalDamage, AttackName (internal use only)
 
-**Behavior layer (Scenes implementing IAttack):**
-- **IAttack** - Interface: `Execute(Vector2 direction, EntityStats, AttackData, float damageMultiplier)`
-- **Projectile** (CharacterBody2D) - Base projectile with movement component and lifetime Timer
-- **Fireball** - Extends Projectile, spawns explosion on impact
-- **RockBody** (Area2D) - Melee body attack
+**Skill hierarchy (`Core/Combat/Skills/`):**
+- **Skill** - Abstract Node2D, base común sin contrato de ejecución
+  - **ActiveSkill** - Abstract. Timer interno, `IsReady`, `GetCooldownProgress()`, `TryExecute(AttackContext)`
+    - **ProjectileSkill** `[GlobalClass]` - Exporta `Spawner: AttackSpawnComponent`. Llama `Spawner.Execute(ctx)` + `StartCooldown()`
+    - **MeleeSkill** - Stub abstracto
+  - **PassiveSkill** - Stub abstracto, sin cooldown
+
+**Spawn layer (`Core/Combat/Components/AttackSpawnComponents/`):**
+- **AttackSpawnComponent** - Abstract Node: `Execute(AttackContext)` orquesta el spawn
+  - **SingleSpawnComponent** - Lanza 1 proyectil
+  - **BurstSpawnComponent** - Lanza ráfagas (ej: Carbon Splinter × 3)
+- **Projectile** (Area2D) - `Initialize(ctx, data)`: conecta hitbox + MovementComponent
 
 **Manager:**
-- **AttackManagerComponent\<TSlot\>** - Abstract generic Node. Timer-based cooldowns (Godot OneShot Timers). Spawns attack scenes into `Main/Attacks` container.
-- **PlayerAttackManager** - Concrete: Exports BasicAttackData, Spell1Data, Spell2Data. Enum: `PlayerAttackSlot { BasicAttack, Spell1, Spell2 }`
-- **EnemyAttackSlot** - Enum exists (`{ BodyAttack }`) but not yet wired to a manager
+- **AttackManagerComponent\<TSlot\>** - Abstract generic Node. Mantiene `Dictionary<TSlot, ActiveSkill>`. `TryFire()` crea `AttackContext` y delega a `skill.TryExecute(ctx)`. Cooldowns viven en `ActiveSkill`.
+- **PlayerAttackManager** - Concreto. Exporta `PackedScene` por slot (Skills), registra por `PlayerAttackSlot` enum. Slots: `{ BasicAttack, Spell1, Spell2 }`
+- **EnemyAttackManager** - Concreto. Exporta `PackedScene RangedAttackSkill`, registra por `EnemyAttackSlot` enum
+
+**Estructura de un Skill scene:**
+- Nodo raíz es un `ProjectileSkill` (o subclase de `ActiveSkill`)
+- Exporta `Spawner` apuntando al hijo `AttackSpawnComponent`
+- El `AttackSpawnComponent` tiene referencias a `ProjectileScene` y `AttackData`
 
 **Important:** `AttackManagerComponent<TSlot>` is abstract generic - it **cannot** be used directly as a Godot node script (will crash .tscn files). Always use a concrete subclass like `PlayerAttackManager`.
+
+**Spells actuales:**
+- `CarbonBoltSkill.tscn` — ataque básico, proyectil rápido, bajo daño
+- `CarbonShellSkill.tscn` — spell 1, proyectil de carbono denso, mayor daño
+- `CarbonSplinterSkill.tscn` — spell 2, ráfaga de 3 fragmentos (BurstSpawnComponent)
 
 ### Data Flow: Attack Spawning
 ```
 Player.TryFireAttack(slot)
   → PlayerAttackManager.TryFire(slot, direction, position, stats, ownerNode)
-    → AttackManagerComponent.SpawnAttack()
-      → Instantiate AttackData.AttackScene as Node2D
-      → AddChild to "Main/Attacks" container
-      → Cast to IAttack → Execute(direction, ownerStats, attackData)
-        → AttackHitboxComponent.Initialize() → DamageCalculator.CalculateRawDamage() → AttackResult
+    → AttackManagerComponent crea AttackContext
+    → ActiveSkill.TryExecute(ctx)
+      → verifica IsReady (Timer interno)
+      → AttackSpawnComponent.Execute(ctx)
+        → Instancia ProjectileScene
+        → AddChild a "Main/Attacks"
+        → Projectile.Initialize(ctx, data) → hitbox + MovementComponent
+      → StartCooldown(duration)
 ```
 
 ### Data Flow: Damage Pipeline
@@ -165,7 +192,7 @@ AttackHitboxComponent overlaps HurtboxComponent
 - **LinearMovementComponent** - Straight-line with MoveToward acceleration
 
 ### Save System (`Core/GameData/`)
-- **MetaData** - Permanent progression (completed milestones). Serialized to JSON.
+- **MetaData** - Permanent progression (completed milestones, current elevation, unlocked resonances, artifact slots/owned/equipped). Serialized to JSON.
 - **GameData/PlayerData** - Planned for run state (not yet implemented)
 
 ### Scene Management (`Core/SceneExtensionManager.cs`)
@@ -193,8 +220,8 @@ Static dictionaries map enums to scene paths:
 - **Signals** for decoupling: Components emit events, entity scripts subscribe
 - **Singleton autoloads** with `Instance` pattern for global access
 - **Generic abstract base classes** for shared logic: `AttackManagerComponent<TSlot>`, `StateMachine<T>`, `State<T>`
-- **IAttack interface** separates attack data (Resource) from behavior (scene) - scenes have no knowledge of their stats until `Execute()` injects them
-- **Timer-based cooldowns** using Godot OneShot Timers (not manual delta tracking)
+- **Skill hierarchy** (`Skill` → `ActiveSkill` → `ProjectileSkill`): Skills son Node2D, el cooldown vive en `ActiveSkill`, el spawn en `AttackSpawnComponent` hijo
+- **Timer-based cooldowns** usando Godot OneShot Timer interno en `ActiveSkill` (no en AttackManagerComponent)
 - **Attacks spawn into** `Main/Attacks` Node2D container (looked up at `GetTree().Root` → `"Main/Attacks"`)
 
 ## Important Gotchas
@@ -208,18 +235,34 @@ Static dictionaries map enums to scene paths:
 
 ## Current Development Phase
 
-Pre-alpha. Attack system refactor completed. Next: Vertical Slice prototype.
+Pre-alpha. Attack system refactor completed. Progression system implemented. Artifact system implemented. Spells implemented. Enemy AI implemented. Boss código implementado.
 
 See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase plan.
 
-**Immediate priorities (Vertical Slice Phase 1):**
-1. Implement Progression System (Elevations & Resonances)
-2. Create Artifact System (slots, equip/unequip, stat modifiers)
-3. Build spell system (2-3 spells beyond Carbon Bolt)
-4. Design Floors 1-3 with Metroidvania connectivity
-5. Create 2-3 enemy types with proper AI and attacks
+**Current status (Vertical Slice):**
+- [x] Phase 1: Attack System Refactor
+- [x] Phase 2, Tasks 1-2: Progression System (Elevations & Resonances)
+- [x] Phase 2, Tasks 3-4: Artifact System (slots, equip/unequip, stat modifiers)
+- [x] Phase 3: Spells (Carbon Bolt + Carbon Shell + Carbon Splinter burst)
+- [x] Phase 4: Enemy AI and Combat (BasicEnemy chase + AttackingState + isotope drops)
+- [ ] Phase 5-6: Level Design + Boss ← **EN PROGRESO**
+- [ ] Phase 7-9: UI, Save/Load, Polish
+
+**Donde nos quedamos (2026-02-22):**
+- Branch: `feature/vertical-slice`, build passing
+- Boss Soul Fragment 1: código C# completo (BossAttackSlot, BossAttackManager, SoulFragment1, SoulFragmentStateMachine + 5 estados)
+- **Pendiente (manual en Godot):** crear recursos `.tres`, `BossProjectileSkill.tscn`, ensamblar `SoulFragment1.tscn` — ver `docs/tasks.md` Boss E-4/E-5/E-6
+- Tras ensamblar el boss: Level Design (Floors 1-3 + arena del boss)
 
 ## Decisions Log
+
+### 2026-02-22: Boss Soul Fragment 1 Architecture
+- **No base class:** `SoulFragment1` duplica el boilerplate de `BasicEnemy` deliberadamente. Con solo 2 enemigos concretos, extraer una base class ahora sería especulativo. Refactor cuando existan 3+ enemigos.
+- **Sin MeleeSkill system:** El body contact damage usa `AttackHitboxComponent` permanente en el cuerpo del boss — mismo componente que los proyectiles, inicializado en `_Ready()`. El dash usa el mismo hitbox (ya activo). Sin nueva abstracción.
+- **Fase 2 como flag, no como estado:** `IsPhase2` modifica valores (velocidad, DashTimer.WaitTime, spread del proyectil) dentro de los estados existentes. Añadir un estado "Fase2Chasing" hubiera duplicado lógica sin beneficio.
+- **Timers en ChasingState:** Los Timers `DashTimer`/`ShootTimer` se suscriben/desuscriben en `Enter()`/`Exit()` de `ChasingState` y se reinician con `Start()` al entrar. Esto garantiza un intervalo completo tras cada ataque y evita transiciones fantasma desde otros estados.
+- **Fan burst en ShootingState:** El abanico de Fase 2 (3 proyectiles a ±20°) se implementa directamente en `ShootingState.Fire()` con 3 llamadas a `TryFire()`. Sin `FanSpawnComponent` nuevo — YAGNI, un solo usuario.
+- **CooldownDuration=0 en BossProjectileData:** El `ShootTimer` del boss controla la cadencia. Si el skill tuviera cooldown propio, habría conflicto entre ambos timers. Cooldown=0 deja el skill siempre listo y delega el control al timer externo.
 
 ### 2026-02-15: Attack System Refactor
 - **Before:** 5 layers (Player → AttackManager → AttackSlot → SpawnerComponent → IAttack), ~600 lines
@@ -229,3 +272,73 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - Cooldowns now use Godot Timer nodes (OneShot) instead of manual `_cooldownRemaining` delta tracking
 - PlayerAttackManager exports AttackData resources directly (no intermediate AttackSlot nodes)
 - Reduced from 4 attack slots to 3 (BasicAttack + 2 Spells)
+
+### 2026-02-16: Progression System Architecture
+- **Plan said:** `ProgressionComponent` as Godot Node child of Player, with `ResonanceData` and `ElevationData` Resources
+- **Actual:** `ProgressionManager` as plain C# class owned by `GameManager` — progression is global game state, not entity-specific
+- **Deleted:** `ResonanceData.cs`, `ElevationData.cs` — YAGNI, all resonances have identical mechanics (+20% HP, +10% DMG), no need for per-resonance Resources
+- **Key decision:** `EntityStatsComponent` uses simple `HealthMultiplier`/`DamageMultiplier` float properties (no dependency on GameManager). `Player.cs` acts as coordinator bridging global state to components.
+- **Save/load:** `MetaData` extended with `CurrentElevation` and `UnlockedResonances` fields, wired through `GameManager.LoadMeta()`/`SaveMeta()`
+
+### 2026-02-16: Artifact System Architecture
+- **Plan said:** `ArtifactManagerComponent` (Godot Node child of Player), `ArtifactSlot` struct, enum `ArtifactEffect` with hardcoded effect types
+- **Actual:** `ArtifactManager` as plain C# class owned by `GameManager` (same pattern as ProgressionManager)
+- **Simplified effects:** `ArtifactData` Resource with `HealthBonus`/`DamageBonus` floats. No enum/Resource for effects — YAGNI until mechanical effects (potions, regen) have supporting systems
+- **Persistence:** Resource paths stored in MetaData, loaded via `GD.Load<ArtifactData>(path)`
+- **Coordination:** `Player.ApplyAllMultipliers()` combines progression + artifact bonuses into EntityStatsComponent multipliers
+- **3 example artifacts:** Escudo de Grafito (+20% HP, 1 slot), Lente de Foco (+15% DMG, 1 slot), Nucleo Denso (+25% HP +15% DMG, 2 slots)
+
+### 2026-02-16: Spells Implementation
+- **Carbon Bolt:** Already existed as `Projectile.tscn` + `CarbonBolt.tres`. No changes needed — was already wired as `BasicAttackData` in `Player.tscn`.
+- **Fireball:** Scene and script already existed (`FireBall.tscn`, `Fireball.cs`). Created proper `Resources/Attacks/Fireball.tres` (ProjectileData: speed 200, cooldown 2.0s, lifetime 4s, dmg 1.5x). Old stub `FireballAttackData.tres` left in place.
+- **Ice Shard (burst):** Plan said single projectile with slow effect. Actual: **burst of 3 projectiles** fired in rapid sequence (0.1s delay). No slow — YAGNI, no status effect system exists.
+- **Key decision:** Burst logic lives in `IceShard.Execute()` (self-contained). If burst pattern is needed again, extract to a spawn strategy component (analogous to `AttackMovementComponent` for movement). Not premature — only 1 user.
+- **IceShard architecture:** Node2D implementing IAttack (not a Projectile). Exports `ProjectileScene` + `SubProjectileData`. Spawns into `Main/Attacks` container. Self-destructs after all projectiles fired.
+
+### 2026-02-17: IAttack Owner Reference
+- **Bug:** IceShard burst spawned projectiles from fixed position instead of following player
+- **Root cause:** `IAttack.Execute()` received position as snapshot, not live reference to owner
+- **Solution:** Added `Node2D owner` parameter to `IAttack.Execute()` interface
+- **Changes:** `IAttack.cs`, `AttackManagerComponent.cs`, `IceShard.cs`, `Projectile.cs`, `RockBody.cs`
+- **Future benefit:** Enables planned channeled spells (carbon shard stream) and orbital shields that need to track owner position
+
+### 2026-02-17: Enemy AI Architecture (Phase 4, Task 8)
+- **Plan said:** Create new "SecurityRobot" from scratch with inline AI code
+- **Actual:** Evolved existing `BasicEnemy` — already had chase AI, state machine, hurtbox, stats, sprite
+- **Added:** `EnemyAttackManager` (concrete `AttackManagerComponent<EnemyAttackSlot>`), same pattern as `PlayerAttackManager`
+- **Added:** `AttackingState` in enemy state machine — fires RockBody when in `AttackRange` (40px), creeps at 40% speed
+- **State flow:** Idle → (target detected) → Chasing → (in attack range) → Attacking → (out of range) → Chasing → (target lost) → Idle
+- **Fixed:** `RockBodyAttackData.tres` was missing DamageCoefficient, CooldownDuration, and AttackScene reference
+- **No NavigationAgent2D** — direct chase is sufficient for vertical slice. Pathfinding is premature.
+
+### 2026-02-17: Isotope Drop System (Phase 4, Task 9)
+- **Plan said:** `EconomyManager` as new Autoload singleton
+- **Actual:** `EconomyManager` as plain C# class owned by `GameManager` — consistent with `ProgressionManager` and `ArtifactManager` pattern
+- **Access:** `GameManager.Instance.EconomyManager` instead of `EconomyManager.Instance`
+- **Persistence:** `MetaData.Isotopes` field, loaded/saved through `GameManager.LoadMeta()`/`SaveMeta()`
+- **IsotopePickup:** Area2D scene in `Core/Economy/`, spawned by `BasicEnemy.OnEnemyDied()`, configurable `Amount` export
+- **Uses C# event** (`IsotopesChanged`) instead of Godot signal since EconomyManager is not a Node
+- **Debug display:** Player.cs debug label updated to show isotope count
+
+### 2026-02-22: Skill Hierarchy + Spell Renames
+- **Before:** Skills eran Node2D planos con un hijo `AttackSpawnComponent`. Cooldowns gestionados por `AttackManagerComponent` con Timer separado por slot.
+- **After:** Jerarquía `Skill → ActiveSkill → ProjectileSkill`. El Timer de cooldown vive dentro de `ActiveSkill`. `AttackManagerComponent` solo mantiene `Dictionary<TSlot, ActiveSkill>` y delega a `skill.TryExecute(ctx)`.
+- **Renombrados por lore:** `FireballSkill.tscn` → `CarbonShellSkill.tscn`, `IceShardSkill.tscn` → `CarbonSplinterSkill.tscn`
+- **Nuevas clases:** `Skill.cs`, `ActiveSkill.cs`, `ProjectileSkill.cs` (GlobalClass), `MeleeSkill.cs` (stub), `PassiveSkill.cs` (stub)
+- **Eliminado:** Timers separados en `AttackManagerComponent`, señal `SkillFired` de `AttackSpawnComponent`
+- **Resultado:** Cada skill es autocontenida (cooldown + spawn); el manager solo registra y delega
+
+### 2026-02-17: Attack System Refactor v2 — Resource as Orchestrator
+- **Problem:** Each attack scene (Projectile, IceShard, RockBody) manages its own lifecycle independently. No central pipeline for spawn → behavior → impact → cleanup. Adding new attack types requires reimplementing the full pipeline per scene.
+- **Solution:** `AttackData.Spawn(AttackContext)` virtual method — the Resource becomes the orchestrator. Scenes become dumb visual containers.
+- **Key changes:**
+  - `AttackData` gains `virtual Spawn(AttackContext)` — handles instantiation, positioning, hitbox init
+  - `ProjectileData` overrides `Spawn()` — adds movement component init + lifetime Timer
+  - New `BurstAttackData` Resource replaces `IceShard.cs` — generic burst spawner via Resource config
+  - New `AttackContext` record packages world context (direction, position, owner, stats, container)
+  - `IAttack` interface eliminated — no longer needed
+  - Projectiles change from `CharacterBody2D` to `Area2D` — movement handled by `AttackMovementComponent._PhysicsProcess()`
+  - `AttackManagerComponent.SpawnAttack()` reduced to `data.Spawn(ctx)` one-liner
+- **Eliminated:** `IAttack.cs`, `IceShard.cs`, `RockBody.cs` (scene keeps working without script)
+- **Created:** `AttackContext.cs`, `BurstAttackData.cs`
+- **Design doc:** `docs/plans/2026-02-17-attack-system-refactor-v2.md`

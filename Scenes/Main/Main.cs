@@ -1,6 +1,8 @@
 using Godot;
 using RotOfTime.Autoload;
 using RotOfTime.Core;
+using RotOfTime.Core.Entities;
+using RotOfTime.Scenes.UI.HUD;
 
 namespace RotOfTime.Scenes.Main;
 
@@ -11,6 +13,7 @@ public partial class Main : Node2D
     private bool _isMenuActive = true;
     private Player.Player _player;
     [Export] private Node _worldContainer;
+    [Export] private HUD _hud;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -33,6 +36,12 @@ public partial class Main : Node2D
 
     private void OnMenuChangeRequested(SceneExtensionManager.MenuScene menuScene)
     {
+        _hud.Teardown();
+
+        // Close any open in-game menus (bonfire, etc.)
+        GetTree().GetFirstNodeInGroup(Groups.BonfireMenu)?.QueueFree();
+        GameManager.Instance.IsMenuOpen = false;
+
         if (IsInstanceValid(_player))
         {
             _player.QueueFree();
@@ -64,6 +73,7 @@ public partial class Main : Node2D
         Marker2D spawnPoint = sceneInstance.GetNode<Marker2D>("SpawnPoint");
         _player.Position = spawnPoint.GlobalPosition;
         _player.Visible = true;
+        _hud.Initialize(_player);
 
         _isMenuActive = false;
         SetupCamera();

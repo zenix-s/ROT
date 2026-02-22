@@ -1,7 +1,7 @@
 # ROT OF TIME - Game Design Document (Final Scope)
 
-**Date:** 2026-02-15  
-**Status:** FINAL - Shipeable Scope  
+**Date:** 2026-02-15 (actualizado 2026-02-22)
+**Status:** FINAL - Shipeable Scope
 **Target:** 12-18 months solo development  
 
 ---
@@ -31,10 +31,14 @@
   - Access to new tower areas
   - +1 Artifact slot (at Elevations 3 and 5)
 
-**Requirements to Advance:**
-1. Complete 3 Resonances in current Elevation
-2. Defeat boss to absorb Soul Fragment of Ismael
-3. Unlock next Elevation
+**Requirements to Advance (at Bonfire):**
+1. Tener el item `elevation` en inventario (drop genérico del boss de la Elevación actual)
+2. Tener 3 resonancias activadas en la Elevación actual
+3. En el Bonfire: consumir el item `elevation` → avanza a la siguiente Elevación
+
+**Item drops:**
+- **Resonance trigger** → item `resonance` al inventario (fungible, se activa en Bonfire)
+- **Boss defeat** → item `elevation` al inventario (genérico, no específico por elevación)
 
 ---
 
@@ -116,12 +120,12 @@
 ### 2.2 Spell Examples
 
 **Elevation 1 (Starter):**
-- **Carbon Bolt** (Basic Attack): Fast projectile, low damage
-- **Fireball:** Medium projectile, explodes in AoE
-- **Ice Shard:** Projectile that slows enemies
+- **Carbon Bolt** (Basic Attack): Proyectil rápido, daño bajo
+- **Carbon Shell:** Proyectil de carbono denso, mayor daño que Carbon Bolt
+- **Carbon Splinter:** Ráfaga de 3 fragmentos de carbono en sucesión rápida
 
 **Elevation 2:**
-- **Burst Shot:** 3-projectile burst fire
+- **Carbon Nova:** Explosión radial de fragmentos en todas direcciones
 - **Shield Dome:** Temporary shield that blocks damage
 
 **Elevation 3:**
@@ -156,18 +160,12 @@
 ### 3.2 Crafting System
 
 **Recipe Structure:**
-```csharp
-Dictionary<ResourceType, int> Requirements;
-
-Examples:
-  Vial de Curación: { Isotopos: 50 }
-  Corazón Diamantino: { Isotopos: 200, FragmentoElevacion2: 1 }
-```
+- Todos los artefactos cuestan solo Isótopos
+- No hay recursos secundarios (Fragmentos de Elevación eliminados del diseño)
 
 **Design Philosophy:**
-- Simple base system (Isótopos only)
-- Scalable: Easy to add new resources later
-- No bloat: Requirements dictionary handles everything
+- Simple: un único recurso (Isótopos) para todo el crafteo
+- No bloat: no añadir recursos gating que compliquen sin mejorar la experiencia
 
 ---
 
@@ -187,7 +185,7 @@ Examples:
 | Artifact | Effect | Cost |
 |----------|--------|------|
 | Vial Superior | +2 potion charges | 150 Isótopos |
-| Corazón Diamantino | 1% HP/sec passive regen | 200 Isótopos + Fragment E2 |
+| Corazón Diamantino | 1% HP/sec passive regen | 200 Isótopos |
 | Púas de Carbono | Enemies take 20% reflected damage | 150 Isótopos |
 | Catalizador | -25% spell cooldowns | 180 Isótopos |
 
@@ -195,8 +193,8 @@ Examples:
 
 | Artifact | Effect | Cost |
 |----------|--------|------|
-| Forma Etérea | Dash grants 0.3s invulnerability | 300 Isótopos + Fragment E3 |
-| Anillo de Velocidad | +30% movement speed, -35% cooldowns | 350 Isótopos + Fragment E4 |
+| Forma Etérea | Dash grants 0.3s invulnerability | 300 Isótopos |
+| Anillo de Velocidad | +30% movement speed, -35% cooldowns | 350 Isótopos |
 
 **Total Artifacts in Game:** 10-15
 
@@ -223,16 +221,22 @@ Examples:
 
 ---
 
-### 4.2 Special Resources (Optional)
+### 4.2 Inventory Items
 
-**Fragmento de Elevación X:**
-- Drops from boss of that Elevation
-- 1 per boss (5 total in game)
-- Required for some Tier 2-3 artifacts
+**`resonance`**
+- Fuente: Resonance triggers repartidos por los floors
+- Uso: Consumido en Bonfire para activar una Resonancia (+20% HP, +10% DMG)
+- Fungible (acumulable)
 
-**Cristales Raros:**
-- Optional drop from secret rooms
-- Add only if more artifact gating needed
+**`elevation`**
+- Fuente: Drop genérico al derrotar a un boss (no específico por Elevación)
+- Uso: Consumido en Bonfire junto a 3 resonancias activadas para avanzar de Elevación
+- No acumulable en la práctica (1 boss por Elevación)
+
+> **Decisión de diseño (2026-02-20):** Los items de elevación son genéricos (`elevation`, no `elevation_1/2/3`).
+> El crafteo de artefactos usa únicamente Isótopos — no hay recursos especiales de crafteo ligados a Elevaciones.
+
+> **Nota de diseño (2026-02-20):** El crafteo tiene base narrativa sólida — el protagonista proviene de una familia de herreros/alquimistas especializados en crear artefactos. No es una mecánica añadida arbitrariamente; es parte de la identidad del personaje. En el vertical slice el crafteo funciona como tienda simple (solo Isótopos), pero el sistema está diseñado para escalar con Fragmentos de boss y Materiales de Exploración conforme avance el juego.
 
 ---
 
@@ -317,39 +321,56 @@ Examples:
 
 ## 7. Technical Architecture
 
-### 7.1 Combat System Simplification
+### 7.1 Combat System Architecture
 
-**REMOVED (Overengineering):**
-- ❌ AttackSlot with spawner children
-- ❌ SpawnerComponent abstraction layer
-- ❌ Projectile + spawn pattern configuration system
-- ❌ PlayerAttackSlot enum with 4 slots
+**Capa de datos (Resources):**
+- `AttackData` — Resource base: Name, DamageCoefficient, CooldownDuration
+- `ProjectileData` — Extiende AttackData: speed, acceleration, lifetime, movementType
+- `AttackContext` — Record C# que empaqueta contexto de spawn: direction, position, owner, stats, container
 
-**KEPT (Essential):**
-- ✅ AttackManagerComponent<TSlot> (generic manager)
-- ✅ IAttack interface (spell scenes implement this)
-- ✅ AttackData resources (spell definitions)
-- ✅ Hitbox/Hurtbox component system
-- ✅ DamageCalculator (pure C# damage logic)
+**Jerarquía Skill (Scenes):**
+- `Skill` (Node2D abstracto) — base común sin contrato de ejecución
+  - `ActiveSkill` (abstracto) — Timer interno, `IsReady`, `GetCooldownProgress()`, `TryExecute(AttackContext)`
+    - `ProjectileSkill` [GlobalClass] — exporta `Spawner: AttackSpawnComponent`, llama `Spawner.Execute(ctx)` + `StartCooldown()`
+    - `MeleeSkill` (stub abstracto)
+  - `PassiveSkill` (stub abstracto) — sin cooldown, gestionado por otro sistema
+
+**Capa de spawn (Components):**
+- `AttackSpawnComponent` — Node abstract: `Execute(AttackContext)` orquesta el spawn
+  - `SingleSpawnComponent` — Lanza 1 proyectil
+  - `BurstSpawnComponent` — Lanza ráfagas (ej: Carbon Splinter × 3)
+- `Projectile` (Area2D) — `Initialize(ctx, data)`: conecta hitbox + movimiento
+- `AttackMovementComponent` — Node abstract: actualiza `GlobalPosition` en `_PhysicsProcess`
+  - `LinearMovementComponent` — Movimiento recto con aceleración
+
+**Manager:**
+- `AttackManagerComponent<TSlot>` — Abstract genérica. Mantiene `Dictionary<TSlot, ActiveSkill>`. `TryFire()` crea `AttackContext` y delega a `skill.TryExecute(ctx)`. Cooldowns y timers viven en `ActiveSkill`.
+- `PlayerAttackManager` — Concreto. Exporta `PackedScene` por slot (Skills), las registra por `PlayerAttackSlot` enum
+- `EnemyAttackManager` — Concreto. Exporta `PackedScene RangedAttackSkill`, registra por `EnemyAttackSlot` enum
+
+**Estructura de un Skill:**
+- Cada spell es una scene (ej: `CarbonBoltSkill.tscn`) cuyo nodo raíz es un `ProjectileSkill`
+- El `ProjectileSkill` exporta una referencia (`Spawner`) al hijo `AttackSpawnComponent`
+- El SpawnComponent tiene referencias a la `ProjectileScene` visual y al `AttackData` Resource
 
 ---
 
-### 7.2 Simplified Attack Flow
+### 7.2 Attack Flow
 
 ```
-Player Input → AttackManager checks slot/cooldown →
-Instantiate spell scene (AttackData.AttackScene) →
-Scene implements IAttack.Execute(direction, stats, attackData) →
-Spell handles its own movement/behavior →
+Estado del Player → input detectado → PlayerAttackManager.TryFire(slot, dir, pos, stats, owner)
+  → AttackManagerComponent crea AttackContext (direction, position, owner, stats, container)
+  → ActiveSkill.TryExecute(ctx)
+    → verifica IsReady (Timer interno)
+    → AttackSpawnComponent.Execute(ctx)
+      → Instancia ProjectileScene
+      → AddChild a "Main/Attacks"
+      → Projectile.Initialize(ctx, data) → hitbox + MovementComponent
+    → StartCooldown(duration)
 AttackHitboxComponent overlaps HurtboxComponent →
-DamageCalculator.Calculate() → 
+DamageCalculator.Calculate() →
 StatsComponent.TakeDamage()
 ```
-
-**Key Change:**
-- Each spell is a **self-contained scene** with its own spawn logic
-- No separate spawner abstraction layer
-- Simpler to implement, easier to prototype new spells
 
 ---
 
@@ -358,12 +379,10 @@ StatsComponent.TakeDamage()
 ```csharp
 PlayerAttackManager : AttackManagerComponent<PlayerAttackSlot>
 {
-    enum PlayerAttackSlot { BasicAttack, Spell1, Spell2 }
-    
-    // Each slot references an AttackData resource (the equipped spell)
-    [Export] AttackData BasicAttackData;
-    [Export] AttackData Spell1Data;
-    [Export] AttackData Spell2Data;
+    // Cada slot es una PackedScene cuyo nodo raíz es un ActiveSkill (ej: ProjectileSkill)
+    [Export] PackedScene BasicAttackSkill;  // CarbonBoltSkill.tscn
+    [Export] PackedScene Spell1Skill;       // CarbonShellSkill.tscn
+    [Export] PackedScene Spell2Skill;       // CarbonSplinterSkill.tscn
 }
 ```
 
@@ -546,7 +565,7 @@ These were removed from core scope but could be added after 1.0 launch:
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** 2026-02-15  
-**Owner:** Zenix (Solo Developer)  
+**Document Version:** 1.2
+**Last Updated:** 2026-02-22
+**Owner:** Zenix (Solo Developer)
 **Status:** ✅ APPROVED - Ready for Implementation
