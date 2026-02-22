@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="AttackData" format=3 uid="uid://dmpck3ubvtk3a"]
+
+[ext_resource type="Script" uid="uid://boqlkvifp1inw" path="res://Core/Combat/Attacks/AttackData.cs" id="1_m2tk6"]
+
+[resource]
+script = ExtResource("1_m2tk6")
+Name = "Boss 1 body"
+metadata/_custom_type_script = "uid://boqlkvifp1inw"
