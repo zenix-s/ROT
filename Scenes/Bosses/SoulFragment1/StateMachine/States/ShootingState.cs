@@ -27,8 +27,6 @@ public partial class ShootingState : State<SoulFragment1>
             return;
         }
 
-        TargetEntity.MoveAndSlide();
-
         var direction = (TargetEntity.Target.GlobalPosition - TargetEntity.GlobalPosition).Normalized();
         Fire(direction);
         _fired = true;

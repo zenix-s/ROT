@@ -28,7 +28,6 @@ public partial class DashChargingState : State<SoulFragment1>
 
     public override void PhysicsProcess(double delta)
     {
-        TargetEntity.MoveAndSlide();
         _elapsed += delta;
 
         if (_elapsed >= ChargeDuration)

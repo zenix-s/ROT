@@ -78,7 +78,12 @@ public partial class SoulFragment1 : CharacterBody2D
 
     private void SetupBodyHitbox()
     {
-        if (BodyHitbox == null || BodyAttackData == null) return;
+        if (BodyHitbox == null && BodyAttackData == null) return;
+        if (BodyHitbox == null || BodyAttackData == null)
+        {
+            GD.PrintErr("SoulFragment1: BodyHitbox y BodyAttackData deben asignarse juntos");
+            return;
+        }
         BodyHitbox.Initialize(EntityStatsComponent.EntityStats, BodyAttackData);
     }
 
@@ -108,7 +113,10 @@ public partial class SoulFragment1 : CharacterBody2D
         {
             IsPhase2 = true;
             if (DashTimer != null)
+            {
                 DashTimer.WaitTime *= 0.6f;
+                DashTimer.Start();
+            }
         }
     }
 

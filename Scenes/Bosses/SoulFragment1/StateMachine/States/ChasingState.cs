@@ -14,9 +14,15 @@ public partial class ChasingState : State<SoulFragment1>
         _shootPending = false;
 
         if (TargetEntity.DashTimer != null)
+        {
             TargetEntity.DashTimer.Timeout += OnDashTimerFired;
+            TargetEntity.DashTimer.Start();
+        }
         if (TargetEntity.ShootTimer != null)
+        {
             TargetEntity.ShootTimer.Timeout += OnShootTimerFired;
+            TargetEntity.ShootTimer.Start();
+        }
     }
 
     public override void Exit()
