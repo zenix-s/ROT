@@ -120,37 +120,57 @@ Generic abstract state machine pattern:
 
 Used by: `PlayerStateMachine` (IdleState, MoveState, DashState) and `EnemyStateMachine` (IdleState, ChasingState)
 
-### Attack System (`Core/Combat/`) - 2-Layer Architecture
+### Attack System (`Core/Combat/`) - 3-Layer Architecture
 
 **Data layer (Resources):**
-- **AttackData** - `[Resource]`: Name, DamageCoefficient, CooldownDuration, AttackScene (PackedScene)
+- **AttackData** - `[Resource]`: Name, DamageCoefficient, CooldownDuration
 - **ProjectileData** - Extends AttackData: InitialSpeed, TargetSpeed, Acceleration, Lifetime
+- **AttackContext** - C# `record`: direction, spawnPosition, ownerStats, owner, damageMultiplier, attacksContainer
 - **AttackResult** - `[Resource]`: RawDamage, AttackName, IsCritical (passed through Godot signals)
 - **DamageResult** - C# `record`: RawDamage, FinalDamage, AttackName (internal use only)
 
-**Behavior layer (Scenes implementing IAttack):**
-- **IAttack** - Interface: `Execute(Vector2 direction, EntityStats, AttackData, Node2D owner, float damageMultiplier)`
-- **Projectile** (CharacterBody2D) - Base projectile with movement component and lifetime Timer
-- **Fireball** - Extends Projectile, spawns explosion on impact
-- **RockBody** (Area2D) - Melee body attack
-- **IceShard** (Node2D) - Burst spawner that fires 3 sub-projectiles from owner's position
+**Skill hierarchy (`Core/Combat/Skills/`):**
+- **Skill** - Abstract Node2D, base común sin contrato de ejecución
+  - **ActiveSkill** - Abstract. Timer interno, `IsReady`, `GetCooldownProgress()`, `TryExecute(AttackContext)`
+    - **ProjectileSkill** `[GlobalClass]` - Exporta `Spawner: AttackSpawnComponent`. Llama `Spawner.Execute(ctx)` + `StartCooldown()`
+    - **MeleeSkill** - Stub abstracto
+  - **PassiveSkill** - Stub abstracto, sin cooldown
+
+**Spawn layer (`Core/Combat/Components/AttackSpawnComponents/`):**
+- **AttackSpawnComponent** - Abstract Node: `Execute(AttackContext)` orquesta el spawn
+  - **SingleSpawnComponent** - Lanza 1 proyectil
+  - **BurstSpawnComponent** - Lanza ráfagas (ej: Carbon Splinter × 3)
+- **Projectile** (Area2D) - `Initialize(ctx, data)`: conecta hitbox + MovementComponent
 
 **Manager:**
-- **AttackManagerComponent\<TSlot\>** - Abstract generic Node. Timer-based cooldowns (Godot OneShot Timers). Spawns attack scenes into `Main/Attacks` container.
-- **PlayerAttackManager** - Concrete: Exports BasicAttackData, Spell1Data, Spell2Data. Enum: `PlayerAttackSlot { BasicAttack, Spell1, Spell2 }`
-- **EnemyAttackSlot** - Enum exists (`{ BodyAttack }`) but not yet wired to a manager
+- **AttackManagerComponent\<TSlot\>** - Abstract generic Node. Mantiene `Dictionary<TSlot, ActiveSkill>`. `TryFire()` crea `AttackContext` y delega a `skill.TryExecute(ctx)`. Cooldowns viven en `ActiveSkill`.
+- **PlayerAttackManager** - Concreto. Exporta `PackedScene` por slot (Skills), registra por `PlayerAttackSlot` enum. Slots: `{ BasicAttack, Spell1, Spell2 }`
+- **EnemyAttackManager** - Concreto. Exporta `PackedScene RangedAttackSkill`, registra por `EnemyAttackSlot` enum
+
+**Estructura de un Skill scene:**
+- Nodo raíz es un `ProjectileSkill` (o subclase de `ActiveSkill`)
+- Exporta `Spawner` apuntando al hijo `AttackSpawnComponent`
+- El `AttackSpawnComponent` tiene referencias a `ProjectileScene` y `AttackData`
 
 **Important:** `AttackManagerComponent<TSlot>` is abstract generic - it **cannot** be used directly as a Godot node script (will crash .tscn files). Always use a concrete subclass like `PlayerAttackManager`.
+
+**Spells actuales:**
+- `CarbonBoltSkill.tscn` — ataque básico, proyectil rápido, bajo daño
+- `CarbonShellSkill.tscn` — spell 1, proyectil de carbono denso, mayor daño
+- `CarbonSplinterSkill.tscn` — spell 2, ráfaga de 3 fragmentos (BurstSpawnComponent)
 
 ### Data Flow: Attack Spawning
 ```
 Player.TryFireAttack(slot)
   → PlayerAttackManager.TryFire(slot, direction, position, stats, ownerNode)
-    → AttackManagerComponent.SpawnAttack()
-      → Instantiate AttackData.AttackScene as Node2D
-      → AddChild to "Main/Attacks" container
-      → Cast to IAttack → Execute(direction, ownerStats, attackData, ownerNode)
-        → AttackHitboxComponent.Initialize() → DamageCalculator.CalculateRawDamage() → AttackResult
+    → AttackManagerComponent crea AttackContext
+    → ActiveSkill.TryExecute(ctx)
+      → verifica IsReady (Timer interno)
+      → AttackSpawnComponent.Execute(ctx)
+        → Instancia ProjectileScene
+        → AddChild a "Main/Attacks"
+        → Projectile.Initialize(ctx, data) → hitbox + MovementComponent
+      → StartCooldown(duration)
 ```
 
 ### Data Flow: Damage Pipeline
@@ -200,8 +220,8 @@ Static dictionaries map enums to scene paths:
 - **Signals** for decoupling: Components emit events, entity scripts subscribe
 - **Singleton autoloads** with `Instance` pattern for global access
 - **Generic abstract base classes** for shared logic: `AttackManagerComponent<TSlot>`, `StateMachine<T>`, `State<T>`
-- **IAttack interface** separates attack data (Resource) from behavior (scene) - scenes have no knowledge of their stats until `Execute()` injects them
-- **Timer-based cooldowns** using Godot OneShot Timers (not manual delta tracking)
+- **Skill hierarchy** (`Skill` → `ActiveSkill` → `ProjectileSkill`): Skills son Node2D, el cooldown vive en `ActiveSkill`, el spawn en `AttackSpawnComponent` hijo
+- **Timer-based cooldowns** usando Godot OneShot Timer interno en `ActiveSkill` (no en AttackManagerComponent)
 - **Attacks spawn into** `Main/Attacks` Node2D container (looked up at `GetTree().Root` → `"Main/Attacks"`)
 
 ## Important Gotchas
@@ -223,7 +243,7 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - [x] Phase 1: Attack System Refactor
 - [x] Phase 2, Tasks 1-2: Progression System (Elevations & Resonances)
 - [x] Phase 2, Tasks 3-4: Artifact System (slots, equip/unequip, stat modifiers)
-- [x] Phase 3: Spells (Carbon Bolt + Fireball + Ice Shard burst)
+- [x] Phase 3: Spells (Carbon Bolt + Carbon Shell + Carbon Splinter burst)
 - [ ] Phase 4: Enemy AI and Combat ← **EN PROGRESO**
 - [ ] Phase 5-6: Level Design + Boss
 - [ ] Phase 7-9: UI, Save/Load, Polish
@@ -232,7 +252,7 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - Branch: `feature/vertical-slice`, build passing
 - Phase 4 en progreso: Task 8 (Enemy AI con body attack) y Task 9 (Isotope drops) implementados, **pendientes de testeo manual en Godot (F5)**
 - Testear en Godot: enemigo debe perseguir al player, atacar a rango corto (RockBody), morir con spells, y dropear isótopos
-- Spells de Phase 3 también pendientes de testeo: LMB (Carbon Bolt), Key 1 (Fireball), Key 2 (Ice Shard burst de 3)
+- Spells de Phase 3 también pendientes de testeo: LMB (Carbon Bolt), Key 1 (Carbon Shell), Key 2 (Carbon Splinter burst de 3)
 - Phase 5 es Level Design (Floor 1 scene)
 
 ## Decisions Log
@@ -292,6 +312,14 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - **IsotopePickup:** Area2D scene in `Core/Economy/`, spawned by `BasicEnemy.OnEnemyDied()`, configurable `Amount` export
 - **Uses C# event** (`IsotopesChanged`) instead of Godot signal since EconomyManager is not a Node
 - **Debug display:** Player.cs debug label updated to show isotope count
+
+### 2026-02-22: Skill Hierarchy + Spell Renames
+- **Before:** Skills eran Node2D planos con un hijo `AttackSpawnComponent`. Cooldowns gestionados por `AttackManagerComponent` con Timer separado por slot.
+- **After:** Jerarquía `Skill → ActiveSkill → ProjectileSkill`. El Timer de cooldown vive dentro de `ActiveSkill`. `AttackManagerComponent` solo mantiene `Dictionary<TSlot, ActiveSkill>` y delega a `skill.TryExecute(ctx)`.
+- **Renombrados por lore:** `FireballSkill.tscn` → `CarbonShellSkill.tscn`, `IceShardSkill.tscn` → `CarbonSplinterSkill.tscn`
+- **Nuevas clases:** `Skill.cs`, `ActiveSkill.cs`, `ProjectileSkill.cs` (GlobalClass), `MeleeSkill.cs` (stub), `PassiveSkill.cs` (stub)
+- **Eliminado:** Timers separados en `AttackManagerComponent`, señal `SkillFired` de `AttackSpawnComponent`
+- **Resultado:** Cada skill es autocontenida (cooldown + spawn); el manager solo registra y delega
 
 ### 2026-02-17: Attack System Refactor v2 — Resource as Orchestrator
 - **Problem:** Each attack scene (Projectile, IceShard, RockBody) manages its own lifecycle independently. No central pipeline for spawn → behavior → impact → cleanup. Adding new attack types requires reimplementing the full pipeline per scene.
