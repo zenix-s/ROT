@@ -14,8 +14,8 @@
 [ext_resource type="Script" uid="uid://cp5drchfh5b2y" path="res://Scenes/Player/Components/PlayerAttackManager.cs" id="14_0u84n"]
 [ext_resource type="Script" uid="uid://dh7ds4tfap2xr" path="res://Scenes/Player/StateMachine/States/DashState.cs" id="14_ds5st"]
 [ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/CarbonBoltSkill.tscn" id="15_esmjy"]
-[ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/FireballSkill.tscn" id="16_fireball"]
-[ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/IceShardSkill.tscn" id="17_iceshard"]
+[ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/CarbonShellSkill.tscn" id="16_fireball"]
+[ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/CarbonSplinterSkill.tscn" id="17_iceshard"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ft8w5"]
 atlas = ExtResource("1_s0eop")

@@ -3,8 +3,11 @@
 [ext_resource type="Script" path="res://Core/Combat/Components/AttackSpawnComponents/SingleSpawnComponent.cs" id="1_spawn"]
 [ext_resource type="PackedScene" uid="uid://dwips18xqhtp8" path="res://Scenes/Attacks/Projectiles/Projectile.tscn" id="2_proj"]
 [ext_resource type="Resource" path="res://Resources/Attacks/EnemyBolt.tres" id="3_data"]
+[ext_resource type="Script" path="res://Core/Combat/Skills/ProjectileSkill.cs" id="4_skill"]
 
-[node name="EnemyBoltSkill" type="Node2D"]
+[node name="EnemyBoltSkill" type="Node2D" node_paths=PackedStringArray("Spawner")]
+script = ExtResource("4_skill")
+Spawner = NodePath("SingleSpawnComponent")
 
 [node name="SingleSpawnComponent" type="Node" parent="."]
 script = ExtResource("1_spawn")

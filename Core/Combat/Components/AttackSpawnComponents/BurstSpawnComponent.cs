@@ -26,7 +26,6 @@ public partial class BurstSpawnComponent : AttackSpawnComponent
         _fired = 0;
 
         SpawnOne();
-        EmitSignal(SignalName.SkillFired, Data.CooldownDuration);
 
         if (BurstCount <= 1)
             return;

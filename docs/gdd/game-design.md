@@ -1,7 +1,7 @@
 # ROT OF TIME - Game Design Document (Final Scope)
 
-**Date:** 2026-02-15  
-**Status:** FINAL - Shipeable Scope  
+**Date:** 2026-02-15 (actualizado 2026-02-22)
+**Status:** FINAL - Shipeable Scope
 **Target:** 12-18 months solo development  
 
 ---
@@ -120,12 +120,12 @@
 ### 2.2 Spell Examples
 
 **Elevation 1 (Starter):**
-- **Carbon Bolt** (Basic Attack): Fast projectile, low damage
-- **Fireball:** Medium projectile, explodes in AoE
-- **Ice Shard:** Projectile that slows enemies
+- **Carbon Bolt** (Basic Attack): Proyectil rápido, daño bajo
+- **Carbon Shell:** Proyectil de carbono denso, mayor daño que Carbon Bolt
+- **Carbon Splinter:** Ráfaga de 3 fragmentos de carbono en sucesión rápida
 
 **Elevation 2:**
-- **Burst Shot:** 3-projectile burst fire
+- **Carbon Nova:** Explosión radial de fragmentos en todas direcciones
 - **Shield Dome:** Temporary shield that blocks damage
 
 **Elevation 3:**
@@ -328,20 +328,29 @@
 - `ProjectileData` — Extiende AttackData: speed, acceleration, lifetime, movementType
 - `AttackContext` — Record C# que empaqueta contexto de spawn: direction, position, owner, stats, container
 
-**Capa de comportamiento (Scenes/Components):**
+**Jerarquía Skill (Scenes):**
+- `Skill` (Node2D abstracto) — base común sin contrato de ejecución
+  - `ActiveSkill` (abstracto) — Timer interno, `IsReady`, `GetCooldownProgress()`, `TryExecute(AttackContext)`
+    - `ProjectileSkill` [GlobalClass] — exporta `Spawner: AttackSpawnComponent`, llama `Spawner.Execute(ctx)` + `StartCooldown()`
+    - `MeleeSkill` (stub abstracto)
+  - `PassiveSkill` (stub abstracto) — sin cooldown, gestionado por otro sistema
+
+**Capa de spawn (Components):**
 - `AttackSpawnComponent` — Node abstract: `Execute(AttackContext)` orquesta el spawn
   - `SingleSpawnComponent` — Lanza 1 proyectil
-  - `BurstSpawnComponent` — Lanza ráfagas (ej: Ice Shard × 3)
+  - `BurstSpawnComponent` — Lanza ráfagas (ej: Carbon Splinter × 3)
 - `Projectile` (Area2D) — `Initialize(ctx, data)`: conecta hitbox + movimiento
 - `AttackMovementComponent` — Node abstract: actualiza `GlobalPosition` en `_PhysicsProcess`
   - `LinearMovementComponent` — Movimiento recto con aceleración
 
 **Manager:**
-- `AttackManagerComponent<TSlot>` — Abstract genérica. Gestiona cooldowns y llama `spawnComponent.Execute(ctx)`
+- `AttackManagerComponent<TSlot>` — Abstract genérica. Mantiene `Dictionary<TSlot, ActiveSkill>`. `TryFire()` crea `AttackContext` y delega a `skill.TryExecute(ctx)`. Cooldowns y timers viven en `ActiveSkill`.
 - `PlayerAttackManager` — Concreto. Exporta `PackedScene` por slot (Skills), las registra por `PlayerAttackSlot` enum
+- `EnemyAttackManager` — Concreto. Exporta `PackedScene RangedAttackSkill`, registra por `EnemyAttackSlot` enum
 
 **Estructura de un Skill:**
-- Cada spell es una scene (ej: `CarbonBoltSkill.tscn`) con un `AttackSpawnComponent` como hijo
+- Cada spell es una scene (ej: `CarbonBoltSkill.tscn`) cuyo nodo raíz es un `ProjectileSkill`
+- El `ProjectileSkill` exporta una referencia (`Spawner`) al hijo `AttackSpawnComponent`
 - El SpawnComponent tiene referencias a la `ProjectileScene` visual y al `AttackData` Resource
 
 ---
@@ -350,12 +359,14 @@
 
 ```
 Estado del Player → input detectado → PlayerAttackManager.TryFire(slot, dir, pos, stats, owner)
-  → AttackManagerComponent verifica cooldown
-  → Crea AttackContext (direction, position, owner, stats, container)
-  → AttackSpawnComponent.Execute(ctx)
-    → Instancia ProjectileScene
-    → AddChild a "Main/Attacks"
-    → Projectile.Initialize(ctx, data) → hitbox + MovementComponent
+  → AttackManagerComponent crea AttackContext (direction, position, owner, stats, container)
+  → ActiveSkill.TryExecute(ctx)
+    → verifica IsReady (Timer interno)
+    → AttackSpawnComponent.Execute(ctx)
+      → Instancia ProjectileScene
+      → AddChild a "Main/Attacks"
+      → Projectile.Initialize(ctx, data) → hitbox + MovementComponent
+    → StartCooldown(duration)
 AttackHitboxComponent overlaps HurtboxComponent →
 DamageCalculator.Calculate() →
 StatsComponent.TakeDamage()
@@ -368,10 +379,10 @@ StatsComponent.TakeDamage()
 ```csharp
 PlayerAttackManager : AttackManagerComponent<PlayerAttackSlot>
 {
-    // Cada slot es una PackedScene que contiene un AttackSpawnComponent
+    // Cada slot es una PackedScene cuyo nodo raíz es un ActiveSkill (ej: ProjectileSkill)
     [Export] PackedScene BasicAttackSkill;  // CarbonBoltSkill.tscn
-    [Export] PackedScene Spell1Skill;       // FireballSkill.tscn
-    [Export] PackedScene Spell2Skill;       // IceShardSkill.tscn
+    [Export] PackedScene Spell1Skill;       // CarbonShellSkill.tscn
+    [Export] PackedScene Spell2Skill;       // CarbonSplinterSkill.tscn
 }
 ```
 
@@ -554,7 +565,7 @@ These were removed from core scope but could be added after 1.0 launch:
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** 2026-02-15  
-**Owner:** Zenix (Solo Developer)  
+**Document Version:** 1.2
+**Last Updated:** 2026-02-22
+**Owner:** Zenix (Solo Developer)
 **Status:** ✅ APPROVED - Ready for Implementation

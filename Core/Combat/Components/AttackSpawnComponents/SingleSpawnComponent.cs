@@ -16,7 +16,6 @@ public partial class SingleSpawnComponent : AttackSpawnComponent
         }
 
         SpawnProjectile(ctx);
-        EmitSignal(SignalName.SkillFired, Data.CooldownDuration);
     }
 
     protected void SpawnProjectile(AttackContext ctx)

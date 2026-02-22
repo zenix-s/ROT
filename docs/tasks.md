@@ -47,6 +47,8 @@
 - [x] **Validado (2026-02-19):** input action `interact` (tecla E), enemigo persigue + ataca + dropea isótopos visibles + HUD actualiza moneda, colisión y apertura de BonfireMenu
 - [x] **Validado (2026-02-20):** ResonanceTrigger → BonfireMenu → activar resonancia → stats suben correctamente
 - [x] Bloque C-1 + C-2: ArtifactsMenu (Mesa de Artefactos) — equip/unequip + crafteo con isótopos. Accesible con K desde cualquier punto del juego.
+- [x] Jerarquía Skill (Skill → ActiveSkill → ProjectileSkill): cooldowns encapsulados en ActiveSkill, AttackManagerComponent simplificado (sin timers externos ni SkillFired signal).
+- [x] Renombrado spells Elevation 1 acorde al lore de carbono: FireballSkill → CarbonShellSkill, IceShardSkill → CarbonSplinterSkill.
 - [x] Bloque D-1: Auditoría MetaData — cubre todo el estado necesario.
 - [x] Bloque D-2: Save triggers — SaveMeta() al morir y al cerrar el juego.
 - [x] Fix: SaveManager reescrito con System.IO (UTF-8 correcto, sin errores de encoding).

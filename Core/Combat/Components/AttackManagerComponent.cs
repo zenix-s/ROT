@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 using RotOfTime.Core.Combat.Attacks;
-using RotOfTime.Core.Combat.Components.AttackSpawnComponents;
+using RotOfTime.Core.Combat.Skills;
 using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Core.Combat.Components;
@@ -10,8 +10,7 @@ namespace RotOfTime.Core.Combat.Components;
 public abstract partial class AttackManagerComponent<TSlot> : Node
     where TSlot : struct, Enum
 {
-    private readonly Dictionary<TSlot, AttackSpawnComponent> _slotSkills = new();
-    private readonly Dictionary<TSlot, Timer> _slotTimers = new();
+    private readonly Dictionary<TSlot, ActiveSkill> _skills = new();
 
     [Signal]
     public delegate void AttackFiredEventHandler(StringName slot);
@@ -25,55 +24,21 @@ public abstract partial class AttackManagerComponent<TSlot> : Node
         }
 
         var skillInstance = skillScene.Instantiate<Node2D>();
-        AddChild(skillInstance);
 
-        AttackSpawnComponent spawnComponent = null;
-        foreach (var child in skillInstance.GetChildren())
+        if (skillInstance is not ActiveSkill activeSkill)
         {
-            if (child is AttackSpawnComponent spawn)
-            {
-                spawnComponent = spawn;
-                break;
-            }
-        }
-
-        if (spawnComponent == null)
-        {
-            GD.PrintErr($"AttackManagerComponent: No AttackSpawnComponent found in skill for slot '{slotKey}'.");
+            GD.PrintErr($"AttackManagerComponent: Scene for slot '{slotKey}' is not an ActiveSkill.");
             skillInstance.QueueFree();
             return;
         }
 
-        _slotSkills[slotKey] = spawnComponent;
-
-        var timer = new Timer
-        {
-            OneShot = true,
-            Name = $"{slotKey}Timer"
-        };
-        AddChild(timer);
-        _slotTimers[slotKey] = timer;
-
-        spawnComponent.SkillFired += (cooldown) => OnSkillFired(slotKey, cooldown);
-    }
-
-    private void OnSkillFired(TSlot slotKey, float cooldown)
-    {
-        if (_slotTimers.TryGetValue(slotKey, out var timer))
-            timer.Start(cooldown);
-
-        EmitSignal(SignalName.AttackFired, SlotToStringName(slotKey));
+        AddChild(activeSkill);
+        _skills[slotKey] = activeSkill;
     }
 
     public bool TryFire(TSlot slotKey, Vector2 direction, Vector2 position, EntityStats stats, Node2D ownerNode)
     {
-        if (!_slotSkills.TryGetValue(slotKey, out var spawnComponent))
-            return false;
-
-        if (!_slotTimers.TryGetValue(slotKey, out var timer))
-            return false;
-
-        if (!timer.IsStopped())
+        if (!_skills.TryGetValue(slotKey, out var skill))
             return false;
 
         var attackContainer = GetTree().Root.GetNodeOrNull<Node>("Main/Attacks");
@@ -84,29 +49,30 @@ public abstract partial class AttackManagerComponent<TSlot> : Node
         }
 
         var ctx = new AttackContext(direction, position, stats, ownerNode, 1.0f, attackContainer);
-        spawnComponent.Execute(ctx);
+        if (!skill.TryExecute(ctx))
+            return false;
+
+        EmitSignal(SignalName.AttackFired, SlotToStringName(slotKey));
         return true;
     }
 
     public bool IsOnCooldown(TSlot slotKey)
     {
-        if (!_slotTimers.TryGetValue(slotKey, out var timer))
+        if (!_skills.TryGetValue(slotKey, out var skill))
             return false;
-        return !timer.IsStopped();
+        return !skill.IsReady;
     }
 
     public float GetCooldownProgress(TSlot slotKey)
     {
-        if (!_slotTimers.TryGetValue(slotKey, out var timer))
+        if (!_skills.TryGetValue(slotKey, out var skill))
             return 0f;
-        if (timer.IsStopped())
-            return 0f;
-        return Mathf.Clamp((float)(timer.TimeLeft / timer.WaitTime), 0f, 1f);
+        return skill.GetCooldownProgress();
     }
 
     public bool HasSlot(TSlot slotKey)
     {
-        return _slotSkills.ContainsKey(slotKey);
+        return _skills.ContainsKey(slotKey);
     }
 
     private static StringName SlotToStringName(TSlot slot)
