@@ -27,9 +27,15 @@
 
 ### Manual en Godot (developer)
 
+- [ ] **Boss E-4: Recursos del boss** — crear en editor: `BossBodyData.tres` (AttackData, DamageCoefficient=1.0), `BossProjectileData.tres` (ProjectileData, Speed=120, Lifetime=5, DamageCoefficient=1.2, CooldownDuration=0), `BossProjectileSkill.tscn` (raíz ProjectileSkill + hijo SingleSpawnComponent apuntando a Projectile.tscn). Ver plan: `docs/plans/2026-02-22-boss-soul-fragment-1.md` Task 4.
+
+- [ ] **Boss E-5: Ensamblar SoulFragment1.tscn** — crear escena CharacterBody2D con script SoulFragment1.cs, añadir todos los nodos hijos (EntityStatsComponent, HurtboxComponent, AttackHitboxComponent, BossAttackManager, DetectionArea, DashTimer, ShootTimer, SoulFragmentStateMachine + 5 estados), wiring de exports en Inspector. Ver plan: Task 5.
+
+- [ ] **Boss E-6: Testeo manual (F5)** — verificar checklist de 11 puntos: Idle→Chasing, daño por contacto, shooting, proyectil daña, DashCharging (telegraph), Dash, Dash daña, Chasing→Idle, daño al boss, Phase 2 (abanico ×3 + dash frecuente), muerte + ElevationItem. Ver plan: Task 6.
+
 - [ ] **Bloque E-1: Floor 1** — TileMap grey-box, 3-5 enemies, trigger de Resonancia
 - [ ] **Bloque E-2: Floor 2 y Floor 3**
-- [ ] **Bloque E-3: Boss 1 (Soul Fragment 1)** — state machine de fases
+- [ ] **Bloque E-3: Boss 1 (Soul Fragment 1)** — state machine de fases *(código implementado 2026-02-22, pendiente ensamblado en editor — ver Boss E-4/E-5/E-6)*
 - [ ] **Bloque E-4: Arena del boss** — puerta bloqueada + trigger de Elevation 2
 
 ---
@@ -55,3 +61,4 @@
 - [x] Fix: BasicEnemy.SpawnIsotopeDrop usa CallDeferred para AddChild (evita crash en physics callback).
 - [x] Simplificación elevación: ElevationItem genérico (`elevation`), gate por 3 resonancias + item en Bonfire.
 - [x] DebugOverlay: botones "+ Resonancia" y "+ Elevation item" para testing.
+- [x] Boss Soul Fragment 1 — código C# (BossAttackSlot, BossAttackManager, SoulFragment1.cs, SoulFragmentStateMachine + 5 estados). Pendiente ensamblado en Godot editor (Boss E-4/E-5/E-6).
