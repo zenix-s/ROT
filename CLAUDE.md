@@ -235,7 +235,7 @@ Static dictionaries map enums to scene paths:
 
 ## Current Development Phase
 
-Pre-alpha. Attack system refactor completed. Progression system implemented. Artifact system implemented. Spells implemented. Next: Enemy AI and Combat.
+Pre-alpha. Attack system refactor completed. Progression system implemented. Artifact system implemented. Spells implemented. Enemy AI implemented. Boss código implementado.
 
 See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase plan.
 
@@ -244,18 +244,25 @@ See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase
 - [x] Phase 2, Tasks 1-2: Progression System (Elevations & Resonances)
 - [x] Phase 2, Tasks 3-4: Artifact System (slots, equip/unequip, stat modifiers)
 - [x] Phase 3: Spells (Carbon Bolt + Carbon Shell + Carbon Splinter burst)
-- [ ] Phase 4: Enemy AI and Combat ← **EN PROGRESO**
-- [ ] Phase 5-6: Level Design + Boss
+- [x] Phase 4: Enemy AI and Combat (BasicEnemy chase + AttackingState + isotope drops)
+- [ ] Phase 5-6: Level Design + Boss ← **EN PROGRESO**
 - [ ] Phase 7-9: UI, Save/Load, Polish
 
-**Donde nos quedamos (2026-02-17):**
+**Donde nos quedamos (2026-02-22):**
 - Branch: `feature/vertical-slice`, build passing
-- Phase 4 en progreso: Task 8 (Enemy AI con body attack) y Task 9 (Isotope drops) implementados, **pendientes de testeo manual en Godot (F5)**
-- Testear en Godot: enemigo debe perseguir al player, atacar a rango corto (RockBody), morir con spells, y dropear isótopos
-- Spells de Phase 3 también pendientes de testeo: LMB (Carbon Bolt), Key 1 (Carbon Shell), Key 2 (Carbon Splinter burst de 3)
-- Phase 5 es Level Design (Floor 1 scene)
+- Boss Soul Fragment 1: código C# completo (BossAttackSlot, BossAttackManager, SoulFragment1, SoulFragmentStateMachine + 5 estados)
+- **Pendiente (manual en Godot):** crear recursos `.tres`, `BossProjectileSkill.tscn`, ensamblar `SoulFragment1.tscn` — ver `docs/tasks.md` Boss E-4/E-5/E-6
+- Tras ensamblar el boss: Level Design (Floors 1-3 + arena del boss)
 
 ## Decisions Log
+
+### 2026-02-22: Boss Soul Fragment 1 Architecture
+- **No base class:** `SoulFragment1` duplica el boilerplate de `BasicEnemy` deliberadamente. Con solo 2 enemigos concretos, extraer una base class ahora sería especulativo. Refactor cuando existan 3+ enemigos.
+- **Sin MeleeSkill system:** El body contact damage usa `AttackHitboxComponent` permanente en el cuerpo del boss — mismo componente que los proyectiles, inicializado en `_Ready()`. El dash usa el mismo hitbox (ya activo). Sin nueva abstracción.
+- **Fase 2 como flag, no como estado:** `IsPhase2` modifica valores (velocidad, DashTimer.WaitTime, spread del proyectil) dentro de los estados existentes. Añadir un estado "Fase2Chasing" hubiera duplicado lógica sin beneficio.
+- **Timers en ChasingState:** Los Timers `DashTimer`/`ShootTimer` se suscriben/desuscriben en `Enter()`/`Exit()` de `ChasingState` y se reinician con `Start()` al entrar. Esto garantiza un intervalo completo tras cada ataque y evita transiciones fantasma desde otros estados.
+- **Fan burst en ShootingState:** El abanico de Fase 2 (3 proyectiles a ±20°) se implementa directamente en `ShootingState.Fire()` con 3 llamadas a `TryFire()`. Sin `FanSpawnComponent` nuevo — YAGNI, un solo usuario.
+- **CooldownDuration=0 en BossProjectileData:** El `ShootTimer` del boss controla la cadencia. Si el skill tuviera cooldown propio, habría conflicto entre ambos timers. Cooldown=0 deja el skill siempre listo y delega el control al timer externo.
 
 ### 2026-02-15: Attack System Refactor
 - **Before:** 5 layers (Player → AttackManager → AttackSlot → SpawnerComponent → IAttack), ~600 lines
