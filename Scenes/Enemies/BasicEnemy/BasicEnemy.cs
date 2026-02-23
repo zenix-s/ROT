@@ -13,6 +13,7 @@ public partial class BasicEnemy : CharacterBody2D
     [Export] public EntityStatsComponent EntityStatsComponent;
     [Export] public HurtboxComponent HurtboxComponent;
     [Export] public EnemyAttackManager AttackManager;
+    [Export] public float Gravity { get; set; } = 980f;
     [Export] public float Speed { get; set; } = 50f;
     [Export] public float AttackRange { get; set; } = 150f;
     [Export] public int IsotopeDropAmount { get; set; } = 10;

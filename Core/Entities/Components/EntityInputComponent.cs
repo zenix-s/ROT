@@ -10,10 +10,11 @@ public partial class EntityInputComponent : Node
 
     public Vector2 Direction => IsBlocked
         ? Vector2.Zero
-        : Input.GetVector("move_left", "move_right", "move_top", "move_down");
+        : new Vector2(Input.GetAxis("move_left", "move_right"), 0f);
 
     public bool IsAttackJustPressed => !IsBlocked && Input.IsActionJustPressed("attack");
     public bool IsDashJustPressed => !IsBlocked && Input.IsActionJustPressed("dash");
     public bool IsSkill1JustPressed => !IsBlocked && Input.IsActionJustPressed("skill_1");
     public bool IsSkill2JustPressed => !IsBlocked && Input.IsActionJustPressed("skill_2");
+    public bool IsJumpJustPressed => !IsBlocked && Input.IsActionJustPressed("jump");
 }

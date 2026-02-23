@@ -8,8 +8,8 @@
 [ext_resource type="Script" uid="uid://djxxiv6qnoyhy" path="res://Scenes/Enemies/BasicEnemy/StateMachine/EnemyStateMachine.cs" id="10_esm"]
 [ext_resource type="Script" uid="uid://bt65f6gwu47u" path="res://Scenes/Enemies/BasicEnemy/StateMachine/States/IdleState.cs" id="11_is"]
 [ext_resource type="Script" uid="uid://dan3m1ygtbyme" path="res://Scenes/Enemies/BasicEnemy/StateMachine/States/ChasingState.cs" id="12_cs"]
-[ext_resource type="Script" path="res://Scenes/Enemies/BasicEnemy/Components/EnemyAttackManager.cs" id="13_eam"]
-[ext_resource type="Script" path="res://Scenes/Enemies/BasicEnemy/StateMachine/States/AttackingState.cs" id="14_as"]
+[ext_resource type="Script" uid="uid://bmbnttp6kqahl" path="res://Scenes/Enemies/BasicEnemy/Components/EnemyAttackManager.cs" id="13_eam"]
+[ext_resource type="Script" uid="uid://b25iw4vyyf63t" path="res://Scenes/Enemies/BasicEnemy/StateMachine/States/AttackingState.cs" id="14_as"]
 [ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/EnemyBoltSkill.tscn" id="15_rbad"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
@@ -71,7 +71,6 @@ radius = 343.14575
 script = ExtResource("7_entitystats")
 VitalityStat = 60
 AttackStat = 25
-DefenseStat = 0
 Faction = 2
 metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
@@ -119,7 +118,7 @@ metadata/_custom_type_script = "uid://dssi7qj4xma0b"
 shape = SubResource("CircleShape2D_hurtbox")
 debug_color = Color(0.24, 0.87, 0.36, 0.42)
 
-[node name="EnemyAttackManager" type="Node" parent="."]
+[node name="EnemyAttackManager" type="Node" parent="." unique_id=1867783095]
 script = ExtResource("13_eam")
 RangedAttackSkill = ExtResource("15_rbad")
 
@@ -132,5 +131,5 @@ script = ExtResource("11_is")
 [node name="ChasingState" type="Node" parent="EnemyStateMachine" unique_id=1699949019]
 script = ExtResource("12_cs")
 
-[node name="AttackingState" type="Node" parent="EnemyStateMachine"]
+[node name="AttackingState" type="Node" parent="EnemyStateMachine" unique_id=58401395]
 script = ExtResource("14_as")

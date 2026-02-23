@@ -11,11 +11,13 @@
 [ext_resource type="Script" uid="uid://rtdfketabos0" path="res://Scenes/Player/StateMachine/PlayerStateMachine.cs" id="10_ji083"]
 [ext_resource type="Script" uid="uid://cq3hd2ie26l7c" path="res://Scenes/Player/StateMachine/States/IdleState.cs" id="11_0kmp4"]
 [ext_resource type="Script" uid="uid://b5mw2kp7rn4xj" path="res://Scenes/Player/StateMachine/States/MoveState.cs" id="12_mv5st"]
+[ext_resource type="Script" uid="uid://cwlrcf2ty7w71" path="res://Scenes/Player/StateMachine/States/JumpingState.cs" id="13_0objx"]
 [ext_resource type="Script" uid="uid://cp5drchfh5b2y" path="res://Scenes/Player/Components/PlayerAttackManager.cs" id="14_0u84n"]
 [ext_resource type="Script" uid="uid://dh7ds4tfap2xr" path="res://Scenes/Player/StateMachine/States/DashState.cs" id="14_ds5st"]
-[ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/CarbonBoltSkill.tscn" id="15_esmjy"]
+[ext_resource type="Script" uid="uid://dkiq143nswdl1" path="res://Scenes/Player/StateMachine/States/FallingState.cs" id="14_w71ue"]
+[ext_resource type="PackedScene" uid="uid://dlnvkksjjfv1v" path="res://Scenes/Attacks/Skills/CarbonBoltSkill.tscn" id="15_esmjy"]
 [ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/CarbonShellSkill.tscn" id="16_fireball"]
-[ext_resource type="PackedScene" path="res://Scenes/Attacks/Skills/CarbonSplinterSkill.tscn" id="17_iceshard"]
+[ext_resource type="PackedScene" uid="uid://bmx37cswwhql" path="res://Scenes/Attacks/Skills/CarbonSplinterSkill.tscn" id="17_iceshard"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ft8w5"]
 atlas = ExtResource("1_s0eop")
@@ -57,7 +59,6 @@ animations = [{
 radius = 5.0
 height = 16.0
 
-
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ji083"]
 radius = 4.0
 height = 16.0
@@ -66,14 +67,13 @@ height = 16.0
 script = ExtResource("5_fk5o5")
 VitalityStat = 100
 AttackStat = 20
-DefenseStat = 0
 metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
-[node name="Player" type="CharacterBody2D" unique_id=1512431336 node_paths=PackedStringArray("AnimationComponent", "EntityStatsComponent", "EntityInputComponent", "EntityMovementComponent", "HurtboxComponent", "AttackManager") groups=["Player"]]
+[node name="Player" type="CharacterBody2D" unique_id=1512431336 node_paths=PackedStringArray("AnimationComponent", "Sprite", "EntityStatsComponent", "EntityInputComponent", "EntityMovementComponent", "HurtboxComponent", "AttackManager") groups=["Player"]]
 collision_layer = 2
-motion_mode = 1
 script = ExtResource("1_ft8w5")
 AnimationComponent = NodePath("AnimationComponent")
+Sprite = NodePath("AnimatedSprite2D")
 EntityStatsComponent = NodePath("EntityStatsComponent")
 EntityInputComponent = NodePath("EntityInputComponent")
 EntityMovementComponent = NodePath("EntityMovementComponent")
@@ -128,6 +128,12 @@ script = ExtResource("12_mv5st")
 
 [node name="DashState" type="Node" parent="PlayerStateMachine" unique_id=233993904]
 script = ExtResource("14_ds5st")
+
+[node name="JumpingState" type="Node" parent="PlayerStateMachine" unique_id=201953649]
+script = ExtResource("13_0objx")
+
+[node name="FallingState" type="Node" parent="PlayerStateMachine" unique_id=332708509]
+script = ExtResource("14_w71ue")
 
 [node name="PlayerAttackManager" type="Node" parent="." unique_id=81337677]
 script = ExtResource("14_0u84n")

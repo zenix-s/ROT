@@ -27,6 +27,7 @@ public partial class Player : CharacterBody2D
     public const float Speed = 200.0f;
 
     [Export] public AnimationComponent AnimationComponent;
+    [Export] public AnimatedSprite2D Sprite;
     [Export] public EntityStatsComponent EntityStatsComponent;
     [Export] public EntityInputComponent EntityInputComponent;
     [Export] public EntityMovementComponent EntityMovementComponent;
@@ -41,6 +42,15 @@ public partial class Player : CharacterBody2D
         SetupStatsComponent();
         SetupHurtboxComponent();
         ApplyAllMultipliers();
+    }
+
+    public void UpdateFacing(float horizontalVelocity)
+    {
+        if (Sprite == null) return;
+        if (horizontalVelocity > 0.1f)
+            Sprite.FlipH = false;
+        else if (horizontalVelocity < -0.1f)
+            Sprite.FlipH = true;
     }
 
     public AttackFireResult TryFireAttack()

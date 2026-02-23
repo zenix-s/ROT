@@ -8,18 +8,31 @@ public partial class IdleState : State<Player>
     public override void Enter()
     {
         TargetEntity.EntityMovementComponent.StopMovement();
-        TargetEntity.Velocity = Vector2.Zero;
     }
 
     public override void PhysicsProcess(double delta)
     {
-        TargetEntity.Velocity = Vector2.Zero;
-        TargetEntity.MoveAndSlide();
-
         var input = TargetEntity.EntityInputComponent;
-        Vector2 direction = input.Direction;
+        var movement = TargetEntity.EntityMovementComponent;
 
-        if (input.IsDashJustPressed && direction != Vector2.Zero)
+        movement.ApplyGravity(delta);
+        TargetEntity.Velocity = movement.Velocity;
+        TargetEntity.MoveAndSlide();
+        movement.Velocity = TargetEntity.Velocity; // sync post-MoveAndSlide
+
+        if (!TargetEntity.IsOnFloor())
+        {
+            StateMachine.ChangeState<FallingState>();
+            return;
+        }
+
+        if (input.IsJumpJustPressed)
+        {
+            StateMachine.ChangeState<JumpingState>();
+            return;
+        }
+
+        if (input.IsDashJustPressed && input.Direction != Vector2.Zero)
         {
             StateMachine.ChangeState<DashState>();
             return;
@@ -29,9 +42,7 @@ public partial class IdleState : State<Player>
         if (fireResult == AttackFireResult.FiredInstant)
             return;
 
-        if (direction != Vector2.Zero)
-        {
+        if (input.Direction != Vector2.Zero)
             StateMachine.ChangeState<MoveState>();
-        }
     }
 }
