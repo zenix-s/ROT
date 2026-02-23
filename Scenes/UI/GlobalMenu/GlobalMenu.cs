@@ -12,14 +12,17 @@ public partial class GlobalMenu : CanvasLayer
 {
     private BonfirePanel _bonfirePanel;
     private ArtifactsPanel _artifactsPanel;
+    private DashPanel _dashPanel;
 
     public override void _Ready()
     {
         _bonfirePanel = GetNode<BonfirePanel>("Container/Panel/VBoxContainer/BonfirePanel");
         _artifactsPanel = GetNode<ArtifactsPanel>("Container/Panel/VBoxContainer/ArtifactsPanel");
+        _dashPanel = GetNode<DashPanel>("Container/Panel/VBoxContainer/DashPanel");
 
         GetNode<Button>("Container/Panel/VBoxContainer/TabsRow/BonfireTabButton").Pressed += OnBonfireTabPressed;
         GetNode<Button>("Container/Panel/VBoxContainer/TabsRow/ArtifactsTabButton").Pressed += OnArtifactsTabPressed;
+        GetNode<Button>("Container/Panel/VBoxContainer/TabsRow/DashTabButton").Pressed += OnDashTabPressed;
         GetNode<Button>("Container/Panel/VBoxContainer/CloseButton").Pressed += Close;
 
         Visible = false;
@@ -61,9 +64,16 @@ public partial class GlobalMenu : CanvasLayer
         _artifactsPanel.Open();
     }
 
+    private void OnDashTabPressed()
+    {
+        ShowTab(_dashPanel);
+        _dashPanel.Open();
+    }
+
     private void ShowTab(Control active)
     {
         _bonfirePanel.Visible = active == _bonfirePanel;
         _artifactsPanel.Visible = active == _artifactsPanel;
+        _dashPanel.Visible = active == _dashPanel;
     }
 }

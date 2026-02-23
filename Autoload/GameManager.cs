@@ -2,6 +2,7 @@ using System.Linq;
 using Godot;
 using RotOfTime.Core;
 using RotOfTime.Core.Artifacts;
+using RotOfTime.Core.Dash;
 using RotOfTime.Core.Economy;
 using RotOfTime.Core.GameData;
 
@@ -28,6 +29,7 @@ public partial class GameManager : Node
     public ArtifactManager ArtifactManager { get; private set; }
     public EconomyManager EconomyManager { get; private set; }
     public InventoryManager InventoryManager { get; private set; }
+    public DashManager DashManager { get; private set; }
 
     /// <summary>True while any game menu (bonfire, etc.) is open. Blocks player input.</summary>
     public bool IsMenuOpen { get; set; }
@@ -42,6 +44,7 @@ public partial class GameManager : Node
         ArtifactManager = new ArtifactManager();
         EconomyManager = new EconomyManager();
         InventoryManager = new InventoryManager();
+        DashManager = new DashManager();
         LoadMeta();
     }
 
@@ -54,6 +57,7 @@ public partial class GameManager : Node
         ArtifactManager.LoadFromPaths(Meta.OwnedArtifacts, Meta.EquippedArtifacts);
         EconomyManager.Load(Meta.Isotopes);
         InventoryManager.Load(Meta.Inventory);
+        DashManager.Load(Meta.EquippedDash, Meta.OwnedDashes);
     }
 
     public void SaveMeta()
@@ -66,6 +70,8 @@ public partial class GameManager : Node
         Meta.EquippedArtifacts = ArtifactManager.GetEquippedPaths();
         Meta.Isotopes = EconomyManager.Isotopes;
         Meta.Inventory = InventoryManager.GetAllItems();
+        Meta.OwnedDashes = DashManager.GetOwned();
+        Meta.EquippedDash = DashManager.Equipped;
         SaveManager.SaveMeta(Meta);
     }
 

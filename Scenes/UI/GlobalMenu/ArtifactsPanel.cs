@@ -14,9 +14,9 @@ public partial class ArtifactsPanel : VBoxContainer
 {
     private static readonly string[] CraftablePaths =
     [
-        "res://Resources/Artifacts/EscudoDeGrafito.tres",
-        "res://Resources/Artifacts/LenteDeFoco.tres",
-        "res://Resources/Artifacts/NucleoDenso.tres",
+        "res://Core/Artifacts/EscudoDeGrafito.tres",
+        "res://Core/Artifacts/LenteDeFoco.tres",
+        "res://Core/Artifacts/NucleoDenso.tres",
     ];
 
     private VBoxContainer _equipPanel;

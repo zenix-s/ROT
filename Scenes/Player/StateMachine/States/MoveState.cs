@@ -12,7 +12,8 @@ public partial class MoveState : State<Player>
 
         movement.ApplyGravity(delta);
 
-        if (input.IsDashJustPressed && input.Direction != Vector2.Zero)
+        if (input.IsDashJustPressed && input.Direction != Vector2.Zero
+            && TargetEntity.DashSkill?.IsReady == true)
         {
             StateMachine.ChangeState<DashState>();
             return;

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DashData" format=3]
+
+[ext_resource type="Script" path="res://Core/Dash/DashData.cs" id="1_dashdata"]
+
+[resource]
+script = ExtResource("1_dashdata")
+DashName = "Dash Estándar"
+Speed = 600.0
+Duration = 0.15
+Cooldown = 0.5

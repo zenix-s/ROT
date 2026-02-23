@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using RotOfTime.Autoload;
+using RotOfTime.Core.Dash;
 
 namespace RotOfTime.Core.GameData;
 
@@ -17,4 +18,6 @@ public class MetaData
     public List<string> OwnedArtifacts { get; set; } = [];
     public List<string> EquippedArtifacts { get; set; } = [];
     public int Isotopes { get; set; }
+    public List<DashType> OwnedDashes { get; set; } = [];
+    public DashType EquippedDash { get; set; } = DashType.Standard;
 }

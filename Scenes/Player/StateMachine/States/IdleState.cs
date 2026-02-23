@@ -32,7 +32,8 @@ public partial class IdleState : State<Player>
             return;
         }
 
-        if (input.IsDashJustPressed && input.Direction != Vector2.Zero)
+        if (input.IsDashJustPressed && input.Direction != Vector2.Zero
+            && TargetEntity.DashSkill?.IsReady == true)
         {
             StateMachine.ChangeState<DashState>();
             return;
