@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-**Rot of Time** is a top-down Action-RPG Metroidvania where you play as a carbon-manipulating mage ascending a mysterious tower. The game focuses on tight combat, meaningful exploration, and build customization through a Charm-like artifact system.
+**Rot of Time** is a side-scroller Action-RPG Metroidvania (estilo Blasphemous/Hollow Knight) where you play as a carbon-manipulating mage ascending a mysterious tower. The game focuses on tight combat, meaningful exploration, and build customization through a Charm-like artifact system.
 
 **Core Pillars:**
 - ✅ **Focused Combat:** 1 basic attack + 2 customizable spells
@@ -395,25 +395,13 @@ PlayerAttackManager : AttackManagerComponent<PlayerAttackSlot>
 
 ## 8. Development Priorities
 
-### 8.1 Vertical Slice (First 3-6 Months)
+### 8.1 Vertical Slice — COMPLETADO (2026-02-22)
 
-**Goal:** Floors 1-3, Elevations 1-2, core loop playable
+**Logrado:** Combat pipeline, Progression system, Artifact system, Spells (×3), Enemy AI, HUD, Save/Load, BonfireMenu, ArtifactsMenu, Boss SoulFragment1 (código C#).
 
-**Includes:**
-- Player movement + Dash + Infinite Dash
-- 1 basic attack + 4 spells (2 per Elevation)
-- 3-4 enemy types
-- 2 bosses
-- 3-5 artifacts
-- Resonance system functional
-- Save/load system
-- Potion healing
+**Pivote:** Top-down → side-scroller por restricciones de pipeline de arte. Ver Decisions Log en CLAUDE.md (2026-02-22).
 
-**Success Criteria:**
-- Combat feels good
-- Progression is clear
-- Exploration is rewarding
-- Build diversity with 3-5 artifacts
+**Siguiente:** Transición a side-scroller — física del player, PlayerStateMachine, primer nivel.
 
 ---
 
@@ -513,9 +501,9 @@ PlayerAttackManager : AttackManagerComponent<PlayerAttackSlot>
 - ✅ Realistic timeline (12-18 months for 8-10 hours of content)
 
 **What makes it special:**
-- ✅ Unique setting (carbon manipulation magic)
+- ✅ Unique setting (carbon manipulation magic — visual identity fuerte y distintivo)
 - ✅ Narrative hook (absorbing corrupted soul fragments)
-- ✅ Top-down perspective (underexplored in Metroidvania genre)
+- ✅ Estética propia (torre industrial-alquímica infectada por Xylos)
 - ✅ Build diversity via artifacts (player expression without bloat)
 
 ---
@@ -557,11 +545,12 @@ These were removed from core scope but could be added after 1.0 launch:
 **End of Document**
 
 **Next Steps:**
-1. Validate this design with a mentor/community
-2. Create implementation plan for vertical slice
-3. Build Floors 1-3 in 3-6 months
-4. Playtest and iterate
-5. Ship the game
+1. Redactar plan de transición a side-scroller (`docs/plans/`)
+2. Implementar física side-scroller (gravedad, salto, player states)
+3. Primer nivel side-scroller (grey-box)
+4. Refactor boss SoulFragment1 para física platformer
+5. Playtest y iterar
+6. Ship the game
 
 ---
 

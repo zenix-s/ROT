@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Rot of Time** is an **Action-RPG Metroidvania** in top-down perspective, built with Godot 4.6 and C# (.NET 10.0). Players embody a carbon-manipulating mage ascending a mysterious tower infected by the Xylos hive-mind. Tight combat with spell loadouts, build diversity via artifacts (Hollow Knight-style Charms), and exploration-based progression (no grinding). Currently in pre-alpha.
+**Rot of Time** is an **Action-RPG Metroidvania side-scroller** (estilo Blasphemous/Hollow Knight), built with Godot 4.6 and C# (.NET 10.0). Players embody a carbon-manipulating mage ascending a mysterious tower infected by the Xylos hive-mind. Tight combat with spell loadouts, build diversity via artifacts (Hollow Knight-style Charms), and exploration-based progression (no grinding). Currently in pre-alpha.
+
+**Pivote (2026-02-22):** Cambio de top-down a side-scroller por restricciones de pipeline de arte. El flujo 3D→spritesheet requiere 4-8x más renders en top-down. Los sistemas core (combat, progression, artifacts) sobreviven intactos.
 
 **Target:** 8-10 hours gameplay, shippable in 12-18 months (solo dev)
 
@@ -24,14 +26,14 @@ The developer is a solo first-time game developer with strong programming skills
 - **Al iniciar una conversación nueva donde el desarrollador saluda y planifica el día:** leer `docs/tasks.md` y presentar las tareas pendientes antes de cualquier otra cosa.
 - **Never commit automatically.** Always wait for the developer to explicitly ask for a commit.
 - **Treat `docs/gdd/game-design.md` as the source of truth** for scope. Anything not in that document needs explicit justification before implementation.
-- **Refer to `docs/plans/2026-02-15-vertical-slice-plan.md`** for the current implementation plan. Stay within the current phase.
+- **Refer to `docs/plans/`** para el plan de implementación activo. El plan `2026-02-15-vertical-slice-plan.md` está cerrado. El nuevo plan de transición a side-scroller se creará en la siguiente sesión.
 - **When in doubt, ask.** Better to clarify than to build the wrong thing.
 - **Prefer small, testable increments.** Each change should be verifiable in Godot (F5) without requiring other systems to be built first.
 - **Document decisions** in the Decisions Log section of this file when making architectural or scope choices.
 - **Mantener `docs/gdd/game-design.md` sincronizado:** Cuando se realice un refactor arquitectónico significativo (combat system, progression, etc.), actualizar la sección técnica correspondiente del GDD antes de cerrar la tarea.
 
 ### What "Critical" Means Here
-- If a proposed feature adds more than 2-3 days of work and isn't in the vertical slice plan: flag it.
+- If a proposed feature adds more than 2-3 days of work and isn't in the current implementation plan: flag it.
 - If an abstraction has fewer than 2 concrete implementations planned: it's premature. Suggest the concrete version.
 - If a system is being designed for 10+ use cases but only 2-3 exist in the game: simplify.
 - If the developer is polishing a system instead of building the next missing piece: redirect.
@@ -44,8 +46,8 @@ The developer is a solo first-time game developer with strong programming skills
 - **2 spell slots** (skill_1, skill_2) - cooldown-based, swappable at base/bonfires
 - **8-10 spells total** unlocked through progression
 - **All attacks are instant** (no casting phase - removed in refactor)
-- **Controls (Keyboard/Mouse):** WASD movement, mouse aim, LMB attack, Space dash, 1-2 for spells
-- **Controls (Gamepad):** Left stick move, right stick aim, RT attack, LB dash, face buttons for spells
+- **Controls (Keyboard/Mouse):** A/D movement, Space/W jump, mouse aim, LMB attack, Shift dash, 1-2 for spells *(pendiente de revisión para side-scroller)*
+- **Controls (Gamepad):** Left stick move, A/Cross jump, right stick aim, RT attack, LB dash, face buttons for spells *(pendiente de revisión)*
 
 ### Progression System (Elevations & Resonances)
 - **5 Elevations** (major power gates)
@@ -235,26 +237,34 @@ Static dictionaries map enums to scene paths:
 
 ## Current Development Phase
 
-Pre-alpha. Attack system refactor completed. Progression system implemented. Artifact system implemented. Spells implemented. Enemy AI implemented. Boss código implementado.
+Pre-alpha. Vertical slice top-down **cerrado (2026-02-22)**. Iniciando transición a side-scroller.
 
-See `docs/plans/2026-02-15-vertical-slice-plan.md` for the full 18-task, 9-phase plan.
+Branch activa: `feature/sidescroller-transition`
 
-**Current status (Vertical Slice):**
-- [x] Phase 1: Attack System Refactor
-- [x] Phase 2, Tasks 1-2: Progression System (Elevations & Resonances)
-- [x] Phase 2, Tasks 3-4: Artifact System (slots, equip/unequip, stat modifiers)
-- [x] Phase 3: Spells (Carbon Bolt + Carbon Shell + Carbon Splinter burst)
-- [x] Phase 4: Enemy AI and Combat (BasicEnemy chase + AttackingState + isotope drops)
-- [ ] Phase 5-6: Level Design + Boss ← **EN PROGRESO**
-- [ ] Phase 7-9: UI, Save/Load, Polish
+**Sistemas core completados (sobreviven al pivote):**
+- [x] Attack System (combat pipeline, skill hierarchy, projectiles)
+- [x] Progression System (Elevations & Resonances)
+- [x] Artifact System (slots, equip/unequip, crafting)
+- [x] Spells (Carbon Bolt, Carbon Shell, Carbon Splinter burst)
+- [x] Enemy AI (BasicEnemy chase + attacking + isotope drops)
+- [x] HUD (HP bar, isotope counter, cooldown indicators)
+- [x] Save/Load (MetaData persistence)
+- [x] BonfireMenu (resonances + elevation advancement)
+- [x] ArtifactsMenu (equip/unequip + crafting)
+- [x] Boss SoulFragment1 — código C# completo, pendiente refactor para física side-scroller
 
-**Donde nos quedamos (2026-02-22):**
-- Branch: `feature/vertical-slice`, build passing
-- Boss Soul Fragment 1: código C# completo (BossAttackSlot, BossAttackManager, SoulFragment1, SoulFragmentStateMachine + 5 estados)
-- **Pendiente (manual en Godot):** crear recursos `.tres`, `BossProjectileSkill.tscn`, ensamblar `SoulFragment1.tscn` — ver `docs/tasks.md` Boss E-4/E-5/E-6
-- Tras ensamblar el boss: Level Design (Floors 1-3 + arena del boss)
+**Siguiente fase: Transición a side-scroller**
+- Plan pendiente de redactar en `docs/plans/`
+- Prioridad: física del player (gravedad + salto), PlayerStateMachine, camera, primer nivel
 
 ## Decisions Log
+
+### 2026-02-22: Pivote Top-down → Side-scroller
+- **Motivo:** Pipeline de arte 3D→spritesheet requiere 4-8x más renders en top-down (4-8 direcciones × animación) vs side-scroller (1 render mirrored). Inviable para solo dev.
+- **Alternativas descartadas:** Sprites simples sin rotación (se siente barato), arte vectorial/minimalista (requiere habilidades de diseño que el dev no tiene).
+- **Sistemas que sobreviven:** Combat pipeline, Progression/Artifact/Economy, Skill hierarchy, Save/Load, Enemy AI architecture, Boss SoulFragment1 (refactor de física pendiente).
+- **Cancelado:** Level Design top-down, ensamblado del boss en editor top-down.
+- **Identidad del juego:** El pivote no diluye la identidad — magia de carbono, torre Xylos, y sistema de artefactos son independientes de la perspectiva. El riesgo es no tener identidad visual fuerte, no el género.
 
 ### 2026-02-22: Boss Soul Fragment 1 Architecture
 - **No base class:** `SoulFragment1` duplica el boilerplate de `BasicEnemy` deliberadamente. Con solo 2 enemigos concretos, extraer una base class ahora sería especulativo. Refactor cuando existan 3+ enemigos.
