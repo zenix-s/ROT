@@ -1,0 +1,151 @@
+[gd_scene format=3 uid="uid://dqdap0r0xxjy8"]
+
+[ext_resource type="Script" uid="uid://dc32dl478c5r5" path="res://Scenes/UI/GlobalMenu/GlobalMenu.cs" id="1_gm"]
+[ext_resource type="Script" uid="uid://drjuof4hiu10r" path="res://Scenes/UI/GlobalMenu/BonfirePanel.cs" id="2_bfp"]
+[ext_resource type="Script" uid="uid://b0v0mu40om2yt" path="res://Scenes/UI/GlobalMenu/ArtifactsPanel.cs" id="3_afp"]
+
+[node name="GlobalMenu" type="CanvasLayer" unique_id=1345216524]
+layer = 10
+script = ExtResource("1_gm")
+
+[node name="Container" type="Control" parent="." unique_id=963950947]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Container" unique_id=756378281]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -200.0
+offset_right = 220.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/Panel" unique_id=731813937]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 16.0
+offset_right = -20.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="Container/Panel/VBoxContainer" unique_id=737722472]
+layout_mode = 2
+text = "Menú"
+
+[node name="HSeparator" type="HSeparator" parent="Container/Panel/VBoxContainer" unique_id=1880042777]
+layout_mode = 2
+
+[node name="TabsRow" type="HBoxContainer" parent="Container/Panel/VBoxContainer" unique_id=2122820090]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="BonfireTabButton" type="Button" parent="Container/Panel/VBoxContainer/TabsRow" unique_id=1682201150]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Hoguera"
+
+[node name="ArtifactsTabButton" type="Button" parent="Container/Panel/VBoxContainer/TabsRow" unique_id=1838881637]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Artefactos"
+
+[node name="HSeparator2" type="HSeparator" parent="Container/Panel/VBoxContainer" unique_id=1041000912]
+layout_mode = 2
+
+[node name="BonfirePanel" type="VBoxContainer" parent="Container/Panel/VBoxContainer" unique_id=1450185483]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+script = ExtResource("2_bfp")
+
+[node name="ResonancesLabel" type="Label" parent="Container/Panel/VBoxContainer/BonfirePanel" unique_id=300319800]
+layout_mode = 2
+text = "Resonancias disponibles: 0"
+
+[node name="ActivateButton" type="Button" parent="Container/Panel/VBoxContainer/BonfirePanel" unique_id=1179834132]
+layout_mode = 2
+text = "Activar Resonancia"
+
+[node name="HSeparatorElev" type="HSeparator" parent="Container/Panel/VBoxContainer/BonfirePanel" unique_id=731999794]
+layout_mode = 2
+
+[node name="ElevationLabel" type="Label" parent="Container/Panel/VBoxContainer/BonfirePanel" unique_id=1427176959]
+visible = false
+layout_mode = 2
+text = "Item de Elevacion recogido"
+
+[node name="ElevationButton" type="Button" parent="Container/Panel/VBoxContainer/BonfirePanel" unique_id=287059039]
+visible = false
+layout_mode = 2
+text = "Ascender de Elevacion"
+
+[node name="ArtifactsPanel" type="VBoxContainer" parent="Container/Panel/VBoxContainer" unique_id=1214050692]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+script = ExtResource("3_afp")
+
+[node name="SubTabsRow" type="HBoxContainer" parent="Container/Panel/VBoxContainer/ArtifactsPanel" unique_id=1438548867]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="EquipTabButton" type="Button" parent="Container/Panel/VBoxContainer/ArtifactsPanel/SubTabsRow" unique_id=1680794101]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Equipar"
+
+[node name="CraftTabButton" type="Button" parent="Container/Panel/VBoxContainer/ArtifactsPanel/SubTabsRow" unique_id=1575998749]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Craftear"
+
+[node name="HSeparatorSub" type="HSeparator" parent="Container/Panel/VBoxContainer/ArtifactsPanel" unique_id=1458744372]
+layout_mode = 2
+
+[node name="EquipPanel" type="VBoxContainer" parent="Container/Panel/VBoxContainer/ArtifactsPanel" unique_id=1104642547]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="SlotsLabel" type="Label" parent="Container/Panel/VBoxContainer/ArtifactsPanel/EquipPanel" unique_id=1235978591]
+layout_mode = 2
+text = "Slots: 0/1"
+
+[node name="ArtifactsListContainer" type="VBoxContainer" parent="Container/Panel/VBoxContainer/ArtifactsPanel/EquipPanel" unique_id=1107026048]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="CraftPanel" type="VBoxContainer" parent="Container/Panel/VBoxContainer/ArtifactsPanel" unique_id=1492705895]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="CraftListContainer" type="VBoxContainer" parent="Container/Panel/VBoxContainer/ArtifactsPanel/CraftPanel" unique_id=1528969364]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="HSeparator3" type="HSeparator" parent="Container/Panel/VBoxContainer" unique_id=1863001910]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="Container/Panel/VBoxContainer" unique_id=1098323343]
+layout_mode = 2
+text = "Cerrar"

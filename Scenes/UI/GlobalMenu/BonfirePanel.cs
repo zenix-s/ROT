@@ -5,49 +5,28 @@ using RotOfTime.Core.Entities;
 namespace RotOfTime.Scenes.UI;
 
 /// <summary>
-///     Bonfire UI: activate resonances and advance elevation.
-///     Instantiated on demand by Bonfire.cs. Destroys itself on close.
-///     Player input is blocked via GameManager.IsMenuOpen while open.
+///     Tab de Hoguera dentro del GlobalMenu.
+///     Gestiona activación de Resonancias y avance de Elevación.
 /// </summary>
-public partial class BonfireMenu : CanvasLayer
+public partial class BonfirePanel : VBoxContainer
 {
     private Label _resonancesLabel;
     private Button _activateButton;
     private Label _elevationLabel;
     private Button _elevationButton;
-    private Button _closeButton;
-
-    private Player.Player _player;
 
     public override void _Ready()
     {
-        _resonancesLabel = GetNode<Label>("Container/Panel/VBoxContainer/ResonancesLabel");
-        _activateButton = GetNode<Button>("Container/Panel/VBoxContainer/ActivateButton");
-        _elevationLabel = GetNode<Label>("Container/Panel/VBoxContainer/ElevationLabel");
-        _elevationButton = GetNode<Button>("Container/Panel/VBoxContainer/ElevationButton");
-        _closeButton = GetNode<Button>("Container/Panel/VBoxContainer/CloseButton");
+        _resonancesLabel = GetNode<Label>("ResonancesLabel");
+        _activateButton = GetNode<Button>("ActivateButton");
+        _elevationLabel = GetNode<Label>("ElevationLabel");
+        _elevationButton = GetNode<Button>("ElevationButton");
 
         _activateButton.Pressed += OnActivatePressed;
         _elevationButton.Pressed += OnElevationPressed;
-        _closeButton.Pressed += OnClosePressed;
     }
 
-    public void Open()
-    {
-        AddToGroup(Groups.BonfireMenu);
-        _player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
-        GameManager.Instance.IsMenuOpen = true;
-        Visible = true;
-        Refresh();
-    }
-
-    private void Close()
-    {
-        GameManager.Instance.IsMenuOpen = false;
-        QueueFree();
-    }
-
-    private void Refresh()
+    public void Refresh()
     {
         var inv = GameManager.Instance.InventoryManager;
         var prog = GameManager.Instance.ProgressionManager;
@@ -57,7 +36,7 @@ public partial class BonfireMenu : CanvasLayer
         _activateButton.Disabled = resonances <= 0;
 
         bool hasElevItem = inv.HasItem("elevation");
-        bool canAdvance = hasElevItem && prog.CanAdvanceElevation();
+        bool canAdvance = prog.CanAdvanceElevation();
         _elevationLabel.Visible = hasElevItem;
         _elevationButton.Visible = hasElevItem;
         _elevationButton.Disabled = !canAdvance;
@@ -77,7 +56,8 @@ public partial class BonfireMenu : CanvasLayer
 
         if (!inv.RemoveItem("resonance")) return;
         prog.ActivateResonance();
-        _player?.ApplyAllMultipliers();
+        var player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
+        player?.ApplyAllMultipliers();
         GameManager.Instance.SaveMeta();
         Refresh();
     }
@@ -90,13 +70,9 @@ public partial class BonfireMenu : CanvasLayer
         if (!inv.HasItem("elevation") || !prog.CanAdvanceElevation()) return;
         inv.RemoveItem("elevation");
         prog.AdvanceElevation();
-        _player?.ApplyAllMultipliers();
+        var player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
+        player?.ApplyAllMultipliers();
         GameManager.Instance.SaveMeta();
         Refresh();
-    }
-
-    private void OnClosePressed()
-    {
-        Close();
     }
 }

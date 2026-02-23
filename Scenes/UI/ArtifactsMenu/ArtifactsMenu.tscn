@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://bmv5iirfmqf13"]
+[gd_scene format=3 uid="uid://ceyyjaew6n22d"]
 
-[ext_resource type="Script" uid="uid://d0vwymid0qofe" path="res://Scenes/UI/ArtifactsMenu/ArtifactsMenu.cs" id="1_amscript"]
+[ext_resource type="Script" path="res://Scenes/UI/ArtifactsMenu/ArtifactsMenu.cs" id="1_amscript"]
 
 [node name="ArtifactsMenu" type="CanvasLayer" unique_id=1037173599]
 layer = 10

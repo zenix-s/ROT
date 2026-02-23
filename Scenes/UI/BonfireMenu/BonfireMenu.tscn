@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://d1hcyn8lhnjvm"]
+[gd_scene format=3 uid="uid://ficn4lfgahxt"]
 
-[ext_resource type="Script" uid="uid://clpfq2mblssb2" path="res://Scenes/UI/BonfireMenu/BonfireMenu.cs" id="1_bfscript"]
+[ext_resource type="Script" path="res://Scenes/UI/BonfireMenu/BonfireMenu.cs" id="1_bfscript"]
 
 [node name="BonfireMenu" type="CanvasLayer" unique_id=1383015731]
 layer = 10

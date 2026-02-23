@@ -7,12 +7,10 @@ using RotOfTime.Core.Entities;
 namespace RotOfTime.Scenes.UI;
 
 /// <summary>
-///     Mesa de Artefactos — toggle con tecla K (input action "artifacts_menu").
-///     Siempre presente en Main.tscn bajo UI. Visible=false por defecto.
-///     Tab Equipar: equip/unequip de artefactos poseídos.
-///     Tab Craftear: craftear artefactos con isótopos.
+///     Tab de Artefactos dentro del GlobalMenu.
+///     Sub-tabs: Equipar y Craftear.
 /// </summary>
-public partial class ArtifactsMenu : CanvasLayer
+public partial class ArtifactsPanel : VBoxContainer
 {
     private static readonly string[] CraftablePaths =
     [
@@ -28,47 +26,24 @@ public partial class ArtifactsMenu : CanvasLayer
     private VBoxContainer _craftPanel;
     private VBoxContainer _craftListContainer;
 
-    private Player.Player _player;
-
     public override void _Ready()
     {
-        _equipPanel = GetNode<VBoxContainer>("Container/Panel/VBoxContainer/EquipPanel");
-        _slotsLabel = GetNode<Label>("Container/Panel/VBoxContainer/EquipPanel/SlotsLabel");
-        _artifactsListContainer = GetNode<VBoxContainer>("Container/Panel/VBoxContainer/EquipPanel/ArtifactsListContainer");
+        _equipPanel = GetNode<VBoxContainer>("EquipPanel");
+        _slotsLabel = GetNode<Label>("EquipPanel/SlotsLabel");
+        _artifactsListContainer = GetNode<VBoxContainer>("EquipPanel/ArtifactsListContainer");
 
-        _craftPanel = GetNode<VBoxContainer>("Container/Panel/VBoxContainer/CraftPanel");
-        _craftListContainer = GetNode<VBoxContainer>("Container/Panel/VBoxContainer/CraftPanel/CraftListContainer");
+        _craftPanel = GetNode<VBoxContainer>("CraftPanel");
+        _craftListContainer = GetNode<VBoxContainer>("CraftPanel/CraftListContainer");
 
-        GetNode<Button>("Container/Panel/VBoxContainer/TabsRow/EquipTabButton").Pressed += OnEquipTabPressed;
-        GetNode<Button>("Container/Panel/VBoxContainer/TabsRow/CraftTabButton").Pressed += OnCraftTabPressed;
-
-        Visible = false;
+        GetNode<Button>("SubTabsRow/EquipTabButton").Pressed += OnEquipTabPressed;
+        GetNode<Button>("SubTabsRow/CraftTabButton").Pressed += OnCraftTabPressed;
     }
 
-    public override void _Input(InputEvent @event)
+    public void Open()
     {
-        if (!Input.IsActionJustPressed("artifacts_menu")) return;
-
-        if (Visible)
-            Close();
-        else if (!GameManager.Instance.IsMenuOpen)
-            Open();
-    }
-
-    private void Open()
-    {
-        _player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
-        GameManager.Instance.IsMenuOpen = true;
         _equipPanel.Visible = true;
         _craftPanel.Visible = false;
-        Visible = true;
         RefreshEquip();
-    }
-
-    private void Close()
-    {
-        GameManager.Instance.IsMenuOpen = false;
-        Visible = false;
     }
 
     private void OnEquipTabPressed()
@@ -118,7 +93,8 @@ public partial class ArtifactsMenu : CanvasLayer
                 btn.Pressed += () =>
                 {
                     am.Unequip(captured);
-                    _player?.ApplyAllMultipliers();
+                    var player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
+                    player?.ApplyAllMultipliers();
                     GameManager.Instance.SaveMeta();
                     RefreshEquip();
                 };
@@ -126,7 +102,8 @@ public partial class ArtifactsMenu : CanvasLayer
                 btn.Pressed += () =>
                 {
                     am.Equip(captured);
-                    _player?.ApplyAllMultipliers();
+                    var player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
+                    player?.ApplyAllMultipliers();
                     GameManager.Instance.SaveMeta();
                     RefreshEquip();
                 };
