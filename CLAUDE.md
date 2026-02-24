@@ -99,13 +99,14 @@ Registered in `project.godot` `[autoload]` section:
 - **GameManager** (`Instance` property) - Runtime meta-progression state. Creates SaveManager, GameStateManager, AbilityManager, ProgressionManager, ArtifactManager, and EconomyManager internally.
 - **SceneManager** (`Instance` property) - Scene transitions via signals (`SceneChangeRequested`, `MenuChangeRequested`)
 
-Not autoloads (plain C# classes created by GameManager):
-- **SaveManager** - File I/O for persistence (JSON to `user://saves/`)
-- **GameStateManager** - Milestone tracking with C# 13 `extension` blocks
-- **AbilityManager** - Player ability loadout management (stub)
-- **ProgressionManager** - Elevation/Resonance tracking, stat multiplier calculation (plain C# class, not a Godot Node)
-- **ArtifactManager** - Artifact ownership/equipment, stat bonus calculation (plain C# class, not a Godot Node)
-- **EconomyManager** - Isotope currency management, add/spend operations, C# event for changes (plain C# class, not a Godot Node)
+Not autoloads (plain C# classes created by GameManager, cada uno en su módulo Core):
+- **SaveManager** (`Core/GameData/`) - File I/O for persistence (JSON to `user://saves/`)
+- **GameStateManager** (`Core/GameState/`) - Milestone tracking with C# 13 `extension` blocks
+- **AbilityManager** (`Autoload/`) - Player ability loadout management (stub)
+- **ProgressionManager** (`Core/Progression/`) - Elevation/Resonance tracking, stat multiplier calculation
+- **ArtifactManager** (`Core/Artifacts/`) - Artifact ownership/equipment, stat bonus calculation
+- **EconomyManager** (`Core/Economy/`) - Isotope currency management, add/spend operations, C# event for changes
+- **InventoryManager** (`Core/Inventory/`) - Generic item inventory as Dictionary&lt;string, int&gt; (resonances, elevation items)
 
 ### Entity System (`Core/Entities/`)
 Reusable components attached to any entity (Player, Enemies):

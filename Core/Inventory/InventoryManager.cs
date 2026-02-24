@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Godot;
 
-namespace RotOfTime.Autoload;
+namespace RotOfTime.Core.Inventory;
 
 /// <summary>
 ///     Manages all collectible items as a Dictionary&lt;string, int&gt;.

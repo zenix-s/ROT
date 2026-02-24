@@ -8,20 +8,15 @@ namespace RotOfTime.Scenes.UI;
 ///     Tab de Hoguera dentro del GlobalMenu.
 ///     Gestiona activación de Resonancias y avance de Elevación.
 /// </summary>
-public partial class BonfirePanel : VBoxContainer
+public partial class ElevationPanel : Control
 {
-    private Label _resonancesLabel;
-    private Button _activateButton;
-    private Label _elevationLabel;
-    private Button _elevationButton;
+    [Export] public Label _resonancesLabel;
+    [Export] public Button _activateButton;
+    [Export] public Label _elevationLabel;
+    [Export] public Button _elevationButton;
 
     public override void _Ready()
     {
-        _resonancesLabel = GetNode<Label>("ResonancesLabel");
-        _activateButton = GetNode<Button>("ActivateButton");
-        _elevationLabel = GetNode<Label>("ElevationLabel");
-        _elevationButton = GetNode<Button>("ElevationButton");
-
         _activateButton.Pressed += OnActivatePressed;
         _elevationButton.Pressed += OnElevationPressed;
     }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using RotOfTime.Autoload;
 
-namespace RotOfTime.Autoload;
+namespace RotOfTime.Core.GameState;
 
 #region Milestones management
 

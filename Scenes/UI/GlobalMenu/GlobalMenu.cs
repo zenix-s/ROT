@@ -4,27 +4,21 @@ using RotOfTime.Autoload;
 namespace RotOfTime.Scenes.UI;
 
 /// <summary>
-///     Menú global del juego — toggle con K (input action "artifacts_menu").
-///     Contiene tabs: Hoguera (progresión) y Artefactos (equip/craft).
-///     Siempre presente en Main.tscn. Visible=false por defecto.
+///     Menú global — toggle con K. Solo gestiona visibilidad.
+///     TabContainer se encarga del show/hide de paneles automáticamente.
 /// </summary>
 public partial class GlobalMenu : CanvasLayer
 {
-    private BonfirePanel _bonfirePanel;
-    private ArtifactsPanel _artifactsPanel;
-    private DashPanel _dashPanel;
+    [Export] public TabContainer _tabContainer;
+    [Export] public Button _closeButton;
+    
+    
 
     public override void _Ready()
     {
-        _bonfirePanel = GetNode<BonfirePanel>("Container/Panel/VBoxContainer/BonfirePanel");
-        _artifactsPanel = GetNode<ArtifactsPanel>("Container/Panel/VBoxContainer/ArtifactsPanel");
-        _dashPanel = GetNode<DashPanel>("Container/Panel/VBoxContainer/DashPanel");
-
-        GetNode<Button>("Container/Panel/VBoxContainer/TabsRow/BonfireTabButton").Pressed += OnBonfireTabPressed;
-        GetNode<Button>("Container/Panel/VBoxContainer/TabsRow/ArtifactsTabButton").Pressed += OnArtifactsTabPressed;
-        GetNode<Button>("Container/Panel/VBoxContainer/TabsRow/DashTabButton").Pressed += OnDashTabPressed;
-        GetNode<Button>("Container/Panel/VBoxContainer/CloseButton").Pressed += Close;
-
+        _tabContainer.TabChanged += OnTabChanged;
+        _closeButton.Pressed += Close;
+        
         Visible = false;
     }
 
@@ -41,9 +35,8 @@ public partial class GlobalMenu : CanvasLayer
     private void Open()
     {
         GameManager.Instance.IsMenuOpen = true;
-        ShowTab(_bonfirePanel);
-        _bonfirePanel.Refresh();
         Visible = true;
+        RefreshActiveTab();
     }
 
     private void Close()
@@ -52,28 +45,13 @@ public partial class GlobalMenu : CanvasLayer
         Visible = false;
     }
 
-    private void OnBonfireTabPressed()
-    {
-        ShowTab(_bonfirePanel);
-        _bonfirePanel.Refresh();
-    }
+    private void OnTabChanged(long _) => RefreshActiveTab();
 
-    private void OnArtifactsTabPressed()
+    private void RefreshActiveTab()
     {
-        ShowTab(_artifactsPanel);
-        _artifactsPanel.Open();
-    }
-
-    private void OnDashTabPressed()
-    {
-        ShowTab(_dashPanel);
-        _dashPanel.Open();
-    }
-
-    private void ShowTab(Control active)
-    {
-        _bonfirePanel.Visible = active == _bonfirePanel;
-        _artifactsPanel.Visible = active == _artifactsPanel;
-        _dashPanel.Visible = active == _dashPanel;
+        var panel = _tabContainer.GetCurrentTabControl();
+        if (panel is ElevationPanel ep) ep.Refresh();
+        else if (panel is ArtifactsPanel ap) ap.Open();
+        else if (panel is DashPanel dp) dp.Open();
     }
 }

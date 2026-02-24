@@ -5,6 +5,9 @@ using RotOfTime.Core.Artifacts;
 using RotOfTime.Core.Dash;
 using RotOfTime.Core.Economy;
 using RotOfTime.Core.GameData;
+using RotOfTime.Core.GameState;
+using RotOfTime.Core.Inventory;
+using RotOfTime.Core.Progression;
 
 namespace RotOfTime.Autoload;
 

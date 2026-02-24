@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://ccvaqiyvx307i"]
+
+[ext_resource type="Script" uid="uid://dc6senko8qnrl" path="res://Scenes/UI/GlobalMenu/EquipmentPanel/Components/ArtifactRow/ArtifactRow.cs" id="1_8g13p"]
+
+[node name="ArtifactRow" type="HBoxContainer" unique_id=212753923 node_paths=PackedStringArray("NameLabel", "ActionButton")]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -11.5
+offset_bottom = 19.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_8g13p")
+NameLabel = NodePath("Name")
+ActionButton = NodePath("ActionButton")
+
+[node name="Name" type="Label" parent="." unique_id=1175480325]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Item name placeholder"
+
+[node name="ActionButton" type="Button" parent="." unique_id=1645402184]
+layout_mode = 2
+text = "Action"

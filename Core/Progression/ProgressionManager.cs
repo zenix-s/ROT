@@ -1,6 +1,6 @@
 using Godot;
 
-namespace RotOfTime.Autoload;
+namespace RotOfTime.Core.Progression;
 
 /// <summary>
 ///     Tracks activated resonances and current elevation.

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using RotOfTime.Autoload;
+using RotOfTime.Core.GameState;
 using RotOfTime.Core.Dash;
 
 namespace RotOfTime.Core.GameData;

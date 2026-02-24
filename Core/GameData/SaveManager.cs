@@ -3,9 +3,8 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using Godot;
-using RotOfTime.Core.GameData;
 
-namespace RotOfTime.Autoload;
+namespace RotOfTime.Core.GameData;
 
 /// <summary>
 ///     Persistence layer for meta-progression.
