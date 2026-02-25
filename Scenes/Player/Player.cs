@@ -2,6 +2,7 @@ using System;
 using Godot;
 using RotOfTime.Autoload;
 using RotOfTime.Core.Animation.Components;
+using RotOfTime.Core.Dash;
 using RotOfTime.Core.Combat.Results;
 using RotOfTime.Core.Entities;
 using RotOfTime.Core.Entities.Components;
@@ -27,6 +28,7 @@ public partial class Player : CharacterBody2D
     public const float Speed = 200.0f;
 
     [Export] public AnimationComponent AnimationComponent;
+    [Export] public AnimatedSprite2D Sprite;
     [Export] public EntityStatsComponent EntityStatsComponent;
     [Export] public EntityInputComponent EntityInputComponent;
     [Export] public EntityMovementComponent EntityMovementComponent;
@@ -34,6 +36,7 @@ public partial class Player : CharacterBody2D
     [Export] public PlayerAttackManager AttackManager;
 
     public PlayerAttackSlot? ActiveAttackSlot { get; set; }
+    public DashSkill DashSkill { get; private set; }
 
     public override void _Ready()
     {
@@ -41,6 +44,16 @@ public partial class Player : CharacterBody2D
         SetupStatsComponent();
         SetupHurtboxComponent();
         ApplyAllMultipliers();
+        InitializeDashSkill();
+    }
+
+    public void UpdateFacing(float horizontalVelocity)
+    {
+        if (Sprite == null) return;
+        if (horizontalVelocity > 0.1f)
+            Sprite.FlipH = false;
+        else if (horizontalVelocity < -0.1f)
+            Sprite.FlipH = true;
     }
 
     public AttackFireResult TryFireAttack()
@@ -118,6 +131,41 @@ public partial class Player : CharacterBody2D
         EntityStatsComponent.HealthMultiplier = hpMult;
         EntityStatsComponent.DamageMultiplier = dmgMult;
         EntityStatsComponent.RecalculateStats();
+    }
+
+    private void InitializeDashSkill()
+    {
+        var type = GameManager.Instance?.DashManager?.Equipped ?? DashType.Standard;
+        SpawnDashSkill(type);
+    }
+
+    /// <summary>
+    ///     Equipa un nuevo dash, swapeando el nodo activo.
+    ///     Llamado por DashPanel.
+    /// </summary>
+    public void EquipDash(DashType type)
+    {
+        DashSkill?.QueueFree();
+        GameManager.Instance?.DashManager?.Equip(type);
+        SpawnDashSkill(type);
+        GameManager.Instance?.SaveMeta();
+    }
+
+    private void SpawnDashSkill(DashType type)
+    {
+        if (!DashManager.ScenePaths.TryGetValue(type, out string path))
+        {
+            GD.PrintErr($"Player: DashType '{type}' no tiene scene registrada.");
+            return;
+        }
+        var packed = GD.Load<PackedScene>(path);
+        if (packed == null)
+        {
+            GD.PrintErr($"Player: No se pudo cargar DashSkill en '{path}'");
+            return;
+        }
+        DashSkill = packed.Instantiate<DashSkill>();
+        AddChild(DashSkill);
     }
 
     #region Event Handlers

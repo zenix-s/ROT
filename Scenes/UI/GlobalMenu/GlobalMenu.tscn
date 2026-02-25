@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://dqdap0r0xxjy8"]
+
+[ext_resource type="Script" uid="uid://dc32dl478c5r5" path="res://Scenes/UI/GlobalMenu/GlobalMenu.cs" id="1_gm"]
+[ext_resource type="PackedScene" uid="uid://dun56c47iegk4" path="res://Scenes/UI/GlobalMenu/ElevationPanel/ElevationPanel.tscn" id="2_gv2ko"]
+[ext_resource type="PackedScene" uid="uid://ch3mtn3lhldmy" path="res://Scenes/UI/GlobalMenu/SkillsPanel/SkillsPanel.tscn" id="3_4k4gf"]
+[ext_resource type="PackedScene" uid="uid://dc14b5aag3rpm" path="res://Scenes/UI/GlobalMenu/CraftingPanel/CraftingPanel.tscn" id="4_wje0e"]
+[ext_resource type="PackedScene" uid="uid://bnbfigeiu7cfu" path="res://Scenes/UI/GlobalMenu/EquipmentPanel/EquipmentPanel.tscn" id="5_t1gf5"]
+
+[node name="GlobalMenu" type="CanvasLayer" unique_id=1345216524 node_paths=PackedStringArray("_tabContainer", "_closeButton", "_equipmentPanel", "_craftingPanel")]
+layer = 10
+script = ExtResource("1_gm")
+_tabContainer = NodePath("Container/VBoxContainer/TabContainer")
+_closeButton = NodePath("Container/VBoxContainer/Cerrar")
+_equipmentPanel = NodePath("Container/VBoxContainer/TabContainer/EquipmentPanel")
+_craftingPanel = NodePath("Container/VBoxContainer/TabContainer/CraftingPanel")
+
+[node name="Container" type="MarginContainer" parent="." unique_id=150428216]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container" unique_id=203702634]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TabContainer" type="TabContainer" parent="Container/VBoxContainer" unique_id=1597102591]
+layout_mode = 2
+size_flags_vertical = 3
+tab_alignment = 1
+current_tab = 3
+
+[node name="ElevationPanel" parent="Container/VBoxContainer/TabContainer" unique_id=932960395 instance=ExtResource("2_gv2ko")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="SkillsPanel" parent="Container/VBoxContainer/TabContainer" unique_id=325534009 instance=ExtResource("3_4k4gf")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="CraftingPanel" parent="Container/VBoxContainer/TabContainer" unique_id=428595855 instance=ExtResource("4_wje0e")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="EquipmentPanel" parent="Container/VBoxContainer/TabContainer" unique_id=754230239 instance=ExtResource("5_t1gf5")]
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="Cerrar" type="Button" parent="Container/VBoxContainer" unique_id=1102526480]
+layout_mode = 2
+text = "Back"

@@ -1,5 +1,5 @@
 using Godot;
-using RotOfTime.Autoload;
+using RotOfTime.Core.GameState;
 
 namespace RotOfTime.Scenes.Levels.Tower.Level0;
 

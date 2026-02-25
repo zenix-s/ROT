@@ -2,6 +2,12 @@ using Godot;
 
 namespace RotOfTime.Core.Artifacts;
 
+
+public enum MaterialCost
+{
+    drugs
+}
+
 /// <summary>
 ///     Defines an artifact's properties. Each artifact can grant
 ///     HP and/or damage bonuses and costs 1-3 slots to equip.
@@ -15,4 +21,5 @@ public partial class ArtifactData : Resource
     [Export] public float HealthBonus { get; set; }
     [Export] public float DamageBonus { get; set; }
     [Export] public int IsotopeCost { get; set; } = 0;
+    [Export] public Godot.Collections.Dictionary<MaterialCost, int> MaterialCosts { get; set; } = [];
 }

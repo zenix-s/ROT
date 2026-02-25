@@ -5,17 +5,19 @@ namespace RotOfTime.Scenes.Player.StateMachine.States;
 
 public partial class DashState : State<Player>
 {
-    private const float DashSpeed = 600f;
-    private const float DashDuration = 0.2f;
-
     private float _dashTimeRemaining;
 
     public override void Enter()
     {
         Vector2 direction = TargetEntity.EntityInputComponent.Direction;
-        TargetEntity.EntityMovementComponent.Dash(direction, DashSpeed);
+        bool executed = TargetEntity.DashSkill.TryExecute(direction, TargetEntity);
+        if (!executed)
+        {
+            StateMachine.ChangeState<IdleState>();
+            return;
+        }
         TargetEntity.Velocity = TargetEntity.EntityMovementComponent.Velocity;
-        _dashTimeRemaining = DashDuration;
+        _dashTimeRemaining = TargetEntity.DashSkill.Data.Duration;
     }
 
     public override void PhysicsProcess(double delta)
@@ -25,13 +27,18 @@ public partial class DashState : State<Player>
         TargetEntity.Velocity = TargetEntity.EntityMovementComponent.Velocity;
         TargetEntity.MoveAndSlide();
 
-        if (_dashTimeRemaining <= 0)
+        if (_dashTimeRemaining > 0) return;
+
+        if (!TargetEntity.IsOnFloor())
         {
-            Vector2 direction = TargetEntity.EntityInputComponent.Direction;
-            if (direction != Vector2.Zero)
-                StateMachine.ChangeState<MoveState>();
-            else
-                StateMachine.ChangeState<IdleState>();
+            StateMachine.ChangeState<FallingState>();
+            return;
         }
+
+        Vector2 direction = TargetEntity.EntityInputComponent.Direction;
+        if (direction != Vector2.Zero)
+            StateMachine.ChangeState<MoveState>();
+        else
+            StateMachine.ChangeState<IdleState>();
     }
 }

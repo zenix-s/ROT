@@ -8,11 +8,26 @@ public partial class MoveState : State<Player>
     public override void PhysicsProcess(double delta)
     {
         var input = TargetEntity.EntityInputComponent;
-        Vector2 direction = input.Direction;
+        var movement = TargetEntity.EntityMovementComponent;
 
-        if (input.IsDashJustPressed && direction != Vector2.Zero)
+        movement.ApplyGravity(delta);
+
+        if (input.IsDashJustPressed && input.Direction != Vector2.Zero
+            && TargetEntity.DashSkill?.IsReady == true)
         {
             StateMachine.ChangeState<DashState>();
+            return;
+        }
+
+        if (input.IsJumpJustPressed && TargetEntity.IsOnFloor())
+        {
+            StateMachine.ChangeState<JumpingState>();
+            return;
+        }
+
+        if (!TargetEntity.IsOnFloor())
+        {
+            StateMachine.ChangeState<FallingState>();
             return;
         }
 
@@ -20,14 +35,16 @@ public partial class MoveState : State<Player>
         if (fireResult == AttackFireResult.FiredInstant)
             return;
 
-        if (direction == Vector2.Zero)
+        if (input.Direction == Vector2.Zero)
         {
             StateMachine.ChangeState<IdleState>();
             return;
         }
 
-        TargetEntity.EntityMovementComponent.Move(direction, Player.Speed);
-        TargetEntity.Velocity = TargetEntity.EntityMovementComponent.Velocity;
+        movement.Move(input.Direction, Player.Speed);
+        TargetEntity.Velocity = movement.Velocity;
         TargetEntity.MoveAndSlide();
+        movement.Velocity = TargetEntity.Velocity;
+        TargetEntity.UpdateFacing(TargetEntity.Velocity.X);
     }
 }

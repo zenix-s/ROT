@@ -11,7 +11,7 @@ public partial class AttackingState : State<BasicEnemy>
 {
     public override void Enter()
     {
-        TargetEntity.Velocity = Vector2.Zero;
+        TargetEntity.Velocity = new Vector2(0f, TargetEntity.Velocity.Y);
     }
 
     public override void PhysicsProcess(double delta)
@@ -30,8 +30,10 @@ public partial class AttackingState : State<BasicEnemy>
             return;
         }
 
-        // Stand still and shoot
-        TargetEntity.Velocity = Vector2.Zero;
+        var velocity = TargetEntity.Velocity;
+        velocity.Y += TargetEntity.Gravity * (float)delta;
+        velocity.X = 0f;
+        TargetEntity.Velocity = velocity;
         TargetEntity.MoveAndSlide();
 
         Vector2 direction = (TargetEntity.Target.GlobalPosition - TargetEntity.GlobalPosition).Normalized();

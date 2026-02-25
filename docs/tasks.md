@@ -17,6 +17,15 @@
 
 ---
 
+## Siguiente fase: Side-scroller — post-transición
+
+- [ ] **Ajuste de números de física** — gravity (980), jump velocity (-420), speed (200) tras playtest. Probable que necesiten tweaking.
+- [ ] **Boss SoulFragment1** — refactor de física para platformer (lógica top-down pendiente de adaptar).
+- [ ] **Nivel propio side-scroller** — TileMap con suelo + plataformas (el nivel top-down actual es provisional).
+- [ ] **Coyote time y jump buffer** — mejoras de feel tras validar la física base.
+
+---
+
 ## En el cajón
 
 ### Código
@@ -67,3 +76,4 @@
 - [x] DebugOverlay: botones "+ Resonancia" y "+ Elevation item" para testing.
 - [x] Boss Soul Fragment 1 — código C# (BossAttackSlot, BossAttackManager, SoulFragment1.cs, SoulFragmentStateMachine + 5 estados). Ensamblado cancelado — refactor para side-scroller en nueva fase.
 - [x] **VERTICAL SLICE CERRADO (2026-02-22)** — pivote a side-scroller. Ver sección ⚠️ PIVOTE arriba.
+- [x] **Transición a side-scroller (2026-02-23)** — EntityMovementComponent con gravedad/salto, PlayerStateMachine con JumpingState/FallingState, DashState horizontal, sprite flip, gravedad en BasicEnemy (IdleState/ChasingState/AttackingState), Input Map actualizado (jump→Space, dash→Shift).

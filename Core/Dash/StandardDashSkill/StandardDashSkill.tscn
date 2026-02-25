@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://b8akdjjuuw1tu"]
+
+[ext_resource type="Script" uid="uid://88v24reg0ugv" path="res://Core/Dash/StandardDashSkill/StandardDashSkill.cs" id="1_oukq1"]
+[ext_resource type="Resource" path="res://Core/Dash/StandardDashSkill/StandardDash.tres" id="2_v1wrq"]
+
+[node name="StandardDashSkill" type="Node2D" unique_id=1890030650]
+script = ExtResource("1_oukq1")
+Data = ExtResource("2_v1wrq")

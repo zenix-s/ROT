@@ -7,12 +7,15 @@ public partial class IdleState : State<BasicEnemy>
 {
     public override void Enter()
     {
-        TargetEntity.Velocity = Vector2.Zero;
+        TargetEntity.Velocity = new Vector2(0f, TargetEntity.Velocity.Y);
     }
 
     public override void PhysicsProcess(double delta)
     {
-        TargetEntity.Velocity = Vector2.Zero;
+        var velocity = TargetEntity.Velocity;
+        velocity.Y += TargetEntity.Gravity * (float)delta;
+        velocity.X = 0f;
+        TargetEntity.Velocity = velocity;
         TargetEntity.MoveAndSlide();
 
         if (TargetEntity.Target != null)

@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://dc14b5aag3rpm"]
+
+[ext_resource type="Script" uid="uid://c1sas7n38uw6x" path="res://Scenes/UI/GlobalMenu/CraftingPanel/CraftingPanel.cs" id="1_o0e11"]
+[ext_resource type="PackedScene" uid="uid://ccvaqiyvx307i" path="res://Scenes/UI/GlobalMenu/EquipmentPanel/Components/ArtifactRow/ArtifactRow.tscn" id="2_lkb1g"]
+
+[node name="CraftingPanel" type="Control" unique_id=428595855 node_paths=PackedStringArray("CraftListContainer")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_o0e11")
+ArtifactRowScene = ExtResource("2_lkb1g")
+CraftListContainer = NodePath("MarginContainer/VBoxContainer")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1990185143]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1076427224]
+layout_mode = 2

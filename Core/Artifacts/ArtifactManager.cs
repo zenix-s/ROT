@@ -13,8 +13,8 @@ namespace RotOfTime.Core.Artifacts;
 /// </summary>
 public class ArtifactManager
 {
-    private readonly List<ArtifactData> _equipped = new();
-    private readonly List<ArtifactData> _owned = new();
+    private readonly List<ArtifactData> _equipped = [];
+    private readonly List<ArtifactData> _owned = [];
 
     public int MaxSlots { get; set; } = 1;
 
@@ -67,10 +67,10 @@ public class ArtifactManager
     }
 
     /// <summary>Returns resource paths of owned artifacts for persistence.</summary>
-    public List<string> GetOwnedPaths() => _owned.Select(a => a.ResourcePath).ToList();
+    public List<string> GetOwnedPaths() => [.. _owned.Select(a => a.ResourcePath)];
 
     /// <summary>Returns resource paths of equipped artifacts for persistence.</summary>
-    public List<string> GetEquippedPaths() => _equipped.Select(a => a.ResourcePath).ToList();
+    public List<string> GetEquippedPaths() => [.. _equipped.Select(a => a.ResourcePath)];
 
     /// <summary>Restores artifacts from saved resource paths.</summary>
     public void LoadFromPaths(IEnumerable<string> ownedPaths, IEnumerable<string> equippedPaths)
