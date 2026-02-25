@@ -6,11 +6,13 @@
 [ext_resource type="PackedScene" uid="uid://dc14b5aag3rpm" path="res://Scenes/UI/GlobalMenu/CraftingPanel/CraftingPanel.tscn" id="4_wje0e"]
 [ext_resource type="PackedScene" uid="uid://bnbfigeiu7cfu" path="res://Scenes/UI/GlobalMenu/EquipmentPanel/EquipmentPanel.tscn" id="5_t1gf5"]
 
-[node name="GlobalMenu" type="CanvasLayer" unique_id=1345216524 node_paths=PackedStringArray("_tabContainer", "_closeButton")]
+[node name="GlobalMenu" type="CanvasLayer" unique_id=1345216524 node_paths=PackedStringArray("_tabContainer", "_closeButton", "_equipmentPanel", "_craftingPanel")]
 layer = 10
 script = ExtResource("1_gm")
 _tabContainer = NodePath("Container/VBoxContainer/TabContainer")
 _closeButton = NodePath("Container/VBoxContainer/Cerrar")
+_equipmentPanel = NodePath("Container/VBoxContainer/TabContainer/EquipmentPanel")
+_craftingPanel = NodePath("Container/VBoxContainer/TabContainer/CraftingPanel")
 
 [node name="Container" type="MarginContainer" parent="." unique_id=150428216]
 anchors_preset = 15

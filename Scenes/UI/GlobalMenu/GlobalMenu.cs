@@ -12,11 +12,17 @@ public partial class GlobalMenu : CanvasLayer
     [Export] public TabContainer _tabContainer;
     [Export] public Button _closeButton;
     
-    
+    [Export] public EquipmentPanel _equipmentPanel;
+    [Export] public CraftingPanel _craftingPanel;
 
     public override void _Ready()
     {
-        _tabContainer.TabChanged += OnTabChanged;
+        _tabContainer.TabChanged += index => {
+            // if (index == 0) ElevationPanel.Open();
+            if (index == 3) _equipmentPanel.Open();
+            else if (index == 2) _craftingPanel.Open();
+            // else if (index == 3) SkillsPanel.Open();
+        };
         _closeButton.Pressed += Close;
         
         Visible = false;
@@ -36,7 +42,7 @@ public partial class GlobalMenu : CanvasLayer
     {
         GameManager.Instance.IsMenuOpen = true;
         Visible = true;
-        RefreshActiveTab();
+        // RefreshActiveTab();
     }
 
     private void Close()
@@ -45,13 +51,13 @@ public partial class GlobalMenu : CanvasLayer
         Visible = false;
     }
 
-    private void OnTabChanged(long _) => RefreshActiveTab();
+    // private void OnTabChanged(long _) => RefreshActiveTab();
 
-    private void RefreshActiveTab()
-    {
-        var panel = _tabContainer.GetCurrentTabControl();
-        if (panel is ElevationPanel ep) ep.Refresh();
-        else if (panel is ArtifactsPanel ap) ap.Open();
-        else if (panel is DashPanel dp) dp.Open();
-    }
+    // private void RefreshActiveTab()
+    // {
+    //     var panel = _tabContainer.GetCurrentTabControl();
+    //     if (panel is ElevationPanel ep) ep.Refresh();
+    //     else if (panel is ArtifactsPanel ap) ap.Open();
+    //     else if (panel is DashPanel dp) dp.Open();
+    // }
 }

@@ -1,26 +1,18 @@
 using System;
 using Godot;
+using RotOfTime.Core.Artifacts;
 
 public partial class ArtifactRow : HBoxContainer
 {
-    private const string EquipedText = "Equipado";
-    private const string EquipText = "Equipar";
-
     [Export] public Label NameLabel;
     [Export] public Button ActionButton;
+    
+    private string ActionDataText(bool isEquipped) => isEquipped ? "Desequipar" : "Equipar";
 
-    public override void _Ready()
+    public void Setup(ArtifactData artifactData, Action onPressed)
     {
-        NameLabel.Text = "Item";
-        ActionButton.Text = GetActionButtonText(false);
-    }
-
-    private string GetActionButtonText(bool equipped) => equipped ? EquipedText : EquipText;
-
-    public void Setup(string name, bool equipped, Action onPressed)
-    {
-        NameLabel.Text = name;
-        ActionButton.Text = GetActionButtonText(equipped: equipped);
+        NameLabel.Text = artifactData.ArtifactName;
+        ActionButton.Text = ActionDataText(false);
         ActionButton.Pressed += onPressed;
     }
 }

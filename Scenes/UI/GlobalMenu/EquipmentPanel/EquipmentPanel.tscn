@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bnbfigeiu7cfu"]
 
+[ext_resource type="Script" uid="uid://caoy8ebab82gn" path="res://Scenes/UI/GlobalMenu/EquipmentPanel/EquipmentPanel.cs" id="1_1xam5"]
 [ext_resource type="PackedScene" uid="uid://ccvaqiyvx307i" path="res://Scenes/UI/GlobalMenu/EquipmentPanel/Components/ArtifactRow/ArtifactRow.tscn" id="1_go3c1"]
 
 [node name="EquipmentPanel" type="Control" unique_id=754230239]
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_1xam5")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1626518886]
 layout_mode = 1

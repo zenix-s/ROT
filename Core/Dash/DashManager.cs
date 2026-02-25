@@ -21,7 +21,7 @@ public class DashManager
         [DashType.Standard] = "Dash Estándar",
     };
 
-    private readonly List<DashType> _owned = new();
+    private readonly List<DashType> _owned = [];
     public DashType Equipped { get; private set; } = DashType.Standard;
 
     public IReadOnlyList<DashType> Owned => _owned;
@@ -41,5 +41,5 @@ public class DashManager
             _owned.Insert(0, DashType.Standard);
     }
 
-    public List<DashType> GetOwned() => new(_owned);
+    public List<DashType> GetOwned() => [.. _owned];
 }
