@@ -10,90 +10,75 @@ namespace RotOfTime.Core.Artifacts;
 ///
 ///     Slot system: player starts with 1 slot, max 3 (unlocked at Elevations 3 and 5).
 ///     Each artifact costs 1-3 slots. Equip/unequip validated against available slots.
+///     MetaData guarda ArtifactType (enum/int), nunca res:// paths.
 /// </summary>
 public class ArtifactManager
 {
-    private readonly List<ArtifactData> _equipped = [];
-    private readonly List<ArtifactData> _owned = [];
+    /// <summary>Lookup table: ArtifactType → resource path. Fuente de verdad de paths.</summary>
+    public static readonly Dictionary<ArtifactType, string> ResourcePaths = new()
+    {
+        [ArtifactType.EscudoDeGrafito] = "res://Core/Artifacts/EscudoDeGrafito.tres",
+        [ArtifactType.LenteDeFoco] = "res://Core/Artifacts/LenteDeFoco.tres",
+        [ArtifactType.NucleoDenso] = "res://Core/Artifacts/NucleoDenso.tres",
+    };
+
+    private readonly List<ArtifactType> _owned = [];
+    private readonly List<ArtifactType> _equipped = [];
 
     public int MaxSlots { get; set; } = 1;
+    public int UsedSlots => _equipped.Sum(t => LoadData(t).SlotCost);
 
-    public int UsedSlots => _equipped.Sum(a => a.SlotCost);
+    public IReadOnlyList<ArtifactType> Owned => _owned;
+    public IReadOnlyList<ArtifactType> Equipped => _equipped;
 
-    public IReadOnlyList<ArtifactData> Equipped => _equipped;
-    public IReadOnlyList<ArtifactData> Owned => _owned;
+    public static ArtifactData LoadData(ArtifactType type) =>
+        GD.Load<ArtifactData>(ResourcePaths[type]);
 
-    public bool CanEquip(ArtifactData artifact)
+    public bool IsOwned(ArtifactType type) => _owned.Contains(type);
+    public bool IsEquipped(ArtifactType type) => _equipped.Contains(type);
+
+    public bool CanEquip(ArtifactType type)
     {
-        return artifact != null
-            && _owned.Contains(artifact)
-            && !_equipped.Contains(artifact)
-            && UsedSlots + artifact.SlotCost <= MaxSlots;
+        return _owned.Contains(type)
+            && !_equipped.Contains(type)
+            && UsedSlots + LoadData(type).SlotCost <= MaxSlots;
     }
 
-    public bool Equip(ArtifactData artifact)
+    public bool Equip(ArtifactType type)
     {
-        if (!CanEquip(artifact))
+        if (!CanEquip(type))
             return false;
 
-        _equipped.Add(artifact);
+        _equipped.Add(type);
         return true;
     }
 
-    public bool Unequip(ArtifactData artifact)
-    {
-        if (artifact == null || !_equipped.Remove(artifact))
-            return false;
+    public bool Unequip(ArtifactType type) => _equipped.Remove(type);
 
-        return true;
+    public void AddOwned(ArtifactType type)
+    {
+        if (!_owned.Contains(type))
+            _owned.Add(type);
     }
 
-    public void AddOwned(ArtifactData artifact)
-    {
-        if (artifact != null && !_owned.Contains(artifact))
-        {
-            _owned.Add(artifact);
-        }
-    }
+    public float GetTotalHealthBonus() => _equipped.Sum(t => LoadData(t).HealthBonus);
+    public float GetTotalDamageBonus() => _equipped.Sum(t => LoadData(t).DamageBonus);
 
-    public float GetTotalHealthBonus()
-    {
-        return _equipped.Sum(a => a.HealthBonus);
-    }
+    public List<ArtifactType> GetOwned() => [.. _owned];
+    public List<ArtifactType> GetEquipped() => [.. _equipped];
 
-    public float GetTotalDamageBonus()
-    {
-        return _equipped.Sum(a => a.DamageBonus);
-    }
-
-    /// <summary>Returns resource paths of owned artifacts for persistence.</summary>
-    public List<string> GetOwnedPaths() => [.. _owned.Select(a => a.ResourcePath)];
-
-    /// <summary>Returns resource paths of equipped artifacts for persistence.</summary>
-    public List<string> GetEquippedPaths() => [.. _equipped.Select(a => a.ResourcePath)];
-
-    /// <summary>Restores artifacts from saved resource paths.</summary>
-    public void LoadFromPaths(IEnumerable<string> ownedPaths, IEnumerable<string> equippedPaths)
+    public void Load(IEnumerable<ArtifactType> owned, IEnumerable<ArtifactType> equipped)
     {
         _owned.Clear();
         _equipped.Clear();
+        _owned.AddRange(owned);
 
-        foreach (string path in ownedPaths)
+        foreach (ArtifactType type in equipped)
         {
-            var artifact = GD.Load<ArtifactData>(path);
-            if (artifact != null)
-                _owned.Add(artifact);
+            if (_owned.Contains(type))
+                _equipped.Add(type);
             else
-                GD.PrintErr($"ArtifactManager: Failed to load artifact at '{path}'");
-        }
-
-        foreach (string path in equippedPaths)
-        {
-            var artifact = GD.Load<ArtifactData>(path);
-            if (artifact != null && _owned.Contains(artifact))
-                _equipped.Add(artifact);
-            else
-                GD.PrintErr($"ArtifactManager: Failed to equip artifact at '{path}'");
+                GD.PrintErr($"ArtifactManager: Artifact {type} not owned, can't equip");
         }
     }
 }

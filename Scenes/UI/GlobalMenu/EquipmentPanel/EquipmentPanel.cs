@@ -1,6 +1,6 @@
-using System.Linq;
 using Godot;
 using RotOfTime.Autoload;
+using RotOfTime.Core.Artifacts;
 using RotOfTime.Core.Entities;
 
 public partial class EquipmentPanel : Control
@@ -22,20 +22,19 @@ public partial class EquipmentPanel : Control
         if (SlotsLabel != null)
             SlotsLabel.Text = $"Slots: {am.UsedSlots}/{am.MaxSlots}";
 
-        foreach (var artifact in am.Owned)
+        foreach (ArtifactType type in am.Owned)
         {
-            bool isEquipped = am.Equipped.Contains(artifact);
+            var artifact = ArtifactManager.LoadData(type);
+            bool isEquipped = am.IsEquipped(type);
             var row = ArtifactRowScene.Instantiate<ArtifactRow>();
-            var captured = artifact;
+            var capturedType = type;
 
             row.Setup(
-                // name: artifact.ArtifactName,
-                // buttonText: isEquipped ? "Desequipar" : "Equipar",
                 artifactData: artifact,
                 onPressed: () =>
                 {
-                    if (isEquipped) am.Unequip(captured);
-                    else am.Equip(captured);
+                    if (isEquipped) am.Unequip(capturedType);
+                    else am.Equip(capturedType);
                     player?.ApplyAllMultipliers();
                     GameManager.Instance.SaveMeta();
                     Refresh();

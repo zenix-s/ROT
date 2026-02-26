@@ -1,17 +1,9 @@
-using System.Linq;
 using Godot;
 using RotOfTime.Autoload;
 using RotOfTime.Core.Artifacts;
 
 public partial class CraftingPanel : Control
 {
-    private static readonly string[] CraftablePaths =
-    [
-        "res://Core/Artifacts/EscudoDeGrafito.tres",
-        "res://Core/Artifacts/LenteDeFoco.tres",
-        "res://Core/Artifacts/NucleoDenso.tres",
-    ];
-
     [Export] public PackedScene ArtifactRowScene;
     [Export] public VBoxContainer CraftListContainer;
 
@@ -25,26 +17,23 @@ public partial class CraftingPanel : Control
         var am = GameManager.Instance.ArtifactManager;
         var eco = GameManager.Instance.EconomyManager;
 
-        foreach (string path in CraftablePaths)
+        foreach (ArtifactType type in ArtifactManager.ResourcePaths.Keys)
         {
-            var artifact = GD.Load<ArtifactData>(path);
+            var artifact = ArtifactManager.LoadData(type);
             if (artifact == null) continue;
 
-            bool alreadyOwned = am.Owned.Any(a => a.ResourcePath == path);
+            bool alreadyOwned = am.IsOwned(type);
             bool canAfford = eco.Isotopes >= artifact.IsotopeCost;
             var row = ArtifactRowScene.Instantiate<ArtifactRow>();
-            var captured = artifact;
-
-            string displayName = alreadyOwned
-                ? $"{artifact.ArtifactName} (obtenido)"
-                : $"{artifact.ArtifactName} — {artifact.IsotopeCost} iso";
+            var capturedType = type;
+            var capturedCost = artifact.IsotopeCost;
 
             row.Setup(
                 artifactData: artifact,
                 onPressed: () =>
                 {
-                    if (!eco.SpendIsotopes(captured.IsotopeCost)) return;
-                    am.AddOwned(captured);
+                    if (!eco.SpendIsotopes(capturedCost)) return;
+                    am.AddOwned(capturedType);
                     GameManager.Instance.SaveMeta();
                     Refresh();
                 }

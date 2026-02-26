@@ -57,7 +57,7 @@ public partial class GameManager : Node
         GameStateManager.LoadMilestones(Meta.CompletedMilestones);
         ProgressionManager.Load(Meta.ActivatedResonances, Meta.CurrentElevation);
         ArtifactManager.MaxSlots = Meta.ArtifactMaxSlots;
-        ArtifactManager.LoadFromPaths(Meta.OwnedArtifacts, Meta.EquippedArtifacts);
+        ArtifactManager.Load(Meta.OwnedArtifacts, Meta.EquippedArtifacts);
         EconomyManager.Load(Meta.Isotopes);
         InventoryManager.Load(Meta.Inventory);
         DashManager.Load(Meta.EquippedDash, Meta.OwnedDashes);
@@ -69,8 +69,8 @@ public partial class GameManager : Node
         Meta.CurrentElevation = ProgressionManager.CurrentElevation;
         Meta.ActivatedResonances = ProgressionManager.ActivatedResonances;
         Meta.ArtifactMaxSlots = ArtifactManager.MaxSlots;
-        Meta.OwnedArtifacts = ArtifactManager.GetOwnedPaths();
-        Meta.EquippedArtifacts = ArtifactManager.GetEquippedPaths();
+        Meta.OwnedArtifacts = ArtifactManager.GetOwned();
+        Meta.EquippedArtifacts = ArtifactManager.GetEquipped();
         Meta.Isotopes = EconomyManager.Isotopes;
         Meta.Inventory = InventoryManager.GetAllItems();
         Meta.OwnedDashes = DashManager.GetOwned();

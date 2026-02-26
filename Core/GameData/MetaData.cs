@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using RotOfTime.Core.Artifacts;
 using RotOfTime.Core.GameState;
 using RotOfTime.Core.Dash;
 
@@ -15,8 +16,8 @@ public class MetaData
     public int ActivatedResonances { get; set; }
     public Dictionary<string, int> Inventory { get; set; } = new();
     public int ArtifactMaxSlots { get; set; } = 1;
-    public List<string> OwnedArtifacts { get; set; } = [];
-    public List<string> EquippedArtifacts { get; set; } = [];
+    public List<ArtifactType> OwnedArtifacts { get; set; } = [];
+    public List<ArtifactType> EquippedArtifacts { get; set; } = [];
     public int Isotopes { get; set; }
     public List<DashType> OwnedDashes { get; set; } = [];
     public DashType EquippedDash { get; set; } = DashType.Standard;

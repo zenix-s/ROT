@@ -1,4 +1,3 @@
-using System.Linq;
 using Godot;
 using RotOfTime.Autoload;
 using RotOfTime.Core.Artifacts;
@@ -12,13 +11,6 @@ namespace RotOfTime.Scenes.UI;
 /// </summary>
 public partial class ArtifactsPanel : VBoxContainer
 {
-    private static readonly string[] CraftablePaths =
-    [
-        "res://Core/Artifacts/EscudoDeGrafito.tres",
-        "res://Core/Artifacts/LenteDeFoco.tres",
-        "res://Core/Artifacts/NucleoDenso.tres",
-    ];
-
     private VBoxContainer _equipPanel;
     private Label _slotsLabel;
     private VBoxContainer _artifactsListContainer;
@@ -68,8 +60,9 @@ public partial class ArtifactsPanel : VBoxContainer
         foreach (Node child in _artifactsListContainer.GetChildren())
             child.QueueFree();
 
-        foreach (ArtifactData artifact in am.Owned)
+        foreach (ArtifactType type in am.Owned)
         {
+            var artifact = ArtifactManager.LoadData(type);
             var row = new HBoxContainer();
 
             string hpText = artifact.HealthBonus > 0 ? $" +{artifact.HealthBonus * 100:F0}%HP" : "";
@@ -81,18 +74,18 @@ public partial class ArtifactsPanel : VBoxContainer
                 SizeFlagsHorizontal = Control.SizeFlags.ExpandFill
             };
 
-            bool isEquipped = am.Equipped.Contains(artifact);
+            bool isEquipped = am.IsEquipped(type);
             var btn = new Button
             {
                 Text = isEquipped ? "Desequipar" : "Equipar",
-                Disabled = !isEquipped && !am.CanEquip(artifact)
+                Disabled = !isEquipped && !am.CanEquip(type)
             };
 
-            var captured = artifact;
+            var capturedType = type;
             if (isEquipped)
                 btn.Pressed += () =>
                 {
-                    am.Unequip(captured);
+                    am.Unequip(capturedType);
                     var player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
                     player?.ApplyAllMultipliers();
                     GameManager.Instance.SaveMeta();
@@ -101,7 +94,7 @@ public partial class ArtifactsPanel : VBoxContainer
             else
                 btn.Pressed += () =>
                 {
-                    am.Equip(captured);
+                    am.Equip(capturedType);
                     var player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
                     player?.ApplyAllMultipliers();
                     GameManager.Instance.SaveMeta();
@@ -122,12 +115,12 @@ public partial class ArtifactsPanel : VBoxContainer
         foreach (Node child in _craftListContainer.GetChildren())
             child.QueueFree();
 
-        foreach (string path in CraftablePaths)
+        foreach (ArtifactType type in ArtifactManager.ResourcePaths.Keys)
         {
-            var artifact = GD.Load<ArtifactData>(path);
+            var artifact = ArtifactManager.LoadData(type);
             if (artifact == null) continue;
 
-            bool alreadyOwned = am.Owned.Any(a => a.ResourcePath == path);
+            bool alreadyOwned = am.IsOwned(type);
             var row = new HBoxContainer();
 
             var label = new Label
@@ -146,11 +139,12 @@ public partial class ArtifactsPanel : VBoxContainer
 
             if (!alreadyOwned)
             {
-                var captured = artifact;
+                var capturedType = type;
+                var capturedCost = artifact.IsotopeCost;
                 btn.Pressed += () =>
                 {
-                    if (!eco.SpendIsotopes(captured.IsotopeCost)) return;
-                    am.AddOwned(captured);
+                    if (!eco.SpendIsotopes(capturedCost)) return;
+                    am.AddOwned(capturedType);
                     GameManager.Instance.SaveMeta();
                     RefreshCraft();
                 };

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using Godot;
 using RotOfTime.Autoload;
+using RotOfTime.Core.Artifacts;
 using RotOfTime.Core.Entities;
 using RotOfTime.Scenes.Player;
 
@@ -107,12 +108,17 @@ public partial class DebugOverlay : CanvasLayer
         if (arts.Equipped.Count == 0)
             sb.AppendLine("  equipados: ninguno");
         else
-            foreach (var a in arts.Equipped)
+            foreach (var t in arts.Equipped)
+            {
+                var a = ArtifactManager.LoadData(t);
                 sb.AppendLine($"  [E] {a.ArtifactName} ({a.SlotCost} slot)");
-        if (arts.Owned.Count > arts.Equipped.Count)
-            foreach (var a in arts.Owned)
-                if (!arts.Equipped.Any(e => e == a))
-                    sb.AppendLine($"  [ ] {a.ArtifactName}");
+            }
+        foreach (var t in arts.Owned)
+            if (!arts.IsEquipped(t))
+            {
+                var a = ArtifactManager.LoadData(t);
+                sb.AppendLine($"  [ ] {a.ArtifactName}");
+            }
 
         return sb.ToString();
     }
