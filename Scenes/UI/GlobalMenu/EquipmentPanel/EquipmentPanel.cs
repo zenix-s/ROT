@@ -24,17 +24,15 @@ public partial class EquipmentPanel : Control
 
         foreach (ArtifactType type in am.Owned)
         {
-            var artifact = ArtifactManager.LoadData(type);
-            bool isEquipped = am.IsEquipped(type);
             var row = ArtifactRowScene.Instantiate<ArtifactRow>();
             var capturedType = type;
 
             row.Setup(
-                artifactData: artifact,
+                artifactData: type.LoadData(),
                 onPressed: () =>
                 {
-                    if (isEquipped) am.Unequip(capturedType);
-                    else am.Equip(capturedType);
+                    if (capturedType.IsEquipped()) capturedType.Unequip();
+                    else capturedType.Equip();
                     player?.ApplyAllMultipliers();
                     GameManager.Instance.SaveMeta();
                     Refresh();

@@ -62,7 +62,7 @@ public partial class ArtifactsPanel : VBoxContainer
 
         foreach (ArtifactType type in am.Owned)
         {
-            var artifact = ArtifactManager.LoadData(type);
+            var artifact = type.LoadData();
             var row = new HBoxContainer();
 
             string hpText = artifact.HealthBonus > 0 ? $" +{artifact.HealthBonus * 100:F0}%HP" : "";
@@ -74,18 +74,17 @@ public partial class ArtifactsPanel : VBoxContainer
                 SizeFlagsHorizontal = Control.SizeFlags.ExpandFill
             };
 
-            bool isEquipped = am.IsEquipped(type);
             var btn = new Button
             {
-                Text = isEquipped ? "Desequipar" : "Equipar",
-                Disabled = !isEquipped && !am.CanEquip(type)
+                Text = type.IsEquipped() ? "Desequipar" : "Equipar",
+                Disabled = !type.IsEquipped() && !type.CanEquip()
             };
 
             var capturedType = type;
-            if (isEquipped)
+            if (type.IsEquipped())
                 btn.Pressed += () =>
                 {
-                    am.Unequip(capturedType);
+                    capturedType.Unequip();
                     var player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
                     player?.ApplyAllMultipliers();
                     GameManager.Instance.SaveMeta();
@@ -94,7 +93,7 @@ public partial class ArtifactsPanel : VBoxContainer
             else
                 btn.Pressed += () =>
                 {
-                    am.Equip(capturedType);
+                    capturedType.Equip();
                     var player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
                     player?.ApplyAllMultipliers();
                     GameManager.Instance.SaveMeta();
@@ -109,7 +108,6 @@ public partial class ArtifactsPanel : VBoxContainer
 
     private void RefreshCraft()
     {
-        var am = GameManager.Instance.ArtifactManager;
         var eco = GameManager.Instance.EconomyManager;
 
         foreach (Node child in _craftListContainer.GetChildren())
@@ -117,15 +115,14 @@ public partial class ArtifactsPanel : VBoxContainer
 
         foreach (ArtifactType type in ArtifactManager.ResourcePaths.Keys)
         {
-            var artifact = ArtifactManager.LoadData(type);
+            var artifact = type.LoadData();
             if (artifact == null) continue;
 
-            bool alreadyOwned = am.IsOwned(type);
             var row = new HBoxContainer();
 
             var label = new Label
             {
-                Text = alreadyOwned
+                Text = type.IsOwned()
                     ? $"{artifact.ArtifactName} — ya obtenido"
                     : $"{artifact.ArtifactName} — {artifact.IsotopeCost} isótopos",
                 SizeFlagsHorizontal = Control.SizeFlags.ExpandFill
@@ -134,17 +131,17 @@ public partial class ArtifactsPanel : VBoxContainer
             var btn = new Button
             {
                 Text = "Craftear",
-                Disabled = alreadyOwned || eco.Isotopes < artifact.IsotopeCost
+                Disabled = type.IsOwned() || eco.Isotopes < artifact.IsotopeCost
             };
 
-            if (!alreadyOwned)
+            if (!type.IsOwned())
             {
                 var capturedType = type;
                 var capturedCost = artifact.IsotopeCost;
                 btn.Pressed += () =>
                 {
                     if (!eco.SpendIsotopes(capturedCost)) return;
-                    am.AddOwned(capturedType);
+                    capturedType.AddOwned();
                     GameManager.Instance.SaveMeta();
                     RefreshCraft();
                 };

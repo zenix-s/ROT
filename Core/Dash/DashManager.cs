@@ -30,6 +30,12 @@ public class DashManager
 
     public void Equip(DashType type) => Equipped = type;
 
+    public void AddOwned(DashType type)
+    {
+        if (!_owned.Contains(type))
+            _owned.Add(type);
+    }
+
     public void Load(DashType equipped, IEnumerable<DashType> owned)
     {
         Equipped = equipped;

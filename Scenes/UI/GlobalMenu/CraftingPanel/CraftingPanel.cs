@@ -14,16 +14,13 @@ public partial class CraftingPanel : Control
         foreach (Node child in CraftListContainer.GetChildren())
             child.QueueFree();
 
-        var am = GameManager.Instance.ArtifactManager;
         var eco = GameManager.Instance.EconomyManager;
 
         foreach (ArtifactType type in ArtifactManager.ResourcePaths.Keys)
         {
-            var artifact = ArtifactManager.LoadData(type);
+            var artifact = type.LoadData();
             if (artifact == null) continue;
 
-            bool alreadyOwned = am.IsOwned(type);
-            bool canAfford = eco.Isotopes >= artifact.IsotopeCost;
             var row = ArtifactRowScene.Instantiate<ArtifactRow>();
             var capturedType = type;
             var capturedCost = artifact.IsotopeCost;
@@ -33,7 +30,7 @@ public partial class CraftingPanel : Control
                 onPressed: () =>
                 {
                     if (!eco.SpendIsotopes(capturedCost)) return;
-                    am.AddOwned(capturedType);
+                    capturedType.AddOwned();
                     GameManager.Instance.SaveMeta();
                     Refresh();
                 }

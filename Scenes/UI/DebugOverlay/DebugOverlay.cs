@@ -110,13 +110,13 @@ public partial class DebugOverlay : CanvasLayer
         else
             foreach (var t in arts.Equipped)
             {
-                var a = ArtifactManager.LoadData(t);
+                var a = t.LoadData();
                 sb.AppendLine($"  [E] {a.ArtifactName} ({a.SlotCost} slot)");
             }
         foreach (var t in arts.Owned)
-            if (!arts.IsEquipped(t))
+            if (!t.IsEquipped())
             {
-                var a = ArtifactManager.LoadData(t);
+                var a = t.LoadData();
                 sb.AppendLine($"  [ ] {a.ArtifactName}");
             }
 
