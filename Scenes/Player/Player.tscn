@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://e8twappwpu0d" path="res://Core/Entities/Components/EntityMovementComponent.cs" id="6_825xp"]
 [ext_resource type="Script" uid="uid://dssi7qj4xma0b" path="res://Core/Combat/Components/HurtboxComponent.cs" id="7_fk5o5"]
 [ext_resource type="Script" uid="uid://1s7je03tfckb" path="res://Core/Animation/Components/AnimationComponent.cs" id="7_ji083"]
-[ext_resource type="Script" uid="uid://1kwvyjmvryoa" path="res://Core/Entities/Components/EntityStatsComponent.cs" id="8_0kmp4"]
+[ext_resource type="Script" uid="uid://c04p6qbfo7q6d" path="res://Scenes/Player/Components/PlayerStatsComponent.cs" id="7_spxdj"]
 [ext_resource type="Script" uid="uid://dsskae1dr0d6c" path="res://Core/Entities/Components/EntityInputComponent.cs" id="9_825xp"]
 [ext_resource type="Script" uid="uid://rtdfketabos0" path="res://Scenes/Player/StateMachine/PlayerStateMachine.cs" id="10_ji083"]
 [ext_resource type="Script" uid="uid://cq3hd2ie26l7c" path="res://Scenes/Player/StateMachine/States/IdleState.cs" id="11_0kmp4"]
@@ -63,10 +63,11 @@ height = 16.0
 radius = 4.0
 height = 16.0
 
-[sub_resource type="Resource" id="Resource_i5acl"]
+[sub_resource type="Resource" id="Resource_0objx"]
 script = ExtResource("5_fk5o5")
 VitalityStat = 100
-AttackStat = 20
+AttackStat = 10
+DefenseStat = 10
 metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
 [node name="Player" type="CharacterBody2D" unique_id=1512431336 node_paths=PackedStringArray("AnimationComponent", "Sprite", "EntityStatsComponent", "EntityInputComponent", "EntityMovementComponent", "HurtboxComponent", "AttackManager") groups=["Player"]]
@@ -74,7 +75,7 @@ collision_layer = 2
 script = ExtResource("1_ft8w5")
 AnimationComponent = NodePath("AnimationComponent")
 Sprite = NodePath("AnimatedSprite2D")
-EntityStatsComponent = NodePath("EntityStatsComponent")
+EntityStatsComponent = NodePath("PlayerStatsComponent")
 EntityInputComponent = NodePath("EntityInputComponent")
 EntityMovementComponent = NodePath("EntityMovementComponent")
 HurtboxComponent = NodePath("HurtboxComponent")
@@ -112,10 +113,16 @@ script = ExtResource("7_ji083")
 AnimatedSprite2D = NodePath("../AnimatedSprite2D")
 metadata/_custom_type_script = "uid://1s7je03tfckb"
 
-[node name="EntityStatsComponent" type="Node" parent="." unique_id=1488090019]
-script = ExtResource("8_0kmp4")
-EntityStats = SubResource("Resource_i5acl")
-metadata/_custom_type_script = "uid://1kwvyjmvryoa"
+[node name="PlayerStatsComponent" type="Node" parent="." unique_id=1503452804]
+script = ExtResource("7_spxdj")
+EntityStats = SubResource("Resource_0objx")
+
+[node name="PlayerAttackManager" type="Node" parent="." unique_id=81337677]
+script = ExtResource("14_0u84n")
+BasicAttackSkill = ExtResource("15_esmjy")
+Spell1Skill = ExtResource("16_fireball")
+Spell2Skill = ExtResource("17_iceshard")
+metadata/_custom_type_script = "uid://cp5drchfh5b2y"
 
 [node name="PlayerStateMachine" type="Node" parent="." unique_id=448834565]
 script = ExtResource("10_ji083")
@@ -134,10 +141,3 @@ script = ExtResource("13_0objx")
 
 [node name="FallingState" type="Node" parent="PlayerStateMachine" unique_id=332708509]
 script = ExtResource("14_w71ue")
-
-[node name="PlayerAttackManager" type="Node" parent="." unique_id=81337677]
-script = ExtResource("14_0u84n")
-BasicAttackSkill = ExtResource("15_esmjy")
-Spell1Skill = ExtResource("16_fireball")
-Spell2Skill = ExtResource("17_iceshard")
-metadata/_custom_type_script = "uid://cp5drchfh5b2y"

@@ -1,7 +1,6 @@
 using Godot;
 using RotOfTime.Autoload;
 using RotOfTime.Core.Artifacts;
-using RotOfTime.Core.Entities;
 
 public partial class EquipmentPanel : Control
 {
@@ -17,7 +16,6 @@ public partial class EquipmentPanel : Control
             child.QueueFree();
 
         var am = GameManager.Instance.ArtifactManager;
-        var player = GetTree().GetFirstNodeInGroup(Groups.Player) as RotOfTime.Scenes.Player.Player;
 
         SlotsLabel.Text = $"Slots: {am.UsedSlots}/{am.MaxSlots}";
 
@@ -26,7 +24,6 @@ public partial class EquipmentPanel : Control
             var row = ArtifactRow.Create(ArtifactRowScene, type);
             row.ActionPerformed += () =>
             {
-                player?.ApplyAllMultipliers();
                 GameManager.Instance.SaveMeta();
                 Refresh();
             };

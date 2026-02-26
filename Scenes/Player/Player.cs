@@ -29,7 +29,7 @@ public partial class Player : CharacterBody2D
 
     [Export] public AnimationComponent AnimationComponent;
     [Export] public AnimatedSprite2D Sprite;
-    [Export] public EntityStatsComponent EntityStatsComponent;
+    [Export] public PlayerStatsComponent EntityStatsComponent;
     [Export] public EntityInputComponent EntityInputComponent;
     [Export] public EntityMovementComponent EntityMovementComponent;
     [Export] public HurtboxComponent HurtboxComponent;
@@ -43,7 +43,6 @@ public partial class Player : CharacterBody2D
         AddToGroup(Groups.Player);
         SetupStatsComponent();
         SetupHurtboxComponent();
-        ApplyAllMultipliers();
         InitializeDashSkill();
     }
 
@@ -111,26 +110,6 @@ public partial class Player : CharacterBody2D
             throw new InvalidOperationException("StatsComponent is not set");
         EntityStatsComponent.EntityDied += OnPlayerDied;
         EntityStatsComponent.HealthChanged += OnPlayerHealthChanged;
-    }
-
-    /// <summary>
-    ///     Applies stat multipliers from Progression and Artifacts to EntityStatsComponent.
-    ///     Call on _Ready and whenever equipment or progression changes.
-    /// </summary>
-    public void ApplyAllMultipliers()
-    {
-        var prog = GameManager.Instance?.ProgressionManager;
-        var arts = GameManager.Instance?.ArtifactManager;
-
-        float hpMult = prog?.GetHealthMultiplier() ?? 1.0f;
-        float dmgMult = prog?.GetDamageMultiplier() ?? 1.0f;
-
-        hpMult += arts?.GetTotalHealthBonus() ?? 0f;
-        dmgMult += arts?.GetTotalDamageBonus() ?? 0f;
-
-        EntityStatsComponent.HealthMultiplier = hpMult;
-        EntityStatsComponent.DamageMultiplier = dmgMult;
-        EntityStatsComponent.RecalculateStats();
     }
 
     private void InitializeDashSkill()

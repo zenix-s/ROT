@@ -1,6 +1,5 @@
 using Godot;
 using RotOfTime.Autoload;
-using RotOfTime.Core.Entities;
 
 namespace RotOfTime.Scenes.UI;
 
@@ -51,8 +50,6 @@ public partial class ElevationPanel : Control
 
         if (!inv.RemoveItem("resonance")) return;
         prog.ActivateResonance();
-        var player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
-        player?.ApplyAllMultipliers();
         GameManager.Instance.SaveMeta();
         Refresh();
     }
@@ -65,8 +62,6 @@ public partial class ElevationPanel : Control
         if (!inv.HasItem("elevation") || !prog.CanAdvanceElevation()) return;
         inv.RemoveItem("elevation");
         prog.AdvanceElevation();
-        var player = GetTree().GetFirstNodeInGroup(Groups.Player) as Player.Player;
-        player?.ApplyAllMultipliers();
         GameManager.Instance.SaveMeta();
         Refresh();
     }
