@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -14,6 +15,8 @@ namespace RotOfTime.Core.Artifacts;
 /// </summary>
 public class ArtifactManager
 {
+    public event Action StatsChanged;
+
     /// <summary>Lookup table: ArtifactType → resource path. Fuente de verdad de paths.</summary>
     public static readonly Dictionary<ArtifactType, string> ResourcePaths = new()
     {
@@ -50,10 +53,17 @@ public class ArtifactManager
             return false;
 
         _equipped.Add(type);
+        StatsChanged?.Invoke();
         return true;
     }
 
-    public bool Unequip(ArtifactType type) => _equipped.Remove(type);
+    public bool Unequip(ArtifactType type)
+    {
+        bool removed = _equipped.Remove(type);
+        if (removed)
+            StatsChanged?.Invoke();
+        return removed;
+    }
 
     public void AddOwned(ArtifactType type)
     {
