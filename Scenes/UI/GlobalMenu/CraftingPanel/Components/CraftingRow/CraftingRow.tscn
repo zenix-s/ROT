@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://craftingrow0001"]
+
+[ext_resource type="Script" path="res://Scenes/UI/GlobalMenu/CraftingPanel/Components/CraftingRow/CraftingRow.cs" id="1_crow"]
+
+[node name="CraftingRow" type="HBoxContainer" node_paths=PackedStringArray("NameLabel", "StatusLabel", "ActionButton")]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -11.5
+offset_bottom = 19.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_crow")
+NameLabel = NodePath("Name")
+StatusLabel = NodePath("Status")
+ActionButton = NodePath("ActionButton")
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Item name"
+
+[node name="Status" type="Label" parent="."]
+layout_mode = 2
+text = "Status"
+
+[node name="ActionButton" type="Button" parent="."]
+layout_mode = 2
+text = "Craftear"

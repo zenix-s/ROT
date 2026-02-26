@@ -19,26 +19,17 @@ public partial class EquipmentPanel : Control
         var am = GameManager.Instance.ArtifactManager;
         var player = GetTree().GetFirstNodeInGroup(Groups.Player) as RotOfTime.Scenes.Player.Player;
 
-        if (SlotsLabel != null)
-            SlotsLabel.Text = $"Slots: {am.UsedSlots}/{am.MaxSlots}";
+        SlotsLabel.Text = $"Slots: {am.UsedSlots}/{am.MaxSlots}";
 
         foreach (ArtifactType type in am.Owned)
         {
-            var row = ArtifactRowScene.Instantiate<ArtifactRow>();
-            var capturedType = type;
-
-            row.Setup(
-                artifactData: type.LoadData(),
-                onPressed: () =>
-                {
-                    if (capturedType.IsEquipped()) capturedType.Unequip();
-                    else capturedType.Equip();
-                    player?.ApplyAllMultipliers();
-                    GameManager.Instance.SaveMeta();
-                    Refresh();
-                }
-            );
-
+            var row = ArtifactRow.Create(ArtifactRowScene, type);
+            row.ActionPerformed += () =>
+            {
+                player?.ApplyAllMultipliers();
+                GameManager.Instance.SaveMeta();
+                Refresh();
+            };
             ArtifactsListContainer.AddChild(row);
         }
     }

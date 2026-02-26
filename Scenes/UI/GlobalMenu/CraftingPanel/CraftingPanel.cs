@@ -4,7 +4,7 @@ using RotOfTime.Core.Artifacts;
 
 public partial class CraftingPanel : Control
 {
-    [Export] public PackedScene ArtifactRowScene;
+    [Export] public PackedScene CraftingRowScene;
     [Export] public VBoxContainer CraftListContainer;
 
     public void Open() => Refresh();
@@ -14,28 +14,17 @@ public partial class CraftingPanel : Control
         foreach (Node child in CraftListContainer.GetChildren())
             child.QueueFree();
 
-        var eco = GameManager.Instance.EconomyManager;
-
         foreach (ArtifactType type in ArtifactManager.ResourcePaths.Keys)
         {
             var artifact = type.LoadData();
             if (artifact == null) continue;
 
-            var row = ArtifactRowScene.Instantiate<ArtifactRow>();
-            var capturedType = type;
-            var capturedCost = artifact.IsotopeCost;
-
-            row.Setup(
-                artifactData: artifact,
-                onPressed: () =>
-                {
-                    if (!eco.SpendIsotopes(capturedCost)) return;
-                    capturedType.AddOwned();
-                    GameManager.Instance.SaveMeta();
-                    Refresh();
-                }
-            );
-
+            var row = CraftingRow.Create(CraftingRowScene, type);
+            row.ActionPerformed += () =>
+            {
+                GameManager.Instance.SaveMeta();
+                Refresh();
+            };
             CraftListContainer.AddChild(row);
         }
     }

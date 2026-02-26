@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bnbfigeiu7cfu"]
 
 [ext_resource type="Script" uid="uid://caoy8ebab82gn" path="res://Scenes/UI/GlobalMenu/EquipmentPanel/EquipmentPanel.cs" id="1_1xam5"]
-[ext_resource type="PackedScene" uid="uid://ccvaqiyvx307i" path="res://Scenes/UI/GlobalMenu/EquipmentPanel/Components/ArtifactRow/ArtifactRow.tscn" id="1_go3c1"]
+[ext_resource type="PackedScene" uid="uid://ccvaqiyvx307i" path="res://Scenes/UI/GlobalMenu/EquipmentPanel/Components/ArtifactRow/ArtifactRow.tscn" id="2_artrow"]
 
-[node name="EquipmentPanel" type="Control" unique_id=754230239]
+[node name="EquipmentPanel" type="Control" unique_id=754230239 node_paths=PackedStringArray("ArtifactsListContainer", "SlotsLabel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,6 +11,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_1xam5")
+ArtifactRowScene = ExtResource("2_artrow")
+ArtifactsListContainer = NodePath("MarginContainer/VBoxContainer/ArtifactsListContainer")
+SlotsLabel = NodePath("MarginContainer/VBoxContainer/SlotsLabel")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1626518886]
 layout_mode = 1
@@ -28,5 +31,10 @@ theme_override_constants/margin_bottom = 5
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="ArtifactRow" parent="MarginContainer/VBoxContainer" unique_id=212753923 instance=ExtResource("1_go3c1")]
+[node name="SlotsLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=334202552]
 layout_mode = 2
+text = "Slots: 0/1"
+
+[node name="ArtifactsListContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=334202553]
+layout_mode = 2
+theme_override_constants/separation = 4
