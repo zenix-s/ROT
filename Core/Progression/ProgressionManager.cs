@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace RotOfTime.Core.Progression;
@@ -8,12 +9,15 @@ namespace RotOfTime.Core.Progression;
 /// </summary>
 public class ProgressionManager
 {
+    public event Action StatsChanged;
+
     public int CurrentElevation { get; set; } = 1;
     public int ActivatedResonances { get; private set; }
 
     public void ActivateResonance()
     {
         ActivatedResonances++;
+        StatsChanged?.Invoke();
     }
 
     /// <summary>True when the player has activated 3 resonances in the current elevation.</summary>
@@ -22,6 +26,7 @@ public class ProgressionManager
     public void AdvanceElevation()
     {
         CurrentElevation++;
+        StatsChanged?.Invoke();
     }
 
     public float GetHealthMultiplier() => 1.0f + ActivatedResonances * 0.20f;
