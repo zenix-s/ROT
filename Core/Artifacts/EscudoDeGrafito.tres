@@ -7,6 +7,6 @@ script = ExtResource("1_artdata")
 ArtifactName = "Escudo de Grafito"
 Description = "Refuerza la estructura molecular del portador. +20% vida."
 SlotCost = 1
-HealthBonus = 0.2
+HealthBonus = 10
 DamageBonus = 0.0
 IsotopeCost = 30

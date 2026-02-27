@@ -66,7 +66,8 @@ public partial class Player : CharacterBody2D
         Vector2 spawnPos = GlobalPosition + dir * 16;
 
         bool fired = AttackManager.TryFire(
-            slot.Value, dir, spawnPos, EntityStatsComponent.EntityStats, this);
+            slot.Value, dir, spawnPos, EntityStatsComponent.EntityStats, this,
+            EntityStatsComponent.DamageMultiplier);
 
         if (!fired)
             return AttackFireResult.NotFired;

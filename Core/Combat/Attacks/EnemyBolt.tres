@@ -9,6 +9,6 @@ TargetSpeed = 150
 Lifetime = 4
 MovementType = 0
 Name = "Enemy Bolt"
-DamageCoefficient = 0.8
+DamageCoefficient = 1.0
 CooldownDuration = 1.5
 metadata/_custom_type_script = "uid://bi7dj6vs1ad3f"

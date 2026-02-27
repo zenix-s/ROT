@@ -63,8 +63,8 @@ public partial class DebugOverlay : CanvasLayer
 
             sb.AppendLine("[PLAYER]");
             sb.AppendLine($"  HP:  {stats.CurrentHealth} / {stats.MaxHealth}");
-            sb.AppendLine($"  ATK: {stats.AttackPower}  DEF: {stats.EntityStats.DefenseStat}");
-            sb.AppendLine($"  HpMult: {stats.HealthMultiplier:F2}x  DmgMult: {stats.DamageMultiplier:F2}x");
+            sb.AppendLine($"  ATK: {stats.AttackPower}  HpBonus: {stats.MaxHealthBonus}");
+            sb.AppendLine($"  DmgMult: {stats.DamageMultiplier:F2}x");
             sb.AppendLine($"  Pos: {player.GlobalPosition.X:F0}, {player.GlobalPosition.Y:F0}");
 
             if (am != null)
@@ -85,7 +85,7 @@ public partial class DebugOverlay : CanvasLayer
         sb.AppendLine("[PROGRESION]");
         sb.AppendLine($"  Elevacion: {prog.CurrentElevation}");
         sb.AppendLine($"  Resonancias activadas: {prog.ActivatedResonances}");
-        sb.AppendLine($"  HpMult: {prog.GetHealthMultiplier():F2}x  DmgMult: {prog.GetDamageMultiplier():F2}x");
+        sb.AppendLine($"  HpBonus: {prog.GetHealthBonus()}  DmgMult: {prog.GetDamageMultiplier():F2}x");
 
         // --- Inventario ---
         var inv   = gm.InventoryManager;

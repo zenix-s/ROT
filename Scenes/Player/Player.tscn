@@ -67,7 +67,6 @@ height = 16.0
 script = ExtResource("5_fk5o5")
 VitalityStat = 100
 AttackStat = 10
-DefenseStat = 10
 metadata/_custom_type_script = "uid://bk4lgfbd2ojpm"
 
 [node name="Player" type="CharacterBody2D" unique_id=1512431336 node_paths=PackedStringArray("AnimationComponent", "Sprite", "EntityStatsComponent", "EntityInputComponent", "EntityMovementComponent", "HurtboxComponent", "AttackManager") groups=["Player"]]

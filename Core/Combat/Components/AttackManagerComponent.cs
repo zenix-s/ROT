@@ -36,7 +36,8 @@ public abstract partial class AttackManagerComponent<TSlot> : Node
         _skills[slotKey] = activeSkill;
     }
 
-    public bool TryFire(TSlot slotKey, Vector2 direction, Vector2 position, EntityStats stats, Node2D ownerNode)
+    public bool TryFire(TSlot slotKey, Vector2 direction, Vector2 position,
+                        EntityStats stats, Node2D ownerNode, float damageMultiplier = 1.0f)
     {
         if (!_skills.TryGetValue(slotKey, out var skill))
             return false;
@@ -48,7 +49,7 @@ public abstract partial class AttackManagerComponent<TSlot> : Node
             return false;
         }
 
-        var ctx = new AttackContext(direction, position, stats, ownerNode, 1.0f, attackContainer);
+        var ctx = new AttackContext(direction, position, stats, ownerNode, damageMultiplier, attackContainer);
         if (!skill.TryExecute(ctx))
             return false;
 

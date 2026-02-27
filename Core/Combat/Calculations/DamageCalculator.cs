@@ -1,4 +1,4 @@
-using System;
+using Godot;
 using RotOfTime.Core.Combat.Attacks;
 using RotOfTime.Core.Combat.Results;
 using RotOfTime.Core.Entities;
@@ -6,29 +6,17 @@ using RotOfTime.Core.Entities;
 namespace RotOfTime.Core.Combat.Calculations;
 
 /// <summary>
-///     Centralized damage calculation formulas.
-///     All damage computation should go through this class.
+///     Cálculo de daño centralizado. Sin defensa — la defensa es esquivar.
 /// </summary>
 public static class DamageCalculator
 {
-    private const int MinimumDamage = 1;
-
     /// <summary>
-    ///     Calculate raw damage output from attacker stats and attack data.
+    ///     Calcula el daño del ataque aplicando el multiplicador.
+    ///     El AttackResult resultante tiene el daño clampado a múltiplo de 5.
     /// </summary>
-    public static AttackResult CalculateRawDamage(EntityStats attacker, AttackData data)
+    public static AttackResult CalculateAttack(EntityStats attacker, AttackData data, float damageMultiplier = 1.0f)
     {
-        int rawDamage = (int)(attacker.AttackStat * data.DamageCoefficient);
-        return new AttackResult(rawDamage, data.Name);
-    }
-
-    /// <summary>
-    ///     Calculate final damage after applying defender's defense.
-    /// </summary>
-    public static DamageResult CalculateFinalDamage(AttackResult attack, EntityStats defender)
-    {
-        int afterDefense = attack.RawDamage - defender.DefenseStat;
-        int finalDamage = Math.Max(MinimumDamage, afterDefense);
-        return new DamageResult(attack.RawDamage, finalDamage, attack.AttackName);
+        int raw = Mathf.RoundToInt(attacker.AttackStat * data.DamageCoefficient * damageMultiplier);
+        return new AttackResult(raw, data.Name);
     }
 }

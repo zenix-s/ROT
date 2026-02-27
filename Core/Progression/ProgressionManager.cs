@@ -29,7 +29,12 @@ public class ProgressionManager
         StatsChanged?.Invoke();
     }
 
-    public float GetHealthMultiplier() => 1.0f + ActivatedResonances * 0.20f;
+    /// <summary>
+    ///     Bonus plano de HP por elevaciones completadas. +10 HP por elevación = +1 máscara.
+    ///     Elevation 1 (inicio): +0. Elevation 2 cleared: +10. ... Elevation 5 cleared: +40.
+    /// </summary>
+    public int GetHealthBonus() => (CurrentElevation - 1) * 10;
+
     public float GetDamageMultiplier() => 1.0f + ActivatedResonances * 0.10f;
 
     public void Load(int activatedResonances, int currentElevation)

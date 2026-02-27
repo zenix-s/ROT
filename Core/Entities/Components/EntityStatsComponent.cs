@@ -1,6 +1,5 @@
 using System;
 using Godot;
-using RotOfTime.Core.Combat.Calculations;
 using RotOfTime.Core.Combat.Results;
 
 namespace RotOfTime.Core.Entities.Components;
@@ -21,16 +20,20 @@ public partial class EntityStatsComponent : Node
 
     public int CurrentHealth { get; private set; }
 
-    /// <summary>Set by the entity coordinator (e.g. Player.cs). Defaults to 1.0 (no bonus).</summary>
-    public float HealthMultiplier { get; set; } = 1.0f;
+    /// <summary>
+    ///     Bonus plano de HP en unidades HP (múltiplos de 10).
+    ///     Sumado a EntityStats.VitalityStat para obtener MaxHealth.
+    ///     Fuentes: progresión (elevaciones) + artefactos.
+    /// </summary>
+    public int MaxHealthBonus { get; set; } = 0;
 
-    /// <summary>Set by the entity coordinator (e.g. Player.cs). Defaults to 1.0 (no bonus).</summary>
+    /// <summary>Multiplicador de daño. Aplicado al AttackStat al disparar.</summary>
     public float DamageMultiplier { get; set; } = 1.0f;
 
-    /// <summary>Max health factoring in external multipliers.</summary>
-    public int MaxHealth => Mathf.RoundToInt(EntityStats.VitalityStat * HealthMultiplier);
+    /// <summary>HP máximo = vida base + bonus de elevaciones y artefactos.</summary>
+    public int MaxHealth => EntityStats.VitalityStat + MaxHealthBonus;
 
-    /// <summary>Attack power factoring in external multipliers.</summary>
+    /// <summary>Attack power efectivo con multiplicador aplicado.</summary>
     public int AttackPower => Mathf.RoundToInt(EntityStats.AttackStat * DamageMultiplier);
 
     public override void _Ready()
@@ -38,19 +41,13 @@ public partial class EntityStatsComponent : Node
         if (EntityStats == null)
             throw new InvalidOperationException("EntityStats is not set");
 
-        SetupHealth();
-    }
-
-    private void SetupHealth()
-    {
         CurrentHealth = MaxHealth;
     }
 
     public void TakeDamage(AttackResult attackResult)
     {
-        DamageResult damageResult = DamageCalculator.CalculateFinalDamage(attackResult, EntityStats);
-
-        CurrentHealth = Math.Max(0, CurrentHealth - damageResult.FinalDamage);
+        // Sin defensa — el daño del AttackResult ya es el daño final.
+        CurrentHealth = Math.Max(0, CurrentHealth - attackResult.RawDamage);
         EmitSignal(SignalName.HealthChanged, CurrentHealth);
 
         if (CurrentHealth <= 0)
@@ -58,13 +55,12 @@ public partial class EntityStatsComponent : Node
     }
 
     /// <summary>
-    /// Recalculates MaxHealth and clamps CurrentHealth. Call after multipliers change.
+    ///     Recalcula MaxHealth y clampea CurrentHealth. Llamar tras cambiar MaxHealthBonus.
     /// </summary>
     public void RecalculateStats()
     {
-        int newMax = MaxHealth;
-        if (CurrentHealth > newMax)
-            CurrentHealth = newMax;
+        if (CurrentHealth > MaxHealth)
+            CurrentHealth = MaxHealth;
 
         EmitSignal(SignalName.StatsUpdated);
     }

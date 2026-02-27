@@ -57,13 +57,7 @@ public partial class AttackHitboxComponent : Area2D
         if (attackData == null)
             return AttackResult.None;
 
-        var baseResult = DamageCalculator.CalculateRawDamage(ownerStats, attackData);
-
-        if (Mathf.IsEqualApprox(damageMultiplier, 1.0f))
-            return baseResult;
-
-        int modifiedDamage = Mathf.Max(1, (int)(baseResult.RawDamage * damageMultiplier));
-        return new AttackResult(modifiedDamage, baseResult.AttackName, baseResult.IsCritical);
+        return DamageCalculator.CalculateAttack(ownerStats, attackData, damageMultiplier);
     }
 
     private void ApplyFaction(GameConstants.Faction faction)

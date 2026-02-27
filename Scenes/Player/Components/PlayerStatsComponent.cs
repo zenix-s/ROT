@@ -5,9 +5,8 @@ using RotOfTime.Core.Entities.Components;
 namespace RotOfTime.Scenes.Player.Components;
 
 /// <summary>
-///     Extends EntityStatsComponent with automatic multiplier recalculation
-///     from ProgressionManager and ArtifactManager. Subscribe/unsuscribe
-///     to StatsChanged events from both managers.
+///     Extiende EntityStatsComponent con recálculo automático desde
+///     ProgressionManager y ArtifactManager.
 /// </summary>
 [GlobalClass]
 public partial class PlayerStatsComponent : EntityStatsComponent
@@ -48,14 +47,12 @@ public partial class PlayerStatsComponent : EntityStatsComponent
         var prog = GameManager.Instance?.ProgressionManager;
         var arts = GameManager.Instance?.ArtifactManager;
 
-        float hpMult  = prog?.GetHealthMultiplier() ?? 1.0f;
-        float dmgMult = prog?.GetDamageMultiplier() ?? 1.0f;
+        // HP: bonus plano (int). Elevaciones + artefactos. Sin multiplicadores flotantes.
+        MaxHealthBonus = (prog?.GetHealthBonus() ?? 0) + (arts?.GetTotalHealthBonus() ?? 0);
 
-        hpMult  += arts?.GetTotalHealthBonus() ?? 0f;
-        dmgMult += arts?.GetTotalDamageBonus() ?? 0f;
+        // Daño: multiplicador aditivo. Resonancias + artefactos.
+        DamageMultiplier = (prog?.GetDamageMultiplier() ?? 1.0f) + (arts?.GetTotalDamageBonus() ?? 0f);
 
-        HealthMultiplier = hpMult;
-        DamageMultiplier = dmgMult;
         RecalculateStats();
     }
 }

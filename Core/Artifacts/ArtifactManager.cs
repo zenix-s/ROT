@@ -71,7 +71,7 @@ public class ArtifactManager
             _owned.Add(type);
     }
 
-    public float GetTotalHealthBonus() => _equipped.Sum(t => LoadData(t).HealthBonus);
+    public int GetTotalHealthBonus() => _equipped.Sum(t => LoadData(t).HealthBonus);
     public float GetTotalDamageBonus() => _equipped.Sum(t => LoadData(t).DamageBonus);
 
     public List<ArtifactType> GetOwned() => [.. _owned];
