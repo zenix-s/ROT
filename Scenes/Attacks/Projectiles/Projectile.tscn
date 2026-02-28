@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dwips18xqhtp8"]
 
-[ext_resource type="Texture2D" uid="uid://dknoyppxxm06p" path="res://Scenes/Attacks/Body/RockBody/rock_body.png" id="2_t7gc1"]
+[ext_resource type="Texture2D" uid="uid://y4jitlp2jjh" path="res://Scenes/Attacks/Projectiles/assets/projectile.png" id="2_mujy1"]
 [ext_resource type="Script" uid="uid://brtvwd7sxoam" path="res://Scenes/Attacks/Projectiles/Projectile.cs" id="3_proj"]
 [ext_resource type="Script" uid="uid://dmjy7sqfwj6nb" path="res://Core/Combat/Components/AttackHitboxComponent.cs" id="6_utkwb"]
 
@@ -18,8 +18,9 @@ HitboxComponent = NodePath("AttackHitboxComponent")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1978875070]
 position = Vector2(-9.536743e-07, -9.536743e-07)
+rotation = 1.5707964
 scale = Vector2(0.40625, 0.40625)
-texture = ExtResource("2_t7gc1")
+texture = ExtResource("2_mujy1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1727957120]
 shape = SubResource("CircleShape2D_pyv0a")

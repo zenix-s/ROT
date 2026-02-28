@@ -26,7 +26,6 @@ The developer is a solo first-time game developer with strong programming skills
 - **Al iniciar una conversación nueva donde el desarrollador saluda y planifica el día:** leer `docs/tasks.md` y presentar las tareas pendientes antes de cualquier otra cosa.
 - **Never commit automatically.** Always wait for the developer to explicitly ask for a commit.
 - **Treat `docs/gdd/game-design.md` as the source of truth** for scope. Anything not in that document needs explicit justification before implementation.
-- **Refer to `docs/plans/`** para el plan de implementación activo. El plan `2026-02-15-vertical-slice-plan.md` está cerrado. El nuevo plan de transición a side-scroller se creará en la siguiente sesión.
 - **When in doubt, ask.** Better to clarify than to build the wrong thing.
 - **Prefer small, testable increments.** Each change should be verifiable in Godot (F5) without requiring other systems to be built first.
 - **Document decisions** in the Decisions Log section of this file when making architectural or scope choices.
