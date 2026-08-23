@@ -7,83 +7,91 @@ namespace RotOfTime.Core.Combat.Components.AttackSpawnComponents;
 [GlobalClass]
 public partial class BurstSpawnComponent : AttackSpawnComponent
 {
-    [Export] public int BurstCount { get; set; } = 3;
-    [Export] public float BurstDelay { get; set; } = 0.1f;
+	[Export] public int BurstCount { get; set; } = 3;
+	[Export] public float BurstDelay { get; set; } = 0.1f;
 
-    private AttackContext _currentCtx;
-    private int _fired;
-    private Timer _burstTimer;
+	private AttackContext _currentCtx;
+	private int _fired;
+	private Timer _burstTimer;
 
-    public override void Execute(AttackContext ctx)
-    {
-        if (ProjectileScene == null || Data == null)
-        {
-            GD.PrintErr("BurstSpawnComponent: ProjectileScene or Data is null.");
-            return;
-        }
+	public override void Execute(AttackContext ctx)
+	{
+		if (ProjectileScene == null || Data == null)
+		{
+			GD.PrintErr("BurstSpawnComponent: ProjectileScene or Data is null.");
+			return;
+		}
 
-        _currentCtx = ctx;
-        _fired = 0;
+		if (_burstTimer != null)
+		{
+			_burstTimer.Timeout -= OnBurstTick;
+			_burstTimer.Stop();
+			_burstTimer.QueueFree();
+			_burstTimer = null;
+		}
 
-        SpawnOne();
+		_currentCtx = ctx;
+		_fired = 0;
 
-        if (BurstCount <= 1)
-            return;
+		SpawnOne();
 
-        _burstTimer = new Timer
-        {
-            WaitTime = BurstDelay,
-            OneShot = false
-        };
-        _burstTimer.Timeout += OnBurstTick;
-        AddChild(_burstTimer);
-        _burstTimer.Start();
-    }
+		if (BurstCount <= 1)
+			return;
 
-    private void OnBurstTick()
-    {
-        SpawnOne();
+		_burstTimer = new Timer
+		{
+			WaitTime = BurstDelay,
+			OneShot = false
+		};
+		_burstTimer.Timeout += OnBurstTick;
+		AddChild(_burstTimer);
+		_burstTimer.Start();
+	}
 
-        if (_fired >= BurstCount)
-        {
-            _burstTimer.Stop();
-            _burstTimer.QueueFree();
-            _burstTimer = null;
-        }
-    }
+	private void OnBurstTick()
+	{
+		SpawnOne();
 
-    private void SpawnOne()
-    {
-        var ctx = _currentCtx with { SpawnPosition = _currentCtx.Owner.GlobalPosition };
+		if (_fired >= BurstCount)
+		{
+			_burstTimer.Stop();
+			_burstTimer.QueueFree();
+			_burstTimer = null;
+		}
+	}
 
-        var instance = ProjectileScene.Instantiate<Node2D>();
-        instance.GlobalPosition = ctx.SpawnPosition;
-        instance.Rotation = ctx.Direction.Angle();
+	private void SpawnOne()
+	{
+		var ctx = _currentCtx with { SpawnPosition = _currentCtx.Owner.GlobalPosition };
 
-        if (Data is ProjectileData projData)
-        {
-            var movement = MovementFactory.Create(projData.MovementType);
-            instance.AddChild(movement);
-        }
+		var instance = ProjectileScene.Instantiate<Node2D>();
+		instance.GlobalPosition = ctx.SpawnPosition;
+		instance.Rotation = ctx.Direction.Angle();
 
-        ctx.AttacksContainer.AddChild(instance);
+		if (Data is ProjectileData projData)
+		{
+			var movement = MovementFactory.Create(projData.MovementType);
+			instance.AddChild(movement);
+		}
 
-        if (instance is Projectile projectile)
-        {
-            projectile.Initialize(ctx, Data);
-        }
-        else
-        {
-            foreach (var child in instance.GetChildren())
-            {
-                if (child is AttackHitboxComponent hitbox)
-                {
-                    hitbox.Initialize(ctx.OwnerStats, Data, ctx.DamageMultiplier);
-                    break;
-                }
-            }
-        }
+		ctx.AttacksContainer.AddChild(instance);
 
-        _fired++;
-    }
+		if (instance is Projectile projectile)
+		{
+			projectile.Initialize(ctx, Data);
+		}
+		else
+		{
+			foreach (var child in instance.GetChildren())
+			{
+				if (child is AttackHitboxComponent hitbox)
+				{
+					hitbox.Initialize(ctx.OwnerStats, Data, ctx.DamageMultiplier);
+					break;
+				}
+			}
+		}
+
+		_fired++;
+	}
 }

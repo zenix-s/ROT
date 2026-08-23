@@ -10,4 +10,5 @@ Lifetime = 3
 MovementType = 0
 Name = "Ice Shard Projectile"
 DamageCoefficient = 0.5
+CooldownDuration = 1.5
 metadata/_custom_type_script = "uid://bi7dj6vs1ad3f"
